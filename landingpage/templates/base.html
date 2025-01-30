@@ -1,0 +1,181 @@
+{% load static %}
+
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <!--====== Title ======-->
+    <title>MarketScout - Sports Card Aggregator</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--====== Favicon Icon ======-->
+
+    <link rel="shortcut icon" href="{% static '/images/favicon.png' %}" type="image/png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+    <!--====== Magnific Popup CSS ======-->
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+
+    <!--====== Slick CSS ======-->
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+
+    <!--====== Line Icons CSS ======-->
+    <link rel="stylesheet" href="{% static 'css/LineIcons.css' %}">
+
+    <!--====== Bootstrap CSS ======-->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <!--====== Default CSS ======-->
+    <link rel="stylesheet" href="{% static 'css/default.css' %}">
+
+    <!--====== Style CSS ======-->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .card {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card.dark-card {
+            background-color: #001531;
+            color: white !important;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-color: #e5e7eb;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            color: #001531;
+            text-align: center;
+            line-height: 24px;
+            flex-shrink: 0;
+        }
+
+        .dark-card .feature-list li::before {
+            background-color: #4b5563;
+            color: white !important;
+        }
+
+        .btn-subscribe {
+            border-radius: 2rem;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+        }
+
+        .dark-card .btn-subscribe {
+            background-color: white;
+            color: #001531 !important;
+        }
+
+        .dark-card .btn-subscribe:hover {
+            border: 1px solid #fafafa;
+            background-color: #001531;
+            color: white !important;
+        }
+
+        .btn-dark-custom {
+            background-color: #001531;
+            color: white !important;
+        }
+
+        .btn-dark-custom:hover {
+            border: 1px solid #001531;
+            background-color: white;
+            color: #001531 !important;
+        }
+
+        .plan-type {
+            font-size: 2.25rem;
+            font-weight: bold;
+        }
+
+        .plan-for {
+            color: #6b7280;
+        }
+
+        .dark-card .plan-for {
+            color: #e5e7eb;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!--====== PRELOADER PART START ======-->
+
+    {% include 'looder.html' %}
+
+    <!--====== PRELOADER PART ENDS ======-->
+
+
+    <!--====== NAVBAR TWO PART START ======-->
+
+    {% include 'navbar.html' %}
+
+    <!--====== NAVBAR TWO PART ENDS ======-->
+    {% block content %} {% endblock %}
+    <!--====== FOOTER PART START ======-->
+
+    {% include 'footer.html' %}
+
+    <!--====== FOOTER PART ENDS ======-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!--====== Jquery js ======-->
+    <script src="{% static 'js/vendor/jquery-1.12.4.min.js' %}"></script>
+    <script src="{% static 'js/vendor/modernizr-3.7.1.min.js' %}"></script>
+
+    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <!--====== Bootstrap js ======-->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+
+    <!--====== Isotope js ======-->
+    <script src="{% static 'js/imagesloaded.pkgd.min.js' %}"></script>
+    <script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+
+    <!--====== Scrolling Nav js ======-->
+    <script src="{% static 'js/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'js/scrolling-nav.js' %}"></script>
+
+    <!--====== Main js ======-->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

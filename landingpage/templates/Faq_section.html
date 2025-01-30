@@ -1,0 +1,87 @@
+<!-- FAQ 2 - Bootstrap Brain Component -->
+<style>
+    .card-header .btn-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        text-align: left;
+    }
+
+    .card-header .btn-link i {
+        transition: transform 0.3s ease;
+    }
+
+    .card-header .btn-link:not(.collapsed) i {
+        transform: rotate(180deg);
+    }
+
+    .card {
+        border: none;
+        background: white;
+        border-radius: 8px !important;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+        background-color: white;
+        border-bottom: none;
+    }
+</style>
+<section class="py-3 bg-transparent py-md-5 py-xl-8" style="background-color: #f4f6f7 !important;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-10">
+                <div class="section-title text-center pb-25">
+                    <h3 class="title">FAQ</h3>
+                    <p class="text">Stop wasting time and money designing and managing a website that doesn’t get
+                        results. Happiness guaranteed!</p>
+                </div> <!-- section title -->
+            </div>
+        </div> <!-- row -->
+        <div class="row gy-5 gy-lg-0">
+            <div class="col-12 col-lg-6">
+                <h2 class="h1 mb-3">How can we help you?
+                </h2>
+                <p class="lead fs-4 text-secondary mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Quaerat qui, veniam dolore quam accusantium ipsa animi ipsam eveniet nisi aperiam ducimus aspernatur
+                    eius amet? Voluptatem nisi iste porro fugit sint.</p>
+                <a href="{% url 'faq' %}" class=" btn-subscribe btn-dark-custom btn">All FAQ</a>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="row justify-content-xl-end">
+                    <div class="col-12 col-xl-11">
+                        <div class="accordion accordion-flush" id="accordionExample">
+                            {% for i in "1234" %}
+                            <div class="card mb-2 shadow-sm">
+                                <div class="card-header" id="headingOne">
+                                    <button style="text-align: start;" class="btn w-100 accordion-button" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse{{i}}" aria-expanded="true"
+                                        aria-controls="collapse{{i}}">
+                                        How Do I Change My Billing Information? <i
+                                            class="fas fa-chevron-down float-right"></i>
+                                    </button>
+                                </div>
+                                <div id="collapse{{i}}" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body p-3">
+                                        <p>To change your billing information, please follow these steps:</p>
+                                        <ul>
+                                            <li>Go to our website and sign in to your account.</li>
+                                            <li>Click on your profile picture in the top right corner of the page and
+                                                select "Account Settings."</li>
+                                            <li>Under the "Billing Information" section, click on "Edit."</li>
+                                            <li>Make your changes and click on "Save."</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

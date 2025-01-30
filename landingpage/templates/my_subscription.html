@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    #navbarTwo {
+        display: none !important;
+    }
+
+    .navbar-btn {
+        margin-left: auto;
+    }
+</style>
+<style>
+    :root {
+        --primary-color: #001531;
+        --secondary-color: #ffffff;
+        --text-color: #333333;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: var(--text-color);
+    }
+    
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .subscription-title {
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+    .subscription-info {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    .info-label {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+</style>
+
+<div class="d-flex align-items-center justify-content-end" style="height: 8vh; background: #001531;">
+    <!-- <div class="container banner-text-container" style="color: #dee7e9;">
+        <div style="font-size: 36px">
+            <b>My Subscription</b>
+        </div>
+        <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
+    </div> -->
+</div>
+<section style="height: 80vh; display: flex; justify-content: center; align-items: center;">
+    <div class="w-50" >
+        <div class="justify-content-center">
+            <div class="">
+                <div class="card w-100">
+                    <div class="card-body p-4">
+                        {% if subscription %}
+                        <h1 class="subscription-title mb-4 text-center">Your Active Subscription</h1>
+                        <div class="subscription-info">
+                            <div class="row text-center">
+                                <div class="col-md-6 mb-3">
+                                    <p class="info-label">Plan</p>
+                                    <p class="h4">{{ subscription.plan.price_heading }}</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="info-label">Price</p>
+                                    <p class="h4">${{ subscription.plan.price }}</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <p class="info-label">Start Date</p>
+                                    <p>{{ subscription.start_date }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="info-label">End Date</p>
+                                    <p>{{ subscription.end_date }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <h1 class="subscription-title mb-4">No Active Subscription</h1>
+                            <p class="lead mb-4">You currently don't have any active subscription.</p>
+                            <a href="/pricing" class="btn btn-primary">View Plans</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
