@@ -96,6 +96,7 @@ class UserSubscription(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
+    video = models.FileField(upload_to='blog_videos/', default='videos/default_video.mp4')
     quote = models.TextField(blank=True, null=True)
     content = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -116,3 +117,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.user.username} on {self.post.title}"
+    
+
+class FAQ(models.Model):
+    question = models.CharField(max_length=255)
+    answer = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.question

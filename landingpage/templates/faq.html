@@ -199,44 +199,27 @@
     <!-- General Questions -->
     <h3 class="category-title">General Questions</h3>
     <div id="generalFAQ" class="accordion">
+        {% for faq in faqs %}
         <div class="card">
             <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
                     <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
                         aria-controls="collapseOne">
-                        What services do you offer? <i class="fas fa-chevron-down float-right"></i>
+                        {{ faq.question }} <i class="fas fa-chevron-down float-right"></i>
                     </button>
                 </h5>
             </div>
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#generalFAQ">
                 <div class="card-body">
-                    We offer a comprehensive range of digital services including web development, mobile app
-                    development, UI/UX design, and digital marketing solutions. Our team specializes in creating custom
-                    solutions tailored to your specific needs.
+                    {{ faq.answer }}
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header" id="headingTwo">
-                <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
-                        aria-expanded="false" aria-controls="collapseTwo">
-                        How long does it take to complete a project? <i class="fas fa-chevron-down float-right"></i>
-                    </button>
-                </h5>
-            </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#generalFAQ">
-                <div class="card-body">
-                    Project timelines vary depending on the scope and complexity of the work. Typically, small projects
-                    take 4-6 weeks, while larger projects can take 3-6 months. We'll provide a detailed timeline during
-                    the initial consultation.
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 
     <!-- Pricing & Plans -->
-    <h3 class="category-title">Pricing & Plans</h3>
+    <!-- <h3 class="category-title">Pricing & Plans</h3>
     <div id="pricingFAQ" class="accordion">
         <div class="card">
             <div class="card-header" id="headingThree">
@@ -271,10 +254,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Technical Support -->
-    <h3 class="category-title">Technical Support</h3>
+    <!-- <h3 class="category-title">Technical Support</h3>
     <div id="technicalFAQ" class="accordion">
         <div class="card">
             <div class="card-header" id="headingFive">
@@ -308,7 +291,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Contact Support Section -->
     <div class="contact-support">
