@@ -15,7 +15,8 @@ from django.db.models import Count , Q
 
 def Landing_page(request):
 
-    
+
+    faqs = FAQ.objects.all()
     slidders = Slidder.objects.all()
     Contact = Contactus.objects.all()
     Pricings = Pricing.objects.all()
@@ -40,6 +41,7 @@ def Landing_page(request):
             return render(request, 'home.html',context)
     
     context = {
+        "faqs" : faqs,
         "User_Subscription" : User_Subscription,
         "slidders" : slidders,
         "Contact" : Contact,
@@ -332,7 +334,8 @@ def blog_post(request,post_id):
 
 
 def faq(request):
-    return render(request,"faq.html")
+    faqs = FAQ.objects.all()
+    return render(request,"faq.html",{'faqs': faqs})
 
 
 
