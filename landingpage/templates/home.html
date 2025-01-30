@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+<!--====== SLIDER PART START ======-->
+
+{% include 'slidder.html' %}
+
+<!--====== SLIDER PART ENDS ======-->
+
+<!--====== PRINICNG START ======-->
+{% if not User_Subscription.active %}
+<section id="pricing" class="pricing-area ">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-10">
+                <div class="section-title text-center pb-25">
+                    <h3 class="title">Pricing Plans</h3>
+                    <p class="text">Stop wasting time and money designing and managing a website that doesn’t get
+                        results. Happiness guaranteed!</p>
+                </div> <!-- section title -->
+            </div>
+        </div> <!-- row -->
+        <div class="row justify-content-center">
+            {% for price in Pricings %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card {% if 'Pro' in price.price_heading %} dark-card {% endif %} h-100 p-4">
+                    <div class="card-body">
+                        <h2 {% if 'Pro' in price.price_heading %} style="color: #fafafa!important;" {% endif %}
+                            class="plan-type mb-2">{{ price.price_heading }}</h2>
+                        <p class="plan-for mb-4">{{ price.desc }}</p>
+                        <h3 {% if 'Pro' in price.price_heading %} style="color: #fafafa!important;" {% endif %}
+                            class="price mb-4">$ {{ price.price }}</h3>
+                        <ul class="feature-list mb-4">
+                            <li>{{ price.price_feature1 }}</li>
+                            <li>{{ price.price_feature2 }}</li>
+                            <li>{{ price.price_feature3 }}</li>
+                            <li>{{ price.price_feature4 }}</li>
+                        </ul>
+
+                        <a href="{% url 'subscribe_to_plan' price.id %}"
+                            class="btn btn-dark-custom btn-subscribe btn-block">Subscribe now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div> <!-- row -->
+    </div> <!-- container -->
+</section>
+{% endif %}
+
+<!--====== PRINICNG ENDS ======-->
+
+{% include 'Faq_section.html' %}
+
+
+
+
+
+<!--====== CONTACT PART START ======-->
+<section id="contact" class="contact-area">
+    <div class="container">
+        {% for cnt in Contact %}
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-10">
+                <div class="section-title text-center pb-30">
+                    <h3 class="title">Contact</h3>
+                    <p class="text">{{ cnt.about }}</p>
+                </div> <!-- section title -->
+            </div>
+        </div>
+        <div class="contact-info pt-30">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-contact-info contact-color-1 mt-30 d-flex align-items-center ">
+                        <div class="contact-info-icon">
+                            <i class="lni lni-map-marker"></i>
+                        </div>
+                        <div class="contact-info-content media-body">
+                            <p class="text">{{ cnt.company_address }}</p>
+                        </div>
+                    </div> <!-- single contact info -->
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-contact-info contact-color-2 mt-30 d-flex align-items-center ">
+                        <div class="contact-info-icon">
+                            <i class="lni lni-envelope"></i>
+                        </div>
+                        <div class="contact-info-content media-body">
+                            <p class="text">{{ cnt.company_email }}</p>
+                        </div>
+                    </div> <!-- single contact info -->
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-contact-info contact-color-3 mt-30 d-flex align-items-center ">
+                        <div class="contact-info-icon">
+                            <i class="lni lni-phone"></i>
+                        </div>
+                        <div class="contact-info-content media-body">
+                            <p class="text">{{ cnt.company_phone }}</p>
+                        </div>
+                    </div> <!-- single contact info -->
+                </div>
+            </div> <!-- row -->
+        </div>
+        {% endfor %}
+    </div> <!-- container -->
+</section>
+
+<!--====== CONTACT PART ENDS ======-->
+
+
+
+<!--====== BACK TOP TOP PART START ======-->
+
+<a href="#" class="back-to-top"><i class="lni lni-chevron-up"></i></a>
+
+<!--====== BACK TOP TOP PART ENDS ======-->
+
+<!--====== PART START ======-->
+
+<!-- 
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-">
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+ -->
+
+<!--====== PART ENDS ======-->
+{% endblock %}

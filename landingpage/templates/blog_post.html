@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-color: #001531;
+        --accent-color: #001531;
+    }
+
+    #navbarTwo {
+        display: none !important;
+    }
+
+    .navbar-btn {
+        margin-left: auto;
+    }
+
+
+    body {
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .blog-header-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .meta-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+        padding: 1rem 0;
+    }
+
+    .meta-info .category {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    .meta-info .comments {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .blog-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .blog-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    .quote-block {
+        border-left: 4px solid var(--accent-color);
+        padding: 2rem;
+        margin: 2rem 0;
+        font-size: 1.5rem;
+        font-weight: 500;
+        background-color: #f8f9fa;
+    }
+
+    .tags-section {
+        margin: 2rem 0;
+        padding-top: 2rem;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .tag-label {
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .tag {
+        background-color: #e9ecef;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-right: 8px;
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .share-buttons a {
+        color: #6c757d;
+        margin-left: 15px;
+        text-decoration: none;
+    }
+
+    .share-buttons a:hover {
+        color: var(--primary-color);
+    }
+
+    .post-navigation {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .prev-post,
+    .next-post {
+        text-decoration: none;
+        color: var(--primary-color);
+    }
+
+    .prev-post:hover,
+    .next-post:hover {
+        color: var(--accent-color);
+    }
+
+    .nav-label {
+        color: var(--accent-color);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Add to existing style section */
+    .comment-item {
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .comment-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .form-control {
+        border: 1px solid #dee2e6;
+        padding: 0.75rem 1rem;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: none;
+    }
+
+    .comments-section h2 {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+</style>
+<div class="d-flex align-items-center justify-content-end" style="height: 80px; background: #001531;">
+    <!-- <div class="container banner-text-container" style="color: #dee7e9;">
+        <div style="font-size: 36px">
+            <b>Payment checkout</b>
+        </div>
+        <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>Payment checkout</b></span></p>
+    </div> -->
+</div>
+<section class="section blog-wrap bg-gray">
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-12 mb-5">
+                <div class="single-blog-item">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="" class="img-fluid rounded">
+                    {% endif %}
+
+                    <div class="blog-item-content bg-white p-5">
+                        <div class="blog-item-meta bg-gray py-1 pr-2">
+                            <span class="text-muted text-capitalize mr-3"><i
+                                    class="fa-regular fa-pen-to-square mr-2"></i>{% for tag in post.tags.all %}
+                                {{ tag.name }}{% if not forloop.last %} |{% endif %}
+                                {% endfor %}</span>
+                            <span class="text-muted text-capitalize mr-3"><i class="fa-regular fa-message mr-2"></i>{{ comments.count }}
+                                Comments</span>
+                            <span class="text-black text-capitalize mr-3"><i class="fa-regular fa-clock mr-2"></i> {{ post.created_at|date:"d F, Y" }}</span>
+                        </div>
+
+                        <h2 class="mt-3 mb-4 blog-title">{{ post.title }}</h2>
+                        <h3 class="quote quote-block">{{ post.quote }}</h3>
+
+                        <p class="lead mb-4">{{ post.content }}</p>
+
+                        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus natus,
+                            consectetur? Illum libero vel nihil nisi quae, voluptatem, sapiente necessitatibus
+                            distinctio voluptates, iusto qui. Laboriosam autem, nam voluptate in beatae.</p>
+
+
+                        <p class="lead mb-4 font-weight-normal text-black">The same is true as we experience the
+                            emotional sensation of stress from our first instances of social rejection ridicule.
+                            We quickly learn to fear and thus automatically.</p>
+
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste, rerum beatae repellat
+                            tenetur incidunt quisquam libero dolores laudantium. Nesciunt quis itaque quidem,
+                            voluptatem autem eos animi laborum iusto expedita sapiente.</p> -->
+
+                        <div class="tags-section d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="tag-label">Tags: </span>
+                                {% for tag in post.tags.all %}
+                                <a class="tag" href="{% url 'blog_listings' %}?tag={{ tag.name }}">{{ tag.name }}</a>
+                                {% endfor %}
+                            </div>
+                            <div>
+                                <span class="tag-label">Author : {{ post.author.first_name }} {{ post.author.last_name }}</span>
+                            </div>
+                            <div class="share-buttons">
+                                <span class="tag-label">Share: </span>
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                                <a href="#"><i class="fas fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-12 mb-5">
+                <div class="posts-nav bg-white p-5 d-lg-flex d-md-flex justify-content-between ">
+                    <a class="prev-post post-prev align-items-center" href="#">
+                        <div class="nav-label posts-prev-item mb-4 mb-lg-0">
+                            <span class="nav-posts-desc text-color">- Previous Post</span>
+                            <h6 class="nav-posts-title mt-1">
+                                Donec consectetuer ligula <br>vulputate sem tristique.
+                            </h6>
+                        </div>
+                    </a>
+                    <div class="border"></div>
+                    <a class="next-post posts-next" href="#">
+                        <div class="nav-label posts-next-item pt-4 pt-lg-0">
+                            <span class="nav-posts-desc text-lg-right text-md-right text-color d-block">- Next
+                                Post</span>
+                            <h6 class="nav-posts-title mt-1">
+                                Ut aliquam sollicitudin leo.
+                            </h6>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-12 mb-5">
+                <div class="bg-white comments-section border-0 p-5">
+                    <h2 class="mb-4">{{ comments.count }} Comments</h2>
+
+                    <!-- Existing Comments -->
+                    <div class="comments-list mb-5">
+                        <!-- Comment 1 -->
+                        {% for comment in comments %}
+                        <div class="comment-item d-flex gap-3 mb-4">
+                            <div class="comment-content flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <img src="{% static 'images/profile.png' %}" alt="Philip W"
+                                            class="rounded-circle mr-2" width="50" height="50">
+                                            <div>
+                                            <h3 class="mb-0">{{ comment.user.first_name }} {{ comment.user.last_name }}</h3>
+
+                                            <small class="text-muted">{{ comment.user.country }}</small>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <!-- <a href="#" class="text-decoration-none"
+                                            style="color: var(--primary-color)">Reply</a> -->
+                                        <small class="text-muted ms-2">Posted on {{ comment.created_at|date:"d F, Y" }}</small>
+                                    </div>
+                                </div>
+                                <p class="mb-0">{{ comment.body }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <!-- Comment 2 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="comment-form bg-white p-4">
+                    <h3 class="mb-4">Write a comment</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn px-4"
+                            style="background-color: var(--primary-color); color: white;">
+                            SUBMIT COMMENT
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

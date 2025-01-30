@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    #navbarTwo {
+        display: none !important;
+    }
+
+    .navbar-btn {
+        margin-left: auto;
+    }
+
+    :root {
+        --primary-color: #001531;
+        --accent-color: #f45c5c;
+    }
+
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s;
+        height: 100%;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-img-top {
+        height: 240px;
+        object-fit: cover;
+    }
+
+    .meta-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .meta-info .category {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+    .meta-info .comments {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .card-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-top: 1rem;
+    }
+
+    .card-text {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+
+    .btn-learn-more {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        transition: background-color 0.2s;
+    }
+
+    .btn-learn-more:hover {
+        background-color: #fafafa;
+        color: var(--primary-color);
+        border: 1px solid #001531;
+
+    }
+
+    .pagination {
+        margin-top: 3rem;
+    }
+
+    .page-link {
+        color: var(--primary-color);
+        border: none;
+        padding: 8px 16px;
+    }
+
+    .page-link.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+</style>
+<div class="d-flex align-items-center justify-content-end" style="height: 8vh; background: #001531;">
+    <!-- <div class="container banner-text-container" style="color: #dee7e9;">
+        <div style="font-size: 36px">
+            <b>Payment checkout</b>
+        </div>
+        <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>Payment checkout</b></span></p>
+    </div> -->
+</div>
+<section>
+    <div class="container py-5">
+        <h1 class="main-title text-center mb-5">BLOGS</h1>
+        <div class="row g-4">
+            {% for post in posts %}
+            <!-- Card 1 -->
+            <div class="col-lg-6 col-md-6 mb-5 d-flex">
+                <div class="blog-item w-100 d-flex flex-column">
+                    <img src="{{ post.image.url }}" alt="" class="img-fluid rounded">
+
+                    <div class="blog-item-content bg-white p-5 d-flex flex-column flex-grow-1">
+                        <div class="blog-item-meta bg-gray py-1">
+                            <span class="text-muted text-capitalize mr-3">
+                                <i class="fa-regular fa-pen-to-square mr-2"></i>
+                                {% for tag in post.tags.all %}
+                                {{ tag.name }}{% if not forloop.last %} |{% endif %}
+                                {% endfor %}
+                            </span>
+                            <span class="text-muted text-capitalize mr-3">
+                                <i class="fa-regular fa-message mr-2"></i>{{ post.comment_count }} Comments
+                            </span>
+                            <span class="text-black text-capitalize mr-3">
+                                <i class="fa-regular fa-clock mr-2"></i> {{ post.created_at|date:"d M" }}
+                            </span>
+                        </div>
+
+                        <h3 class="mb-3"><a class="card-title" href="{% url 'blog_post' post.id %}">{{ post.title }}</a>
+                        </h3>
+                        <p class="mb-4 card-text flex-grow-1">{{ post.content|truncatewords:30 }}</p>
+
+                        <a href="{% url 'blog_post' post.id %}"
+                            class="btn-learn-more btn btn-small btn-main btn-round-full mt-auto">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        <!-- Pagination -->
+        <!-- <div class="d-flex justify-content-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">PREV</a></li>
+                    <li class="page-item"><a class="page-link active" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">NEXT</a></li>
+                </ul>
+            </nav>
+        </div> -->
+    </div>
+</section>
+
+{% endblock %}

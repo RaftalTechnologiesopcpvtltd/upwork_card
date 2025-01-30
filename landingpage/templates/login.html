@@ -1,0 +1,297 @@
+{% load static %} {% load form_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <!-- <style>
+      body {
+        font-size: 12px;
+      }
+
+      .dotted-hr {
+        border: none;
+        border-top: 2px dotted #4743e0;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      .question_tooltip {
+        opacity: 0.3;
+        margin-bottom: 4px;
+      }
+
+      .right-bg {
+        background: #f9faff;
+        width: 61%;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: -1;
+      }
+
+      .right-img {
+        background-image: url("{% static 'images/Layer 11.png' %}");
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 60vw;
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 100vh;
+        z-index: -1;
+      }
+
+      @media (max-width: 767px) {
+        .right-img {
+          margin-top: auto;
+          bottom: 0;
+          height: 30vh;
+        }
+      }
+
+      .input-container {
+        position: relative;
+      }
+
+      .input-container box-icon {
+        position: absolute;
+        top: 50%;
+        opacity: 0.4;
+        transform: translateY(-50%);
+        left: 10px;
+      }
+    </style> -->
+  <style>
+    body {
+      position: relative;
+      font-size: 12px;
+      background-color: #F9FAFF;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: right;
+      overflow-x: hidden;
+    }
+
+    .question_tooltip {
+      opacity: 0.3;
+      margin-bottom: 4px;
+    }
+
+    .dotted-hr {
+      border: none;
+      border-top: 2px dotted #4743e0;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* Use a pseudo-element to apply the background image */
+    body::before {
+      content: "";
+      position: fixed;
+      /* Ensure it covers the entire viewport */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("{% static 'images/Sposrtscard.jpg' %}");
+      /* background-image: url("./assets/images/slider/1.png"); */
+      background-size: cover;
+      background-position: right;
+      background-repeat: no-repeat;
+      opacity: 0.8;
+      /* Default opacity */
+      z-index: -1;
+      /* Ensure it is behind other content */
+      pointer-events: none;
+      /* Ensure it doesn't interfere with other elements */
+    }
+
+    @media (max-width: 991px) {
+      body::before {
+        opacity: 0.3;
+        /* Adjust opacity as needed */
+      }
+
+      .login {
+        background-color: transparent !important;
+      }
+
+      .TandC {
+        margin-left: 45px !important;
+      }
+
+      .submit-btn {
+        margin-right: auto;
+      }
+    }
+
+    .login {
+      height: 100vh;
+      background-color: #ffff;
+      padding: 7%;
+    }
+
+    .loginHead h2 {
+      font-weight: 700;
+      font-size: 54px;
+      line-height: 68px;
+      color: #001531;
+    }
+
+    .loginHead p {
+      /* margin-top: 10%; */
+      font-size: 14px;
+      line-height: 28px;
+      width: 80%;
+    }
+
+    input,
+    select {
+      border-radius: 0 !important;
+      height: 48px !important;
+    }
+
+    .form-check-input {
+      height: 24px !important;
+      width: 24px !important;
+    }
+
+    .question_tooltip.show {
+      background-color: #1b221b;
+      /* Background color for the tooltip content */
+      color: #f6e9e9;
+      /* Text color for the tooltip content */
+    }
+
+    #id_username {
+      margin-bottom: 10px;
+    }
+
+    #id_password,
+    #id_username {
+      border-radius: 10px !important;
+    }
+
+    .submit-btn {
+      background-color: #001531;
+      padding: 10px 16px;
+      font-size: 16px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #fff;
+      border: 2px solid;
+      border-radius: 10px;
+      -webkit-transition: all 0.3s ease-out 0s;
+      -moz-transition: all 0.3s ease-out 0s;
+      -ms-transition: all 0.3s ease-out 0s;
+      -o-transition: all 0.3s ease-out 0s;
+      transition: all 0.3s ease-out 0s;
+    }
+
+    .submit-btn:hover {
+      background-color: #ffff;
+      color: #001531;
+      border-color: #001531;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-lg-4 login">
+      {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="loginHead">
+        <h2>Login</h2>
+        <p class="my-5" style="text-align: left">
+          Please input your information in the fields below to enter your
+          journey platform.
+        </p>
+      </div>
+
+      <hr class="dotted-hr" />
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row">
+          <div class="col-md-8 mb-2" style="text-align: left; font-weight: 500; font-size: 16px;color: #333333;">
+            Email
+          </div>
+          <div class="col-md-4" style="text-align: right">
+            <img src="{% static 'images/question.png' %}" class="question_tooltip" alt="Question Image"
+              data-toggle="tooltip" title="Enter your Username" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{ form.username|add_class:"form-control" }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8 mb-2" style="text-align: left; font-weight: 500; font-size: 16px;color: #333333;">
+            Password
+          </div>
+          <div class="col-md-4" style="text-align: right">
+            <img src="{% static 'images/question.png' %}" class="question_tooltip" alt="Question Image"
+              data-toggle="tooltip" title="Enter your Password" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{ form.password|add_class:"form-control" }}
+          </div>
+        </div>
+        <br />
+
+        <hr class="dotted-hr" />
+        <div class="row mt-5 d-flex align-items-center">
+          <div class="col-md-6">
+            <div class="form-check d-flex align-items-center" style="float: left;">
+
+              <label for="remember_me" class="form-check-label" style="margin-left:10px; font-size: 14px; color: #001531; font-weight: 600;display: flex;align-items: center;gap: 10px;" for="rememberMe">
+                <input style="height: 15px; width: 15px; float: none" class="form-check-input" type="checkbox"
+                  name="remember_me" id="remember_me" required {% if form.remember_me.value%}checked{% endif %} />
+                Remember me
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 mt-3 mt-md-0 d-flex justify-content-center justify-content-md-end">
+            <button type="submit" id="loginBtn" class="submit-btn btn btn-primary">
+              Login
+            </button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+    <div class="col-lg-8 right-side"></div>
+  </div>
+</body>
+<script>
+  var errorlist = document.querySelector(".errorlist");
+  errorlist.classList.add("bg-danger");
+  errorlist.style.padding = "10px";
+  errorlist.style.borderRadius = "10px";
+  // errorlist.style.backgroundColor = "red"; // Adding previously defined style
+  errorlist.style.color = "white"; // Adding previously defined style
+  errorlist.style.fontWeight = "bold"; // Adding previously defined
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
+</html>
