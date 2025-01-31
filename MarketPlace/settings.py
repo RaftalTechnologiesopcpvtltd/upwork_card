@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+import stripe
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -150,3 +151,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 RAZORPAY_KEY_ID = "rzp_test_JMGoGO18bn9BfG"
 RAZORPAY_KEY_SECRET = "P39iyeaMhrpPWzzaIoOjkkSQ"
+
+
+# Stripe Ids
+STRIPE_PUBLIC_KEY = "pk_test_51QnDNFKyDQNgXXcfuWGjVkv8K8NHd96dOzmt3pvV3KEI1IE8XEL3innfTo4ylkqQ6yyTKGWBQhmDODaUPg9gSMuo00tgqhYzCN"
+STRIPE_SECRET_KEY = "sk_test_51QnDNFKyDQNgXXcfRG3TL2YAERvkqwisMZxdq2w6GIvznfjhA79S5wvuFMbJgCjcpn4D4HFcDpSfnF9l7JcBLGe100HRV7emeI"
+
+stripe.api_key = STRIPE_SECRET_KEY
