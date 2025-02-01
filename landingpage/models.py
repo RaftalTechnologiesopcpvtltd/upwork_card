@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
@@ -5,8 +6,6 @@ from django.conf import settings  # Import settings to access AUTH_USER_MODEL
 from datetime import timedelta
 from datetime import date
 from taggit.managers import TaggableManager  # Import taggit
-
-
 
 class CustomUser(AbstractUser):
     GENDER_CHOICES =(
@@ -70,11 +69,23 @@ class UserSubscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     plan = models.ForeignKey(Pricing, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
-    payment_id = models.CharField(max_length=100, null=True, blank=True)
-    receipt = models.CharField(max_length=100, null=True, blank=True)
+    subscription_id = models.CharField(max_length=100, null=True, blank=True)
+    customer_id = models.CharField(max_length=100, null=True, blank=True)
+    session_id = models.CharField(max_length=100, null=True, blank=True)
     payment_status = models.CharField(max_length=20, null=True, blank=True)
+    interval = models.CharField(max_length=50, default="month")
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+
+    @property
+    def is_active(self):
+        if self.end_date:
+            if now() < self.end_date:
+                return True
+            else:
+                return False
+        else:
+            return True
 
     def save(self, *args, **kwargs):
         # Ensure start_date is populated (auto_now_add works only on initial save)
