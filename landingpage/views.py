@@ -252,12 +252,19 @@ def subscribe_to_plan(request, plan_id):
                 "user_id" : request.user.id,
             }
         )
-        subscription = UserSubscription.objects.create(
-            user=request.user,
-            session_id = checkout_session.id,
-            plan=plan,
-            active=False
-            )
+        if active_subscription:
+            active_subscription.user=request.user
+            active_subscription.session_id = checkout_session.id
+            active_subscription.plan=plan
+            active_subscription.active=False
+            active_subscription.save() 
+        else:
+            UserSubscription.objects.create(
+                user=request.user,
+                session_id = checkout_session.id,
+                plan=plan,
+                active=False
+                )
         return redirect(checkout_session.url, code=303)
     
     # Check if the user already has an active subscription
@@ -436,8 +443,10 @@ def blog_post(request,post_id):
 
 
 def faq(request):
+    subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+
     faqs = FAQ.objects.all()
-    return render(request,"faq.html",{'faqs': faqs})
+    return render(request,"faq.html",{'faqs': faqs,'User_Subscription': subscription})
 
 
 

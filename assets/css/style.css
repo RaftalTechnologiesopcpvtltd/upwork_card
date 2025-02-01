@@ -2958,7 +2958,7 @@ p {
     color: #001531;
   }
 }
-.navbar-area .navbar .navbar-nav .nav-item a::before {
+/* .navbar-area .navbar .navbar-nav .nav-item a::before {
   position: absolute;
   content: "";
   width: 32px;
@@ -2987,7 +2987,7 @@ p {
   -ms-transform: translate(-50%) scaleX(0);
   -o-transform: translate(-50%) scaleX(0);
   transform: translate(-50%) scaleX(0);
-}
+} */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   .navbar-area .navbar .navbar-nav .nav-item a::before {
     display: none;

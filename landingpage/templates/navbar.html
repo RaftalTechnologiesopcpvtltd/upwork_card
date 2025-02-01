@@ -16,6 +16,16 @@
                     </button>
 
                     <div class="collapse navbar-collapse sub-menu-bar" id="navbarTwo">
+                        {% if User_Subscription.active %}
+                        <ul class="navbar-nav m-auto">
+                            <li class="nav-item active"><a class="page-scroll"href="{% url 'my_subscription' %}">My Subscription</a></li>
+                            <!-- <li class="nav-item"><a class="page-scroll" href="#services">Services</a></li> -->
+                            <!-- <li class="nav-item"><a class="page-scroll" href="#portfolio">Portfolio</a></li> -->
+                            <li class="nav-item"><a class="page-scroll"href="{% url 'blog_listings' %}">All Blogs</a></li>
+                            <li class="nav-item"><a class="page-scroll"href="{% url 'create_post' %}">Create Blogs</a></li>
+                            <li class="nav-item"><a class="page-scroll"href="{% url 'faq' %}">FAQs</a></li>
+                        </ul>
+                        {% else %}
                         <ul class="navbar-nav m-auto">
                             <li class="nav-item active"><a class="page-scroll" href="{% url 'landingpage' %}">home</a></li>
                             <!-- <li class="nav-item"><a class="page-scroll" href="#services">Services</a></li> -->
@@ -26,6 +36,7 @@
                             <li class="nav-item"><a class="page-scroll" href="#contact">Contact</a></li>
                             <li class="nav-item"><a class="page-scroll" href="#about">About</a></li>
                         </ul>
+                        {% endif %}
                     </div>
 
                     <div class="navbar-btn d-sm-inline-block">
@@ -40,13 +51,7 @@
                                 <ul class="dropdown-menu m-0 p-0" style="min-width: 0;">
                                     <li class="solid_dropdown w-100">
                                         <a class="nav-link dropdown-item"href="{% url 'logout' %}">Logout</a>
-                                        {% if User_Subscription.active %}
-                                        <a class="nav-link dropdown-item"href="{% url 'my_subscription' %}">My Subscription</a>
-                                        <a class="nav-link dropdown-item"href="{% url 'blog_listings' %}">All Blogs</a>
-                                        <a class="nav-link dropdown-item"href="{% url 'create_post' %}">Create Blogs</a>
-                                        {% else %}
-                                        <a class="nav-link dropdown-item"href="#pricing">My Subscription</a>
-                                        {% endif %}
+                                        
                                     </li>
                                 </ul>
                             </li>
