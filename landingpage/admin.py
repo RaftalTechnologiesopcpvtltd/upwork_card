@@ -68,3 +68,12 @@ admin.site.register(BlogPost, BlogPostAdmin)
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'created_at')
     search_fields = ('question', 'answer')
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['website_name', 'product_title', 'product_price', 'brand', 'category', 'updated']
+    search_fields = ['website_name', 'product_title', 'brand', 'category']
+    list_filter = ['is_closed', 'certified_seller', 'status']
+    ordering = ['updated']
+    list_per_page = 20  # Adjust this number based on your preference
+
+admin.site.register(Product, ProductAdmin)
