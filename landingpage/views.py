@@ -226,9 +226,8 @@ def subscribe_to_plan(request, plan_id):
     plan = get_object_or_404(Pricing, id=plan_id)
 
     subscription_prod = {
-        'Basic' : 'price_1QnDS7KyDQNgXXcfY5HXXEuy',
-        'Advance' : 'price_1QnDSsKyDQNgXXcf9Kakv0m4',
-        'Pro' : 'price_1QnDTQKyDQNgXXcfsw1EIPtv',
+        'Monthly' : 'price_1QtpecKyDQNgXXcfn7iWYSRF',
+        'Yearly' : 'price_1Qtpk3KyDQNgXXcfzS4EApeg',
     }
     try:
         active_subscription = UserSubscription.objects.get(user=request.user)

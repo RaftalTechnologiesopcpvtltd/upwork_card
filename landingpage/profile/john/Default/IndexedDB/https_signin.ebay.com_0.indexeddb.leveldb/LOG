@@ -1,0 +1,8 @@
+2025/02/06-13:56:34.651 58dc Reusing MANIFEST d:\FAIZ\office work\dev project\profile\john\Default\IndexedDB\https_signin.ebay.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/02/06-13:56:34.652 58dc Recovering log #4
+2025/02/06-13:56:34.654 58dc Reusing old log d:\FAIZ\office work\dev project\profile\john\Default\IndexedDB\https_signin.ebay.com_0.indexeddb.leveldb/000004.log 
+2025/02/06-13:56:34.665 6dec Level-0 table #8: started
+2025/02/06-13:56:34.668 6dec Level-0 table #8: 2653 bytes OK
+2025/02/06-13:56:34.671 6dec Delete type=0 #4
+2025/02/06-13:56:34.672 19cc Manual compaction at level-0 from '\x00\x06\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x07\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/02/06-13:56:34.683 6dec Manual compaction at level-0 from '\x00\x07\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x08\x00\x00\x00' @ 0 : 0; will stop at (end)

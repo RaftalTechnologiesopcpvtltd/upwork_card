@@ -1,0 +1,4 @@
+2025/02/18-16:38:29.411 2a5c Reusing MANIFEST D:\FAIZ\office work\dev project\profile\john\Default\IndexedDB\https_offerup.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/02/18-16:38:29.412 2a5c Recovering log #305
+2025/02/18-16:38:29.412 2a5c Reusing old log D:\FAIZ\office work\dev project\profile\john\Default\IndexedDB\https_offerup.com_0.indexeddb.leveldb/000305.log 
+2025/02/18-16:38:29.725 2508 Manual compaction at level-0 from '\x00\xae\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\xaf\x00\x00\x00' @ 0 : 0; will stop at (end)
