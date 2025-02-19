@@ -15,6 +15,8 @@ from django.http import JsonResponse
 import stripe
 from datetime import datetime
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 def Landing_page(request):
 
@@ -201,7 +203,7 @@ def login_view(request):
 #         return HttpResponseBadRequest()
 
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 # def create_checkout_session(request):
 #     if request.method == "POST":
@@ -259,11 +261,11 @@ def subscribe_to_plan(request, plan_id):
             active_subscription.save() 
         else:
             UserSubscription.objects.create(
-                user=request.user,
-                session_id = checkout_session.id,
-                plan=plan,
-                active=False
-                )
+            user=request.user,
+            session_id = checkout_session.id,
+            plan=plan,
+            active=False
+            )
         return redirect(checkout_session.url, code=303)
     
     # Check if the user already has an active subscription
@@ -382,6 +384,8 @@ def my_subscription(request):
     View the current active subscription.
     """
     subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    # stripe_subscription = stripe.Subscription.retrieve(subscription.subscription_id)
+    # print(stripe_subscription)
     return render(request, 'my_subscription.html', {'User_Subscription': subscription})
 
 def create_post(request):
@@ -447,6 +451,105 @@ def faq(request):
     faqs = FAQ.objects.all()
     return render(request,"faq.html",{'faqs': faqs,'User_Subscription': subscription})
 
+
+def cancel_subscription(request):
+    try:
+        subscription_id = request.POST.get("subscription_id")
+        cancel_now = request.POST.get("cancel_now", False)  # Default: Cancel at end of period
+        subscription = UserSubscription.objects.filter(user=request.user, subscription_id=subscription_id)
+
+        print("subscription_id :",subscription_id)
+        print("cancel_now: ",cancel_now)
+
+        if cancel_now:
+            stripe.Subscription.delete(subscription_id)  # Cancel Immediately
+            subscription.delete()
+            print(subscription)
+            return redirect("my_subscription")
+        else:
+            stripe.Subscription.modify(subscription_id, cancel_at_period_end=True)  # Cancel at end
+            return redirect("my_subscription")
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+def resume_subscription(request):
+    try:
+        subscription_id = request.POST.get("subscription_id")
+
+        stripe.Subscription.modify(subscription_id, cancel_at_period_end=False)
+
+        return JsonResponse({"message": "Subscription resumed successfully."})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+def update_subscription(request):
+    try:
+        subscription_prod = {
+            'Yearly' : 'price_1Qtpk3KyDQNgXXcfzS4EApeg',
+        }
+        subscriptionId = request.POST.get("subscription_id")
+        stripe_subscription = stripe.Subscription.retrieve(subscriptionId)
+        subscription_id = stripe_subscription.get('items').get('data')[0].get('id')
+        Pricings = Pricing.objects.filter(price_heading="Yearly").first()
+        print(Pricings)
+
+        plan = request.POST.get("plan")
+        print("subscription_id :",subscription_id)
+        price_id = subscription_prod.get(plan)
+        print("plan: ",plan)
+        print("price_id: ",price_id)
+
+        subscription = stripe.SubscriptionItem.modify(
+            subscription_id,
+            price=price_id,  # New price ID
+            payment_behavior="allow_incomplete",  # Handle failed payments
+            proration_behavior="create_prorations",  # Adjust billing for changes
+        )
+        subscription_info = stripe.Subscription.retrieve(subscriptionId)
+        subscription = UserSubscription.objects.get(subscription_id=subscriptionId)
+        subscription.plan = Pricings
+        price = subscription_info['items']['data'][0]['price']
+        product_id = price['product']
+        subscription.interval = price['recurring']['interval']
+        subscription.start_date = datetime.fromtimestamp(int(subscription_info['current_period_start']))
+        subscription.end_date = datetime.fromtimestamp(int(subscription_info['current_period_end']))  # ✅ Fixed key
+
+        subscription.save()
+
+        return redirect("my_subscription")
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+def check_unpaid_invoices(request):
+    try:
+        customer_id = request.GET.get("customer_id",'cus_RnQlbssw0HORXa')
+
+        invoices = stripe.Invoice.list(customer=customer_id)
+        # unpaid_invoices = [{"id": inv.id, "amount_due": inv.amount_due} for inv in invoices]
+        unpaid_invoices = invoices
+
+        return JsonResponse({"unpaid_invoices": unpaid_invoices})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+def process_refund(request):
+    try:
+        charge_id = request.POST.get("charge_id")
+        amount = int(request.POST.get("amount"))  # Amount in cents
+
+        refund = stripe.Refund.create(charge=charge_id, amount=amount)
+
+        return JsonResponse({"message": "Refund processed successfully.", "refund_id": refund.id})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
 
 @login_required
