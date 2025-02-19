@@ -15,4 +15,10 @@ urlpatterns = [
     path('faq/', views.faq, name='faq'),
     path("payment-success/", views.payment_success, name="payment_success"),
     path("payment-failed/", views.payment_failed, name="payment_failed"),
+    path("cancel-subscription/", views.cancel_subscription, name="cancel_subscription"),
+    path("resume-subscription/", views.resume_subscription, name="resume_subscription"),
+    path("update-subscription/", views.update_subscription, name="update_subscription"),
+    path("check-unpaid-invoices/", views.check_unpaid_invoices, name="check_unpaid_invoices"),
+    path("process-refund/", views.process_refund, name="process_refund"),
+
 ]
