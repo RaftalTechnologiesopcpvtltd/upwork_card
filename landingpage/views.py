@@ -328,6 +328,11 @@ def payment_success(request):
 
         # Update subscription status in database
         subscription_id = session.subscription
+        stripe.Subscription.modify(
+            subscription_id,
+            cancel_at_period_end=True
+        )
+
         customer_id = session.customer
 
         subscription = UserSubscription.objects.get(session_id=session_id)
@@ -356,18 +361,104 @@ def payment_success(request):
 def payment_failed(request):
     return render(request, "paymentfail.html")
 
+
+
+import ast
+from django.http import JsonResponse
+from .models import Product
+
+def product_search(request):
+    query = request.GET.get("query", "").strip()
+
+    if query:
+        products = Product.objects.filter(product_title__icontains=query)  # Limit to 10 results
+        results = []
+
+        for p in products:
+            product_images_str = p.product_images
+
+            if product_images_str:
+                try:
+                    product_images_list = ast.literal_eval(product_images_str)  # Convert string to list
+                except (SyntaxError, ValueError):
+                    product_images_list = []
+            else:
+                product_images_list = []
+
+            results.append({
+                "id": p.id,
+                "title": p.product_title,
+                "link": p.product_link,
+                "website_name": p.website_name,
+                "price": p.product_price,
+                "image": product_images_list[0] if product_images_list else "",  # Handle missing images
+            })
+    else:
+        results = []
+
+    return JsonResponse({"products": results})
+
+
+
+import ast
+
+
 @login_required
 def dashboard_view(request):
     """
     Dashboard view for users with an active subscription.
     """
     slidders = Slidder.objects.all()
+    today = now().date()
+
+    print(today)
+
+    
+
 
     try:
+        # Fetch all products
+        products = Product.objects.all()
+        # List to store all products with formatted images
+        all_products = []
+
+        # Loop through each product
+        for product in products:
+            # Convert product_images (string) to a real list
+            product_images_str = product.product_images
+
+            if product_images_str:
+                try:
+                    product_images_list = ast.literal_eval(product_images_str)
+                except (SyntaxError, ValueError):
+                    product_images_list = []
+            else:
+                product_images_list = []
+
+            # Construct the full product object
+            full_product = {
+                "id": product.id,
+                "website_name": product.website_name,
+                "product_link": product.product_link,
+                "product_title": product.product_title,
+                "product_price": product.product_price,
+                "product_images": product_images_list  # Now it's a real list
+            }
+
+            # Append to list
+            all_products.append(full_product)
+        print(all_products[10]['product_images'][0])
         subscription = UserSubscription.objects.get(user=request.user)
+        stripe_sub = stripe.Subscription.retrieve(subscription.subscription_id)
+        
+        if stripe_sub.status in ["canceled", "past_due", "unpaid"] or subscription.end_date <= today:
+            subscription.active = False
+            subscription.save(update_fields=['active'])
+            print(f"Subscription {subscription.id} deactivated")
+            
         if subscription.active:
             # Render the dashboard page if the subscription is active
-            return render(request, 'dashboard.html',{"slidders" : slidders,"User_Subscription" : subscription,})  # Replace with your dashboard template
+            return render(request, 'dashboard.html',{"slidders" : slidders,"User_Subscription" : subscription,"products" : all_products[:15],"today":today})  # Replace with your dashboard template
         else:
             # Redirect to landing page if the subscription is not active
             return redirect('landingpage')
@@ -387,6 +478,44 @@ def my_subscription(request):
     # stripe_subscription = stripe.Subscription.retrieve(subscription.subscription_id)
     # print(stripe_subscription)
     return render(request, 'my_subscription.html', {'User_Subscription': subscription})
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.headers.get("Stripe-Signature", "")
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+
+    print("endpoint_secret :",endpoint_secret)
+
+    print("Received Webhook:", payload)
+    print("Received Stripe Signature Header:", sig_header)
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        return JsonResponse({"error": "Invalid payload"}, status=400)
+    except stripe.error.SignatureVerificationError as e:
+        return JsonResponse({"error": "Invalid signature"}, status=400)
+
+    # Handle subscription events
+    if event["type"] in ["customer.Subscription.retrieve"]:
+        subscription_data = event["data"]["object"]
+        stripe_subscription_id = subscription_data["id"]
+        status = subscription_data["status"]  # active, canceled, past_due, etc.
+
+        # Find and cancel the subscription in Django
+        subscription = UserSubscription.objects.filter(stripe_subscription_id=stripe_subscription_id).first()
+        if subscription and status in ["canceled", "past_due", "unpaid"]:
+            subscription.active = False
+            subscription.save(update_fields=['active'])
+            print(f"Subscription {stripe_subscription_id} marked as inactive")
+
+    return JsonResponse({"status": "success"})
+
+
 
 def create_post(request):
     subscription = UserSubscription.objects.filter(user=request.user, active=True).first()

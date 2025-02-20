@@ -20,5 +20,6 @@ urlpatterns = [
     path("update-subscription/", views.update_subscription, name="update_subscription"),
     path("check-unpaid-invoices/", views.check_unpaid_invoices, name="check_unpaid_invoices"),
     path("process-refund/", views.process_refund, name="process_refund"),
-
+    path("stripe-webhook/", views.stripe_webhook, name="stripe_webhook"),
+    path("search/", views.product_search, name="product_search"),
 ]
