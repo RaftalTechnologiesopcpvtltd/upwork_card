@@ -37,6 +37,25 @@
         gap: 10px;
         justify-content: space-evenly;
     }
+
+    .suggestions {
+        /* border: 0.5px solid #ccc; */
+        max-height: 200px;
+        overflow-y: auto;
+        /* position: absolute; */
+        width: 100%;
+        background: white;
+        z-index: 1000;
+    }
+
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+        background: #f2f2f2;
+    }
 </style>
 
 
@@ -62,9 +81,10 @@
                 <div class="row">
                     <div class="col-lg-12 mb-3">
                         <label for="searchInput" class="form-label">Search</label>
-                        <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Type to search...">
+                        <div id="suggestions" class="suggestions"></div>
                     </div>
-                    <div class="col-lg-12">
+                    <!-- <div class="col-lg-12">
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="dateFilter" class="form-label">Date</label>
@@ -93,36 +113,19 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
-                <div class="text-center mt-3">
+                <!-- <div class="text-center mt-3">
                     <button id="searchBtn" class="btn-subscribe btn-dark-custom btn mr-2">Search</button>
                     <button id="clearBtn" class="btn btn-subscribe clear_btn">Clear All</button>
-                </div>
+                </div> -->
             </div>
         </div>
 
         <div id="results">
             <!-- Example result item -->
             <div class="category-container">
-                {% for i in "123456" %}
-                <div class="my-5" data-category="">
-                    <a href="">
-                        <div
-                            style="width: 18rem; border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
-                            <div
-                                style="display: flex; justify-content: center; height: 230.5px !important; width: 230.5px !important; overflow: hidden; padding: 8%; margin-left: 12%;">
-                                <img src="{% static 'images/Sposrtscard2.jpg' %}" class="img-fluid" alt="">
-                            </div>
-                        </div>
-                        <h5 style="font-size: 18px !important; line-height: 18px !important; font-weight: 700 !important;"
-                            class="mt-4 card-title">Product {{ i }}</h5>
-                            <h6 class="mt-4 card-title">Market Place : Ebay</h6>
-                            <h6 class="mt-4 card-title">Status : Sold</h6>
-                            <h6 class="mt-4 card-title">Dated : 2025-02-01</h6>
-                    </a>
-                </div>
-                {% endfor %}
+
             </div>
             <!-- More result items will be dynamically added here -->
         </div>
@@ -134,62 +137,48 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    // Sample Data for results (replace with actual dynamic data in your implementation)
-    const sampleResults = [
-        { name: "Product 1", marketplace: "eBay", status: "Sold", date: "2025-01-01" },
-        { name: "Product 2", marketplace: "Amazon", status: "Unsold", date: "2025-02-01" },
-        { name: "Product 3", marketplace: "Etsy", status: "Sold", date: "2025-01-15" },
-    ];
+    $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+            let query = $(this).val().trim();
 
-    // Function to display filtered results
-    // function displayResults(results) {
-    //     const resultsContainer = document.getElementById('results');
-    //     resultsContainer.innerHTML = '';
-    //     results.forEach(item => {
-    //         const resultItem = document.createElement('div');
-    //         resultItem.classList.add('result-item');
-    //         resultItem.innerHTML = `
-    //                 <h5>${item.name}</h5>
-    //                 <p>Marketplace: ${item.marketplace}</p>
-    //                 <p>Status: ${item.status}</p>
-    //                 <p>Date: ${item.date}</p>
-    //             `;
-    //         resultsContainer.appendChild(resultItem);
-    //     });
-    // }
+            if (query.length > 1) {  // Only search when at least 2 characters
+                $.ajax({
+                    url: "/search/",
+                    type: "GET",
+                    data: { query: query },
+                    success: function (response) {
+                        let resultsContainer = $(".category-container");
+                        resultsContainer.empty();
 
-    // Search button click event
-    document.getElementById('searchBtn').addEventListener('click', () => {
-        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-        const dateFilter = document.getElementById('dateFilter').value;
-        const soldFilter = document.getElementById('soldFilter').value;
-        const marketplaceFilter = document.getElementById('marketplaceFilter').value;
-
-        const filteredResults = sampleResults.filter(item => {
-            return (
-                (searchQuery === '' || item.name.toLowerCase().includes(searchQuery)) &&
-                (dateFilter === '' || (dateFilter === 'new' && new Date(item.date) > new Date()) ||
-                    (dateFilter === 'latest' && new Date(item.date) > new Date() - 7 * 24 * 60 * 60 * 1000) ||
-                    (dateFilter === 'old' && new Date(item.date) < new Date())) &&
-                (soldFilter === '' || item.status.toLowerCase() === soldFilter) &&
-                (marketplaceFilter === '' || item.marketplace.toLowerCase() === marketplaceFilter)
-            );
+                        if (response.products.length > 0) {
+                            response.products.forEach(product => {
+                                let productHTML = `
+                                    <div class="my-5" data-category="">
+                                        <a href="${product.link}" target="_blank">
+                                            <div style="width: 18rem; border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
+                                                <div style="display: flex; justify-content: center; height: 230.5px !important; width: 230.5px !important; overflow: hidden; padding: 8%; margin-left: 12%;">
+                                                    <img src="${product.image}" class="img-fluid" alt="${product.title}">
+                                                </div>
+                                            </div>
+                                            <h5 style="font-size: 18px !important; line-height: 18px !important; font-weight: 700 !important;"
+                                                class="mt-4 card-title">${product.title}</h5>
+                                            <h6 class="mt-4 card-title">Market Place : ${product.website_name}</h6>
+                                            <h6 class="mt-4 card-title">Price : ${product.price}</h6>
+                                            <h6 class="mt-4 card-title">Dated : ${product.date}</h6>
+                                        </a>
+                                    </div>
+                                `;
+                                resultsContainer.append(productHTML);
+                            });
+                        } else {
+                            resultsContainer.html("<p>No products found.</p>");
+                        }
+                    }
+                });
+            } else {
+                $(".category-container").empty(); // Clear results if input is empty
+            }
         });
-
-        displayResults(filteredResults);
     });
-
-    // Clear button click event
-    document.getElementById('clearBtn').addEventListener('click', () => {
-        document.getElementById('searchInput').value = '';
-        document.getElementById('dateFilter').value = '';
-        document.getElementById('soldFilter').value = '';
-        document.getElementById('marketplaceFilter').value = '';
-
-        displayResults(sampleResults); // Reset results to show all
-    });
-
-    // Initial display of all results
-    displayResults(sampleResults);
 </script>
 {% endblock %}

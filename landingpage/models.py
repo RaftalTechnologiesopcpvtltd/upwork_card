@@ -6,6 +6,8 @@ from django.conf import settings  # Import settings to access AUTH_USER_MODEL
 from datetime import timedelta
 from datetime import date
 from taggit.managers import TaggableManager  # Import taggit
+import stripe
+from django.conf import settings
 
 from django.db import models
 
@@ -133,13 +135,20 @@ class UserSubscription(models.Model):
 
     @property
     def is_active(self):
-        if self.end_date:
-            if now() < self.end_date:
-                return True
-            else:
-                return False
-        else:
-            return True
+        # 🔹 Check if the subscription has ended
+        if self.end_date and now().date() >= self.end_date:
+            return False  # Mark inactive if end date has passed
+
+        # 🔹 Also check Stripe for real-time subscription status
+        try:
+            stripe.api_key = settings.STRIPE_SECRET_KEY
+            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+            if subscription.status in ["canceled", "past_due", "unpaid"]:
+                return False  # Mark inactive if canceled in Stripe
+        except Exception as e:
+            print(f"Error fetching Stripe subscription: {e}")
+
+        return True  # Active otherwise
 
     def save(self, *args, **kwargs):
         # Ensure start_date is populated (auto_now_add works only on initial save)
