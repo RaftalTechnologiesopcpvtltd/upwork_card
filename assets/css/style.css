@@ -2854,7 +2854,7 @@ p {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 10px 0;
+  padding: 0;
   z-index: 99;
 }
 .navbar-area .navbar-brand {
@@ -2958,36 +2958,7 @@ p {
     color: #001531;
   }
 }
-/* .navbar-area .navbar .navbar-nav .nav-item a::before {
-  position: absolute;
-  content: "";
-  width: 32px;
-  height: 4px;
-  background: -webkit-linear-gradient(
-    left,
-    rgba(255, 255, 255, 0.1) 0%,
-    white 100%
-  );
-  background: -o-linear-gradient(left, rgba(255, 255, 255, 0.1) 0%, white 100%);
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.1) 0%,
-    white 100%
-  );
-  left: 50%;
-  margin: 0 2px;
-  bottom: 14px;
-  -webkit-transition: all 0.3s ease-out 0s;
-  -moz-transition: all 0.3s ease-out 0s;
-  -ms-transition: all 0.3s ease-out 0s;
-  -o-transition: all 0.3s ease-out 0s;
-  transition: all 0.3s ease-out 0s;
-  -webkit-transform: translate(-50%) scaleX(0);
-  -moz-transform: translate(-50%) scaleX(0);
-  -ms-transform: translate(-50%) scaleX(0);
-  -o-transform: translate(-50%) scaleX(0);
-  transform: translate(-50%) scaleX(0);
-} */
+
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   .navbar-area .navbar .navbar-nav .nav-item a::before {
     display: none;
@@ -3037,43 +3008,49 @@ p {
     top: 7px;
   }
 }
-.navbar-area .navbar .navbar-btn li {
+.navbar-area .navbar .navbar-btn {
   display: inline-block;
   margin-right: 5px;
 }
-.navbar-area .navbar .navbar-btn li a {
+.navbar-area.sticky .navbar .navbar-btn a {
+  color: #001531;
+}
+.navbar-area .navbar .navbar-btn .dropdown-item{
+  color: #001531 !important;
+}
+.navbar-area .navbar .navbar-btn a {
   padding: 10px 16px;
   font-size: 16px;
   text-transform: uppercase;
   font-weight: 700;
   color: #fff;
-  border: 2px solid;
-  border-radius: 4px;
+  /* border: 2px solid;
+  border-radius: 4px; */
   -webkit-transition: all 0.3s ease-out 0s;
   -moz-transition: all 0.3s ease-out 0s;
   -ms-transition: all 0.3s ease-out 0s;
   -o-transition: all 0.3s ease-out 0s;
   transition: all 0.3s ease-out 0s;
 }
-.navbar-area .navbar .navbar-btn li a.light {
+.navbar-area .navbar .navbar-btn a.light {
   border-color: #fff;
 }
-.navbar-area .navbar .navbar-btn li a.light:hover {
+.navbar-area .navbar .navbar-btn a.light:hover {
   background-color: rgba(255, 255, 255, 0.4);
 }
-.navbar-area .navbar .navbar-btn li a.solid {
+.navbar-area .navbar .navbar-btn a.solid {
   background-color: #fff;
   border-color: #fff;
   color: #001531;
 }
 
-.navbar-area .navbar .navbar-btn li a.solid:hover {
+.navbar-area .navbar .navbar-btn a.solid:hover {
   background-color: transparent;
   color: #fff;
 }
 
 .navbar-area.sticky {
-  height: 80px;
+  height: auto;
   background-color: #fff;
   z-index: 999;
   position: fixed;
@@ -3106,11 +3083,11 @@ p {
   color: #001531;
   opacity: 1;
 }
-.navbar-area.sticky .navbar .navbar-btn li a.light {
+.navbar-area.sticky .navbar .navbar-btn a.light {
   border-color: #001531;
   color: #001531;
 }
-.navbar-area.sticky .navbar .navbar-btn li a.solid {
+.navbar-area.sticky .navbar .navbar-btn a.solid {
   border-color: #001531;
   background-color: #001531;
   color: #fff;
@@ -3130,9 +3107,9 @@ p {
 
 /* Sticky navbar styling for solid_dropdown */
 .navbar-area.sticky .navbar .solid_dropdown a {
-  border-color: #001531 !important;
   background-color: #001531 !important;
   color: #fff !important;
+  border-color: #fff !important;
 }
 
 /*===========================
@@ -3144,7 +3121,10 @@ p {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+.maincarousel-item {
   height: 100vh;
+
 }
 
 /* Background Overlay for Carousel Items */

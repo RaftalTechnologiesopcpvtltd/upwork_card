@@ -9,6 +9,7 @@ urlpatterns = [
     # path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
     path('my-subscription/', views.my_subscription, name='my_subscription'),
     path('my-dashboard/', views.dashboard_view, name='dashboard_view'),
+    path('my-profile/', views.profile, name='profile'),
     path('create/', views.create_post, name='create_post'),
     path('blog_listings/', views.blog_listings, name='blog_listings'),
     path('blog_post/<int:post_id>/', views.blog_post, name='blog_post'),

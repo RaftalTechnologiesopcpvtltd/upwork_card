@@ -14,13 +14,14 @@ from django.db.models import Count , Q
 from django.http import JsonResponse
 import stripe
 from datetime import datetime
+import ast
+from django.http import JsonResponse
+from .models import Product
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def Landing_page(request):
-
-
     faqs = FAQ.objects.all()
     slidders = Slidder.objects.all()
     Contact = Contactus.objects.all()
@@ -363,9 +364,7 @@ def payment_failed(request):
 
 
 
-import ast
-from django.http import JsonResponse
-from .models import Product
+
 
 def product_search(request):
     query = request.GET.get("query", "").strip()
@@ -466,8 +465,14 @@ def dashboard_view(request):
         # Redirect to landing page if no subscription exists
         return redirect('landingpage')
 
-
-
+@login_required
+def profile(request):
+    try:
+        subscription = UserSubscription.objects.get(user=request.user)
+        return render(request, 'profile.html',{"User_Subscription" : subscription})
+    except:
+        subscription = None
+    return render(request, 'profile.html')
 
 @login_required
 def my_subscription(request):
