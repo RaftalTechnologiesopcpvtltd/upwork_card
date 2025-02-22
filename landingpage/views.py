@@ -266,8 +266,8 @@ def subscribe_to_plan(request, plan_id):
             mode="subscription",
             customer_email=request.user.email,
             line_items=[{"price": subscription_id, "quantity": 1}],
-            success_url="http://127.0.0.1:8000/payment-success/?session_id={CHECKOUT_SESSION_ID}",
-            cancel_url="http://127.0.0.1:8000/payment-failed/",
+            success_url="https://buyredge.com/payment-success/?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url="https://buyredge.com/payment-failed/",
             metadata={
                 "user_id" : request.user.id,
             }
