@@ -1,0 +1,7 @@
+2025/02/06-13:38:41.291 6714 Creating DB d:\FAIZ\office work\dev project\profile\john\Default\IndexedDB\https_signin.ebay.com_0.indexeddb.leveldb since it was missing.
+2025/02/06-13:38:41.300 6714 Reusing MANIFEST d:\FAIZ\office work\dev project\profile\john\Default\IndexedDB\https_signin.ebay.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/02/06-13:38:41.315 15b4 Level-0 table #5: started
+2025/02/06-13:38:41.319 15b4 Level-0 table #5: 1762 bytes OK
+2025/02/06-13:38:41.321 15b4 Delete type=0 #3
+2025/02/06-13:38:41.322 6714 Manual compaction at level-0 from '\x00\x02\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x03\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/02/06-13:38:41.332 15b4 Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)

@@ -3,9 +3,9 @@
 
 {% block content %}
 <style>
-    #navbarTwo {
+    /* #navbarTwo {
         display: none !important;
-    }
+    } */
 
     .navbar-btn {
         margin-left: auto;
@@ -14,40 +14,76 @@
 <style>
     :root {
         --primary-color: #001531;
-        --secondary-color: #ffffff;
-        --text-color: #333333;
+        --secondary-color: #002b63;
+        --accent-color: #0056b3;
+        --text-color: #ffffff;
     }
+
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
-        color: var(--text-color);
+        background-color: #f0f4f8;
+        color: var(--primary-color);
     }
-    
+
     .card {
         border: none;
-        border-radius: 10px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
     }
-    .subscription-title {
-        color: var(--primary-color);
-        font-weight: bold;
+
+    .card-title {
+        color: #ffffff;
     }
-    .subscription-info {
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        padding: 20px;
+
+    .card:hover {
+        transform: translateY(-5px);
     }
-    .info-label {
-        font-weight: bold;
-        color: var(--primary-color);
-    }
-    .btn-primary {
+
+    .card-header {
         background-color: var(--primary-color);
-        border-color: var(--primary-color);
+        color: var(--text-color);
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .btn-primary {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+    .btn-outline-primary {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--accent-color);
+        color: var(--text-color);
+    }
+
+    .modal-content {
+        border-radius: 15px;
+    }
+
+    .modal-header {
+        background-color: var(--primary-color);
+        color: var(--text-color);
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
     }
 </style>
 
-<div class="d-flex align-items-center justify-content-end" style="height: 8vh; background: #001531;">
+<div class="d-flex align-items-center justify-content-end nav_section_block">
     <!-- <div class="container banner-text-container" style="color: #dee7e9;">
         <div style="font-size: 36px">
             <b>My Subscription</b>
@@ -56,45 +92,214 @@
     </div> -->
 </div>
 <section style="height: 80vh; display: flex; justify-content: center; align-items: center;">
-    <div class="w-50" >
-        <div class="justify-content-center">
-            <div class="">
-                <div class="card w-100">
-                    <div class="card-body p-4">
-                        {% if User_Subscription %}
-                        <h1 class="subscription-title mb-4 text-center">Your Active Subscription</h1>
-                        <div class="subscription-info">
-                            <div class="row text-center">
-                                <div class="col-md-6 mb-3">
-                                    <p class="info-label">Plan</p>
-                                    <p class="h4">{{ User_Subscription.plan.price_heading }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <p class="info-label">Price</p>
-                                    <p class="h4">${{ User_Subscription.plan.price }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <p class="info-label">Start Date</p>
-                                    <p>{{ User_Subscription.start_date }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p class="info-label">End Date</p>
-                                    <p>{{ User_Subscription.end_date }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="text-center py-5">
-                            <h1 class="subscription-title mb-4">No Active Subscription</h1>
-                            <p class="lead mb-4">You currently don't have any active subscription.</p>
-                            <a href="/pricing" class="btn btn-primary">View Plans</a>
-                        </div>
-                        {% endif %}
+
+    {% if User_Subscription %}
+    <div class="container py-4">
+
+        <h1 class="mb-4 text-center">Manage Your Subscription</h1>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="card-title h5 mb-0">Active Subscription Details</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 col-6 mb-3">
+                        <strong>Plan:</strong>
+                        <p>{{ User_Subscription.plan.price_heading }}</p>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <strong>Price:</strong>
+                        <p>${{ User_Subscription.plan.price }}/{{ User_Subscription.interval }}</p>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <strong>Start Date:</strong>
+                        <p>{{ User_Subscription.start_date }}</p>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <strong>End Date:</strong>
+                        <p>{{ User_Subscription.end_date }}</p>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row g-4">
+            {% if "Yearly" not in User_Subscription.plan.price_heading %}
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h3 class="card-title h5 mb-0">Upgrade Plan</h3>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <p>Upgrade your plan to access more features and benefits.</p>
+                        <button class="btn btn-dark-custom mt-auto" data-bs-toggle="modal"
+                            data-bs-target="#upgradeModal">Upgrade Now</button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        
+            <!-- <div class="col-md-{% if 'Yearly' not in User_Subscription.plan.price_heading %}4{% else %}6{% endif %}">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h3 class="card-title h5 mb-0">Modify Subscription</h3>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <p>Change your billing cycle or update payment method.</p>
+                        <button class="btn btn-dark-custom mt-auto" data-bs-toggle="modal"
+                            data-bs-target="#modifyModal">Modify Subscription</button>
+                    </div>
+                </div>
+            </div> -->
+        
+            <div class="col-md-{% if 'Yearly' not in User_Subscription.plan.price_heading %}6{% else %}12{% endif %}">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h3 class="card-title h5 mb-0">Cancel Subscription</h3>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <p>We're sorry to see you go. Choose a cancellation option:</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-danger mb-2 w-100" data-bs-toggle="modal"
+                                data-bs-target="#cancelImmediateModal">Cancel Immediately</button>
+                            <button class="btn btn-outline-danger w-100" data-bs-toggle="modal"
+                                data-bs-target="#cancelEndModal">Cancel at End of Billing Period</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>       
     </div>
+
+    <!-- Modals (unchanged) -->
+    <!-- Upgrade Modal -->
+    <div class="modal fade" id="upgradeModal" tabindex="-1" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="upgradeModalLabel">Upgrade Your Plan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Choose a new plan to upgrade:</p>
+                    <form method="POST" action="{% url 'update_subscription' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="subscription_id" value="{{ User_Subscription.subscription_id }}">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="plan" id="Yearly" value="Yearly"
+                                required>
+                            <label class="form-check-label" for="Yearly">
+                                Yearly Plan - $999/year
+                            </label>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Confirm Upgrade</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modify Subscription Modal -->
+    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifyModalLabel">Modify Your Subscription</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Change Billing Cycle</h6>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="billingCycle" id="monthlyBilling"
+                            value="monthly" checked>
+                        <label class="form-check-label" for="monthlyBilling">
+                            Monthly Billing
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="billingCycle" id="annualBilling"
+                            value="annual">
+                        <label class="form-check-label" for="annualBilling">
+                            Annual Billing (Save 10%)
+                        </label>
+                    </div>
+                    <h6>Update Payment Method</h6>
+                    <button class="btn btn-outline-primary btn-sm">Change Payment Method</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Immediate Modal -->
+    <div class="modal fade" id="cancelImmediateModal" tabindex="-1" aria-labelledby="cancelImmediateModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelImmediateModalLabel">Cancel Subscription Immediately</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to cancel your subscription immediately? Your access will be revoked
+                        right
+                        away, and you won't receive a refund for the remaining days of your billing period.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep My
+                        Subscription</button>
+                    <form method="POST" action="{% url 'cancel_subscription' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="subscription_id" value="{{ User_Subscription.subscription_id }}">
+                        <input type="hidden" name="cancel_now" value="True">
+                        <!-- <button type="submit" class="btn btn-warning">Cancel</button> -->
+                        <button type="submit" class="btn btn-danger">Yes, Cancel Immediately</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel at End of Billing Period Modal -->
+    <div class="modal fade" id="cancelEndModal" tabindex="-1" aria-labelledby="cancelEndModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelEndModalLabel">Cancel Subscription at End of Billing Period
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Your subscription will be canceled at the end of the current billing period (June 1, 2023).
+                        You'll continue to have access until then. Are you sure you want to proceed?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep My
+                        Subscription</button>
+                    <form method="POST" action="{% url 'cancel_subscription' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="subscription_id" value="{{ User_Subscription.subscription_id }}">
+                        <button type="submit" class="btn btn-danger">Yes, Cancel at End of Period</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <h1 class="subscription-title mb-4">No Active Subscription</h1>
+        <p class="lead mb-4">You currently don't have any active subscription.</p>
+        <a href="{% url 'landingpage' %}" class="btn btn-dark-custom">View Plans</a>
+    </div>
+    {% endif %}
 </section>
 
 {% endblock %}

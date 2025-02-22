@@ -6,6 +6,62 @@ from django.conf import settings  # Import settings to access AUTH_USER_MODEL
 from datetime import timedelta
 from datetime import date
 from taggit.managers import TaggableManager  # Import taggit
+import stripe
+from django.conf import settings
+
+from django.db import models
+
+class Product(models.Model):
+    website_name = models.CharField(max_length=255, null=True)
+    website_url = models.URLField(null=True)
+    product_link = models.URLField(null=True)
+    product_title = models.CharField(max_length=255, null=True)
+    product_images = models.TextField(null=True)  # A field to store image URLs as a comma-separated string
+    product_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    product_availability_status = models.CharField(max_length=100, null=True)
+    product_availability_quantity = models.IntegerField(null=True)
+    product_sold_quantity = models.IntegerField(null=True)
+    product_remaining_quantity = models.IntegerField(null=True)
+    description = models.TextField(null=True)
+    shipping = models.CharField(max_length=255, null=True)
+    est_arrival = models.CharField(max_length=255,null=True)
+    condition = models.CharField(max_length=255, null=True)
+    condition_id = models.CharField(max_length=100, null=True)
+    condition_descriptors = models.TextField(null=True)  # Using TextField to store descriptors as a string
+    condition_values = models.TextField(null=True)  # Using TextField to store values as a string
+    condition_additional_info = models.TextField(null=True)
+    brand = models.CharField(max_length=255, null=True)
+    category = models.CharField(max_length=255, null=True)
+    updated = models.CharField(max_length=255,null=True)
+    auction_id = models.CharField(max_length=100, null=True)
+    bid_count = models.IntegerField(null=True)
+    certified_seller = models.CharField(max_length=100,null=True)
+    current_bid = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    current_bid_currency = models.CharField(max_length=10, null=True)
+    favorited_count = models.IntegerField(null=True)
+    highest_bidder = models.CharField(max_length=255, null=True)
+    listing_id = models.CharField(max_length=100, null=True)
+    integer_id = models.IntegerField(null=True)
+    is_owner = models.CharField(max_length=100,null=True)
+    listing_type = models.CharField(max_length=100, null=True)
+    lot_string = models.CharField(max_length=100, null=True)
+    slug = models.SlugField(null=True)
+    starting_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    starting_price_currency = models.CharField(max_length=10, null=True)
+    is_closed = models.CharField(max_length=100,null=True)
+    user_bid_status = models.CharField(max_length=100, null=True)
+    user_max_bid = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    status = models.CharField(max_length=100, null=True)
+    return_terms_returns_accepted = models.CharField(max_length=100,null=True)
+    return_terms_refund_method = models.CharField(max_length=100, null=True)
+    return_terms_return_shipping_cost_payer = models.CharField(max_length=100, null=True)
+    return_terms_return_period_value = models.IntegerField(null=True)
+    return_terms_return_period_unit = models.CharField(max_length=50, null=True)
+    payment_methods = models.TextField(null=True)  # Store payment methods as a comma-separated string
+
+    def __str__(self):
+        return self.product_title
+
 
 class CustomUser(AbstractUser):
     GENDER_CHOICES =(
@@ -79,13 +135,20 @@ class UserSubscription(models.Model):
 
     @property
     def is_active(self):
-        if self.end_date:
-            if now() < self.end_date:
-                return True
-            else:
-                return False
-        else:
-            return True
+        # 🔹 Check if the subscription has ended
+        if self.end_date and now().date() >= self.end_date:
+            return False  # Mark inactive if end date has passed
+
+        # 🔹 Also check Stripe for real-time subscription status
+        try:
+            stripe.api_key = settings.STRIPE_SECRET_KEY
+            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+            if subscription.status in ["canceled", "past_due", "unpaid"]:
+                return False  # Mark inactive if canceled in Stripe
+        except Exception as e:
+            print(f"Error fetching Stripe subscription: {e}")
+
+        return True  # Active otherwise
 
     def save(self, *args, **kwargs):
         # Ensure start_date is populated (auto_now_add works only on initial save)
