@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-r94vjuxyy*@!kx^pk_djkxy0mt$9)t$q=q6u&mk=td2zaptknh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["buyredge.com","www.buyredge.com"]
 
 AUTH_USER_MODEL = 'landingpage.CustomUser'
 
