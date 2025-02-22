@@ -131,8 +131,11 @@ p {
 }
 @media (max-width: 767px) {
   .section-title .title {
-    font-size: 30px;
     line-height: 35px;
+  }
+  .faq-title
+  {
+    font-size: 33px !important;
   }
 }
 .section-title .text {

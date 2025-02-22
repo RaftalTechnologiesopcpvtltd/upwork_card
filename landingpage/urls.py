@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.Landing_page, name='landingpage'),  # Default route for the landing page
+    path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('subscribe/<int:plan_id>/', views.subscribe_to_plan, name='subscribe_to_plan'),
