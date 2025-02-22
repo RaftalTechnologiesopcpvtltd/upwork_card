@@ -23,7 +23,7 @@ jobs:
     - name: Deploy to server
       run: |
         ssh -i ~/.ssh/id_rsa ubuntu@3.147.77.165 << 'EOF'
-          cd \home\ubuntu\upwork_card  # Replace with actual project path
+          cd \home\ubuntu\upwork_card  # Replace with actual project pat
           git pull origin main  # Change branch if needed
           source /home/ubuntu/env/bin/activate  # Replace with actual virtualenv path
           pip install --upgrade pip
