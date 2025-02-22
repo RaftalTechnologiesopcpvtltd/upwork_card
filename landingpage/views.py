@@ -16,7 +16,8 @@ import stripe
 from datetime import datetime
 import ast
 from django.http import JsonResponse
-from .models import Product
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -92,6 +93,23 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 
+def register_view(request):
+    if request.method == 'POST':
+        data = request.POST.copy()
+        data['username'] = data['email']
+        form = CustomUserCreationForm(data)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Registration successful.")
+            login(request, user)
+            return redirect('login')
+        else:
+            # print("Form is invalid")
+            print(form.errors.as_data())  # Print detailed form errors
+            messages.error(request, "Unsuccessful registration. Please correct the errors below.")
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
 # # Initialize logger
 # logger = logging.getLogger(__name__)

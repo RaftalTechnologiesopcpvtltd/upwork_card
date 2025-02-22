@@ -9,28 +9,28 @@ from .models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('email', 'username', 'first_name', 'last_name','gender','address','city','country','zip_code')
+        fields = ('email', 'username', 'first_name', 'last_name','gender','phone_number', 'country_code','address','city','country','zip_code')
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'first_name', 'last_name','gender','address','city','country','zip_code')
+        fields = ('email', 'username', 'first_name', 'last_name','gender','phone_number', 'country_code','address','city','country','zip_code')
 
 class CustomUserAdmin(BaseUserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ['email', 'username', 'first_name', 'last_name','gender','is_staff','address','city','country','zip_code']
+    list_display = ['email', 'username', 'first_name', 'last_name','gender','phone_number', 'country_code','is_staff','address','city','country','zip_code']
     fieldsets = (
         (None, {'fields': ('email', 'username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'gender','address','city','country','zip_code')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'gender','phone_number', 'country_code','address','city','country','zip_code')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'last_name', 'category', 'gender','password1', 'password2', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions','address','city','country','zip_code'),
+            'fields': ('email', 'username', 'first_name', 'last_name', 'category', 'gender','phone_number', 'country_code','password1', 'password2', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions','address','city','country','zip_code'),
         }),
     )
     search_fields = ('email', 'username', 'first_name', 'last_name', 'category')
