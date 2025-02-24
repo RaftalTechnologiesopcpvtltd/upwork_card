@@ -63,6 +63,7 @@
                             {% endif %}
                             <li class="nav-item"><a class="page-scroll" href="#contact">Contact</a></li>
                             <li class="nav-item"><a class="page-scroll" href="#about">About</a></li>
+                            <li class="nav-item"><a class="page-scroll" href="{% url 'faq' %}">FAQs</a></li>
                             {% if user.is_authenticated %}
                             <li class="nav-item"><a class="page-scroll" href="{% url 'profile' %}">My profile</a>
                             </li>
