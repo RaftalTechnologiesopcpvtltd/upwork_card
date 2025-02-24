@@ -266,8 +266,8 @@ def subscribe_to_plan(request, plan_id):
             mode="subscription",
             customer_email=request.user.email,
             line_items=[{"price": subscription_id, "quantity": 1}],
-            success_url="https://buyredge.com/payment-success/?session_id={CHECKOUT_SESSION_ID}",
-            cancel_url="https://buyredge.com/payment-failed/",
+            success_url=f"{request.scheme}://{request.get_host()}/payment-success/?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{request.scheme}://{request.get_host()}/payment-failed/",
             metadata={
                 "user_id" : request.user.id,
             }
@@ -386,7 +386,7 @@ def payment_failed(request):
 
 def product_search(request):
     query = request.GET.get("query", "").strip()
-
+    today = now().date()
     if query:
         products = Product.objects.filter(product_title__icontains=query)  # Limit to 10 results
         results = []
@@ -409,15 +409,93 @@ def product_search(request):
                 "website_name": p.website_name,
                 "price": p.product_price,
                 "image": product_images_list[0] if product_images_list else "",  # Handle missing images
+                "date" : today,
             })
     else:
         results = []
 
     return JsonResponse({"products": results})
 
-
-
 import ast
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Product
+
+def get_product_details(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    # Convert `product_images` field (string) to a list
+    product_images_list = []
+    if product.product_images:
+        try:
+            product_images_list = ast.literal_eval(product.product_images)
+            if not isinstance(product_images_list, list):  # Ensure it's a list
+                product_images_list = []
+        except (SyntaxError, ValueError):
+            product_images_list = []
+
+    # Convert `condition_descriptors`, `condition_values`, and `payment_methods` to lists if stored as strings
+    condition_descriptors_list = product.condition_descriptors.split(",") if product.condition_descriptors else []
+    condition_values_list = product.condition_values.split(",") if product.condition_values else []
+    payment_methods_list = product.payment_methods.split(",") if product.payment_methods else []
+
+    # Convert Decimal fields to string to avoid JSON serialization errors
+    product_data = {
+        "id": product.id,
+        "website_name": product.website_name,
+        "website_url": product.website_url,
+        "product_link": product.product_link,
+        "product_title": product.product_title,
+        "product_images": product_images_list,
+        "product_price": str(product.product_price) if product.product_price else "N/A",
+        "product_availability_status": product.product_availability_status,
+        "product_availability_quantity": product.product_availability_quantity,
+        "product_sold_quantity": product.product_sold_quantity,
+        "product_remaining_quantity": product.product_remaining_quantity,
+        "description": product.description,
+        "shipping": product.shipping,
+        "est_arrival": product.est_arrival,
+        "condition": product.condition,
+        "condition_id": product.condition_id,
+        "condition_descriptors": condition_descriptors_list,
+        "condition_values": condition_values_list,
+        "condition_additional_info": product.condition_additional_info,
+        "brand": product.brand,
+        "category": product.category,
+        "updated": product.updated,
+        "auction_id": product.auction_id,
+        "bid_count": product.bid_count,
+        "certified_seller": product.certified_seller,
+        "current_bid": str(product.current_bid) if product.current_bid else "N/A",
+        "current_bid_currency": product.current_bid_currency,
+        "favorited_count": product.favorited_count,
+        "highest_bidder": product.highest_bidder,
+        "listing_id": product.listing_id,
+        "integer_id": product.integer_id,
+        "is_owner": product.is_owner,
+        "listing_type": product.listing_type,
+        "lot_string": product.lot_string,
+        "slug": product.slug,
+        "starting_price": str(product.starting_price) if product.starting_price else "N/A",
+        "starting_price_currency": product.starting_price_currency,
+        "is_closed": product.is_closed,
+        "user_bid_status": product.user_bid_status,
+        "user_max_bid": str(product.user_max_bid) if product.user_max_bid else "N/A",
+        "status": product.status,
+        "return_terms_returns_accepted": product.return_terms_returns_accepted,
+        "return_terms_refund_method": product.return_terms_refund_method,
+        "return_terms_return_shipping_cost_payer": product.return_terms_return_shipping_cost_payer,
+        "return_terms_return_period_value": product.return_terms_return_period_value,
+        "return_terms_return_period_unit": product.return_terms_return_period_unit,
+        "payment_methods": payment_methods_list
+    }
+
+    # Debugging
+    print("Product Data:", product_data)  
+
+    return JsonResponse(product_data, safe=False)
+
+
 
 
 @login_required
@@ -427,11 +505,6 @@ def dashboard_view(request):
     """
     slidders = Slidder.objects.all()
     today = now().date()
-
-    print(today)
-
-    
-
 
     try:
         # Fetch all products
@@ -464,7 +537,6 @@ def dashboard_view(request):
 
             # Append to list
             all_products.append(full_product)
-        print(all_products[10]['product_images'][0])
         subscription = UserSubscription.objects.get(user=request.user)
         stripe_sub = stripe.Subscription.retrieve(subscription.subscription_id)
         
@@ -475,7 +547,7 @@ def dashboard_view(request):
             
         if subscription.active:
             # Render the dashboard page if the subscription is active
-            return render(request, 'dashboard.html',{"slidders" : slidders,"User_Subscription" : subscription,"products" : all_products[:15],"today":today})  # Replace with your dashboard template
+            return render(request, 'dashboard.html',{"slidders" : slidders,"User_Subscription" : subscription,"products" : all_products,"today":today})  # Replace with your dashboard template
         else:
             # Redirect to landing page if the subscription is not active
             return redirect('landingpage')
@@ -598,9 +670,12 @@ def blog_post(request,post_id):
 
 
 def faq(request):
-    subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
-
     faqs = FAQ.objects.all()
+    try:
+        subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    except:
+        subscription = None
+
     return render(request,"faq.html",{'faqs': faqs,'User_Subscription': subscription})
 
 
