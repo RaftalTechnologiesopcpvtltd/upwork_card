@@ -91,10 +91,10 @@
         <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
     </div> -->
 </div>
-<section style="height: 80vh; display: flex; justify-content: center; align-items: center;">
+<section class="my-4" style="display: flex; justify-content: center; align-items: center;">
 
     {% if User_Subscription %}
-    <div class="container py-4">
+    <div class="container py-5">
 
         <h1 class="mb-4 text-center">Manage Your Subscription</h1>
 
@@ -125,7 +125,7 @@
         </div>
         <div class="row g-4">
             {% if "Yearly" not in User_Subscription.plan.price_heading %}
-            <div class="col-md-6">
+            <div class="col-md-6  mb-4">
                 <div class="card h-100">
                     <div class="card-header">
                         <h3 class="card-title h5 mb-0">Upgrade Plan</h3>

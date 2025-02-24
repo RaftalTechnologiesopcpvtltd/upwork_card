@@ -24,4 +24,5 @@ urlpatterns = [
     path("process-refund/", views.process_refund, name="process_refund"),
     path("stripe-webhook/", views.stripe_webhook, name="stripe_webhook"),
     path("search/", views.product_search, name="product_search"),
+    path('get-product/<int:product_id>/', views.get_product_details, name='get_product_details'),
 ]

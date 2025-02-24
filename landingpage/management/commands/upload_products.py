@@ -1,111 +1,129 @@
 import csv
-from django.core.management.base import BaseCommand
-from landingpage.models import Product
-
 import decimal
+import os
+from django.core.management.base import BaseCommand
 from django.core.exceptions import ValidationError
-
+from landingpage.models import Product
 
 
 class Command(BaseCommand):
     help = 'Uploads products from a CSV file'
 
     def add_arguments(self, parser):
-        parser.add_argument('csv_file', type=str)
+        parser.add_argument('csv_file', type=str, help="Path to the CSV file")
 
     def handle(self, *args, **options):
         csv_file = options['csv_file']
+
+        # Check if the file exists
+        if not os.path.exists(csv_file):
+            self.stdout.write(self.style.ERROR(f"File '{csv_file}' not found."))
+            return
+
         try:
             with open(csv_file, mode='r', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
+                product_list = []
+                
                 for row in reader:
-                    # Preprocess product price to remove dollar sign and commas
                     try:
-                        product_price = row['Product Price'].replace('$', '').replace(',', '')
-                        product_price = decimal.Decimal(product_price) if product_price else None
-                    except (decimal.InvalidOperation, ValueError):
-                        product_price = None  # Handle invalid price
-                    
-                    # Handle product availability quantity
-                    try:
-                        product_availability_quantity = int(row['Product Availibility Quantity']) if row['Product Availibility Quantity'] else 0
-                    except (ValueError, TypeError):
-                        product_availability_quantity = 0  # Handle invalid or empty availability quantity
-                    
-                    # Handle product sold quantity
-                    try:
-                        product_sold_quantity = int(row['Product Sold Quantity']) if row['Product Sold Quantity'] else 0
-                    except (ValueError, TypeError):
-                        product_sold_quantity = 0  # Handle invalid or empty sold quantity
+                        # Debugging: Print row before processing
+                        print(f"Processing row: {row}")
 
-                    # Handle product remaining quantity
-                    try:
-                        product_remaining_quantity = int(row['Product Remaining Quantity']) if row['Product Remaining Quantity'] else 0
-                    except (ValueError, TypeError):
-                        product_remaining_quantity = 0  # Handle invalid or empty remaining quantity
+                        # Convert product price (remove $ and ,)
+                        try:
+                            product_price = decimal.Decimal(row['Product Price'].replace('$', '').replace(',', ''))
+                        except (decimal.InvalidOperation, ValueError, AttributeError):
+                            product_price = None  # Default to None if conversion fails
 
-                    # Ensure other fields are valid and prepare Product object
-                    product = Product(
-                        website_name=row['Website Name'] or '',
-                        website_url=row['Website URL'] or '',
-                        product_link=row['Product Link'] or '',
-                        product_title=row['Product Title'] or '',
-                        product_images=row['Product Images'] or '',  # Adjust this if needed
-                        product_price=product_price,
-                        product_availability_status=row['Product Availibility status'] or '',
-                        product_availability_quantity=product_availability_quantity,
-                        product_sold_quantity=product_sold_quantity,
-                        product_remaining_quantity=product_remaining_quantity,
-                        description=row['Description'] or '',
-                        shipping=row['Shipping'] or '',
-                        est_arrival=row['Est. Arrival'] or '',
-                        condition=row['Condition'] or '',
-                        condition_id=row['conditionId'] or '',
-                        condition_descriptors=row['conditionDescriptors'] or '',
-                        condition_values=row['condition_values'] or '',
-                        condition_additional_info=row['condition_additional_info'] or '',
-                        brand=row['Brand'] or '',
-                        category=row['Category'] or '',
-                        updated=row['Updated'] or '',
-                        auction_id=row['auction_id'] or '',
-                        bid_count=int(row['bid_count']) if row['bid_count'] else 0,
-                        certified_seller=row['certified_seller'] or '',
-                        current_bid=decimal.Decimal(row['current_bid'].replace('$', '').replace(',', '')) if row['current_bid'] else None,
-                        current_bid_currency=row['current_bid_currency'] or '',
-                        favorited_count=int(row['favorited_count']) if row['favorited_count'] else 0,
-                        highest_bidder=row['highest_bidder'] or '',
-                        listing_id=row['listing_id'] or '',
-                        integer_id=int(row['integer_id']) if row['integer_id'] else 0,
-                        is_owner=row['is_owner'] or False,
-                        listing_type=row['listing_type'] or '',
-                        lot_string=row['lot_string'] or '',
-                        slug=row['slug'] or '',
-                        starting_price=decimal.Decimal(row['starting_price'].replace('$', '').replace(',', '')) if row['starting_price'] else None,
-                        starting_price_currency=row['starting_price_currency'] or '',
-                        is_closed=row['is_closed'] or False,
-                        user_bid_status=row['user_bid_status'] or '',
-                        user_max_bid=decimal.Decimal(row['user_max_bid'].replace('$', '').replace(',', '')) if row['user_max_bid'] else None,
-                        status=row['status'] or '',
-                        return_terms_returns_accepted=row['returnTerms_returnsAccepted'] or '',
-                        return_terms_refund_method=row['returnTerms_refundMethod'] or '',
-                        return_terms_return_shipping_cost_payer=row['returnTerms_returnShippingCostPayer'] or '',
-                        return_terms_return_period_value=int(row['returnTerms_returnPeriod_value']) if row['returnTerms_returnPeriod_value'] else 0,
-                        return_terms_return_period_unit=row['returnTerms_returnPeriod_unit'] or '',
-                        payment_methods=row['paymentMethods'] or '',
-                    )
+                        # Convert integer fields safely
+                        def safe_int(value, default=0):
+                            try:
+                                return int(float(value)) if value else default
+                            except (ValueError, TypeError):
+                                return default
 
-                    # Save the product to the database
-                    try:
-                        product.save()
-                    except ValidationError as e:
-                        self.stdout.write(self.style.ERROR(f"Error saving product: {e.message}"))
-                        continue
+                        product_availability_quantity = safe_int(row['Product Availibility Quantity'])
+                        product_sold_quantity = safe_int(row['Product Sold Quantity'])
+                        product_remaining_quantity = safe_int(row['Product Remaining Quantity'])
+                        bid_count = safe_int(row['bid_count'])
+                        favorited_count = safe_int(row['favorited_count'])
+                        integer_id = safe_int(row['integer_id'])
+                        return_period_value = safe_int(row['returnTerms_returnPeriod_value'])
+
+                        # Convert other decimal fields safely
+                        def safe_decimal(value):
+                            try:
+                                return decimal.Decimal(value.replace('$', '').replace(',', '')) if value else None
+                            except (decimal.InvalidOperation, ValueError, AttributeError):
+                                return None
+
+                        current_bid = safe_decimal(row['current_bid'])
+                        starting_price = safe_decimal(row['starting_price'])
+                        user_max_bid = safe_decimal(row['user_max_bid'])
+
+                        # Create Product instance
+                        product = Product(
+                            website_name=row.get('Website Name', ''),
+                            website_url=row.get('Website URL', ''),
+                            product_link=row.get('Product Link', ''),
+                            product_title=row.get('Product Title', ''),
+                            product_images=row.get('Product Images', ''),
+                            product_price=product_price,
+                            product_availability_status=row.get('Product Availibility status', ''),
+                            product_availability_quantity=product_availability_quantity,
+                            product_sold_quantity=product_sold_quantity,
+                            product_remaining_quantity=product_remaining_quantity,
+                            description=row.get('Description', ''),
+                            shipping=row.get('Shipping', ''),
+                            est_arrival=row.get('Est. Arrival', ''),
+                            condition=row.get('Condition', ''),
+                            condition_id=row.get('conditionId', ''),
+                            condition_descriptors=row.get('conditionDescriptors', ''),
+                            condition_values=row.get('condition_values', ''),
+                            condition_additional_info=row.get('condition_additional_info', ''),
+                            brand=row.get('Brand', ''),
+                            category=row.get('Category', ''),
+                            updated=row.get('Updated', ''),
+                            auction_id=row.get('auction_id', ''),
+                            bid_count=bid_count,
+                            certified_seller=row.get('certified_seller', ''),
+                            current_bid=current_bid,
+                            current_bid_currency=row.get('current_bid_currency', ''),
+                            favorited_count=favorited_count,
+                            highest_bidder=row.get('highest_bidder', ''),
+                            listing_id=row.get('listing_id', ''),
+                            integer_id=integer_id,
+                            is_owner=row.get('is_owner', False),
+                            listing_type=row.get('listing_type', ''),
+                            lot_string=row.get('lot_string', ''),
+                            slug=row.get('slug', ''),
+                            starting_price=starting_price,
+                            starting_price_currency=row.get('starting_price_currency', ''),
+                            is_closed=row.get('is_closed', False),
+                            user_bid_status=row.get('user_bid_status', ''),
+                            user_max_bid=user_max_bid,
+                            status=row.get('status', ''),
+                            return_terms_returns_accepted=row.get('returnTerms_returnsAccepted', ''),
+                            return_terms_refund_method=row.get('returnTerms_refundMethod', ''),
+                            return_terms_return_shipping_cost_payer=row.get('returnTerms_returnShippingCostPayer', ''),
+                            return_terms_return_period_value=return_period_value,
+                            return_terms_return_period_unit=row.get('returnTerms_returnPeriod_unit', ''),
+                            payment_methods=row.get('paymentMethods', ''),
+                        )
+
+                        product_list.append(product)
+
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR(f"Skipping row {row}: {e}"))
+
+                # Bulk insert products
+                Product.objects.bulk_create(product_list)
+                self.stdout.write(self.style.SUCCESS(f"Successfully uploaded {len(product_list)} products from {csv_file}"))
 
         except UnicodeDecodeError as e:
             self.stdout.write(self.style.ERROR(f"Unicode decode error while reading the file: {e}"))
         except FileNotFoundError as e:
             self.stdout.write(self.style.ERROR(f"File not found: {e}"))
         except Exception as e:
-            self.stdout.write(self.style.ERROR(f"An error occurred: {e}"))
-
-        self.stdout.write(self.style.SUCCESS(f'Successfully uploaded products from {csv_file}'))
+            self.stdout.write(self.style.ERROR(f"An unexpected error occurred: {e}"))
