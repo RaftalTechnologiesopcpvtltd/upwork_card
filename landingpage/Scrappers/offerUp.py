@@ -97,7 +97,7 @@ def save_to_csv(data, filename="OfferUp_data.csv"):
     logger.info(f"Data saved to {filename}")
 
 def get_product(driver,all_prod_links):
-    for links in all_prod_links[:5]:
+    for links in all_prod_links:
         ProductImagesURLS = "-"
         ProductTitle = "-"
         ProductPrice = "-"
@@ -158,15 +158,18 @@ def get_product(driver,all_prod_links):
             "Website URL": "https://offerup.com/",
             "Product Link": links,
             "Product Images": ProductImagesURLS,
+            "Selling Type" : "Fixed",
             "Product Title": ProductTitle,
+            "Product Price Currency": "$",
             "Product Price": ProductPrice,
-            "Shipping": Shipping if Shipping else "-",
-            "Est. Arrival": EstArrival,
+            "Description": Description,
             "Condition": Condition,
+            "Shipping Cost": Shipping if Shipping else "-",
+            "Shipping Currency": "$" if Shipping else "-",
+            "Estimated Arrival": EstArrival,
             "Brand": Brand,
             "Category": Category,
             "Updated": Updated,
-            "Description": Description
         })
 
         logger.info(product_data)

@@ -86,7 +86,7 @@ SCOPES = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_sc
 TOKEN_URL = "https://api.ebay.com/identity/v1/oauth2/token"
 
 refresh_token = "v^1.1#i^1#I^3#r^1#p^3#f^0#t^Ul4xMF8wOkVCNTJGODRFMDMzMUUwRkRFNUYzN0EyMTBGMUU3QUI0XzFfMSNFXjI2MA=="
-access_token = "v^1.1#i^1#p^3#r^0#I^3#f^0#t^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"
+access_token = "v^1.1#i^1#r^0#I^3#f^0#p^3#t^H4sIAAAAAAAAAOVZeYwTVRjf7gESWPjDM+ofZTgMkmnfTGc6R2i1tNvdsrvs0cIKkdQ3M2/acTszZebNXgazLkKIQPCIEjQCBvlDxSMimoj6hyaSqKjReETigcdqNESjgke8ZroHy6ogdiVNnKZp3ntfv/f9ft/x5psBg9NmXLmxaeMP9b7p1bsHwWC1z0fNBDOm1S2eXVN9aV0VmCDg2z04f7B2qOaLJTbUC0WxE9lF07CRv08vGLZYmowQjmWIJrQ1WzSgjmwRy2I61toi0gEgFi0Tm7JZIPypRIRAKlQkluEQCnMQgrA7a4zpzJgRQuU4gQa8IAE6JPMqctdt20Epw8bQwBGCBjRLApqk2QzgRJYRARtgOGY14V+JLFszDVckAIhoyVyx9F9rgq2nNxXaNrKwq4SIpmLJdFsslWhYnlkSnKArOspDGkPs2KeO4qaC/CthwUGn38YuSYtpR5aRbRPB6MgOpyoVY2PG/AvzS1QzYQkIIZljFJ5VocpPCZVJ09IhPr0d3oymkGpJVEQG1nD/mRh12ZCuRzIeHS13VaQSfu+nw4EFTdWQFSEalsZWrUg3dBL+dHu7ZfZoClI8pDRHhamQwFMsEb3eDNEsw1Kje4woGmV40iZx01A0jy/bv9zES5FrMJpMCzOBFleozWizYir2jJkoJ4zRFxZWe/4ccaCD84bnUqS7HPhLwzOTPxYNJ/0/ZfHAUrQqqDwvc0Di1NBfx4OX62cXE1HPLbH29qBnC5JgP6lDqxvhYgHKiJRdeh0dWZoihliVDrk5TSphQSUZQVVJiVXCJKUiBBCSJFng/yehgbGlSQ5G4+ExeaGEL0KkZbOI2s2CJvcTk0VKlWY0GPrsCJHHuCgGg729vYHeUMC0ckEaACp4TWtLWs4jHRLjstqZhUmtFBayW4BdeRH3F11r+tyoczc3ckQ0ZCnt0ML9aVQouBNjMXuKbdHJs38DMl7QXAYy7haVhbHJtDFSyoKmoB5NRllNqSxktJuH4TDv5bpA8wAwZYEsmDnNaEU4b1YYzMa2tsaWhrKwufUT4spCRXEhng8BhgJlIYsViylddzCUCihVYY5jKYYrMyiLjlNpWdffg0K9WWTigf6yoHlnrKhBVcRmNzL+Yd30cv0cYu1sSHY2pJuymbbmhuVloe1EqoXsfMbDWmlxGuuINcfcq7WZ0zuDMWctlUknzIG+ZQOLUVjS9J5MsdARjudoOQYMRedX2bqQYvO4q6vLTsb7mmJg6SoZ8plkLhIpi6Q0ki1UYXVqhWRi2MwoVlBiwsaAZKsdS3O9QbySx7lYnu02ehs748u0PsNeUR741lylZfro+ToFZ2vmLFJ83GYv1/97kNZIYmZLVSjrjsoC2pCruHqtQEZRGF6lBAZAlqcZWkI8onlVVeWQguiyj98Kw5uE2kBzHhrj/RvZ3pkgeYVmQlCReJKVBcQzHCzzXK40N0/VsWx7vdo5h+bl+mnheTpsVwksagHvziEgm3rQhA7Oe1PZktXl3SIjRbPc1jnrWFpledYL6GwpoieFNpkrYF2zyqtYHoWV2PWkElNw15VAPZVWnpQQG5IFBZEqzwkkQ/MsKUkKR7rtEAVl9wPk8jqiiu/0atecGdmkiQkPmP70WDF46iP9aFXpooZ8z4Mh33PVPh9YAhZQ88DcaTUramtmXWprGAXcviNgazkDYsdCgW7UX4SaVX1+1WuzW5SbmlqOD0rOU13fX8VX1U94o7B7Dbhk/J3CjBpq5oQXDODykyt11JyL62kW0O6XYxnArgbzTq7WUhfVXrBr59c9/gP5Ban1y3a8fN5w8/qun24A9eNCPl9dVe2Qryq58MsD3Vuf3Z+5/6v3pMb4b3PpWW8VrKaPDydOQFP/9NrFrwrDN1+4M3n3Ne8DJnHdz0cXvXSieceGgec5xox/+ELjAx/cyvKXzfts3/a3jx4fjmnHjl18T+HD+w5VPXnX09PMg3uO/n5l/tAr+drdW25/53EwfW3LiQOHxMtOLDy8a92ebcMP5Lc8+N2iI4+yu94khb1XfNv8wsHZM++1k48kCG0zp8Zvuy49f/6M9R36tk1Hc8Pgk4G17+5/4pvF8+R9+7cOzdHQe8Pyr09f/f0vXOb1zQ+lj9Wdd28WkgefeWPvms9v/GLL9L5rdzJPPrLd/Oj1vgfhj3c+XP8if2TfHW8fWffWrMPLblkU3vDYphFf/gFgRJbJ6xkAAA=="
 
 
 def get_authorization_code():
@@ -263,55 +263,61 @@ def api_request_product(url, method="GET", headers=None, token=None, timeout=10)
         return {"error": str(e)}
     
 def get_data(response_prod):
+    if "FIXED" in response_prod.get("buyingOptions")[0]:
+        selling_type = "Fixed Price"
+    else:
+        selling_type = "Auction"
+
     extracted_data = normalize_data({
         "Website Name": "eBay",
         "Website URL": "https://www.ebay.com/",
         "Product Link": response_prod.get("itemWebUrl"),
-        "Product Title": response_prod.get("title"),
         "Product Images": [response_prod["image"]["imageUrl"]] + [
             img.get("imageUrl") for img in response_prod.get("additionalImages", [])
         ],
+        "Selling Type" : selling_type,
+        "Product Title": response_prod.get("title"),
+        "Product Price Currency": response_prod.get("price", {}).get("currency"),
+        "Product Price": response_prod.get("price", {}).get("value"),
+        "Current Bid Price": response_prod.get("currentBidPrice", {}).get("value"),
+        "Current Bid Currency": response_prod.get("currentBidPrice", {}).get("currency"),
+        "Current Bid Count": response_prod.get("bidCount"),
+        "Description": response_prod.get('shortDescription'),
+        "Condition": response_prod.get("condition"),
+        "Condition Id": response_prod.get("conditionId"),
+        "Condition Descriptors": response_prod.get("conditionDescriptors", [{}])[0].get("name"),
+        "Condition Values": response_prod.get("conditionDescriptors", [{}])[0].get("values", [{}])[0].get("content"),
+        "Condition Additional Info": response_prod.get("conditionDescriptors", [{}])[0].get("values", [{}])[0].get("additionalInfo"),
         "Product Availibility status": response_prod.get("estimatedAvailabilities", [{}])[0].get("estimatedAvailabilityStatus"),
         "Product Availibility Quantity": response_prod.get("estimatedAvailabilities", [{}])[0].get("estimatedAvailableQuantity"),
         "Product Sold Quantity": response_prod.get("estimatedAvailabilities", [{}])[0].get("estimatedSoldQuantity"),
         "Product Remaining Quantity": response_prod.get("estimatedAvailabilities", [{}])[0].get("estimatedRemainingQuantity"),
-        "Description": response_prod.get('shortDescription'),
         "Shipping Service Code": response_prod.get("shippingOptions", [{}])[0].get("shippingServiceCode"),
         "Shipping Carrier Code": response_prod.get("shippingOptions", [{}])[0].get("shippingCarrierCode"),
-        "Type": response_prod.get("shippingOptions", [{}])[0].get("type"),
+        "Shipping Type": response_prod.get("shippingOptions", [{}])[0].get("type"),
         "Shipping Cost": response_prod.get("shippingOptions", [{}])[0].get("shippingCost", {}).get("value"),
-        "Currency": response_prod.get("shippingOptions", [{}])[0].get("shippingCost", {}).get("currency"),
-        "Quantity Used For Estimate": response_prod.get("shippingOptions", [{}])[0].get("quantityUsedForEstimate"),
-        "Min Estimated Delivery Date": response_prod.get("shippingOptions", [{}])[0].get("minEstimatedDeliveryDate"),
-        "Max Estimated Delivery Date": response_prod.get("shippingOptions", [{}])[0].get("maxEstimatedDeliveryDate"),
+        "Shipping Currency": response_prod.get("shippingOptions", [{}])[0].get("shippingCost", {}).get("currency"),
         "Additional Shipping Cost Per Unit": response_prod.get("shippingOptions", [{}])[0].get("additionalShippingCostPerUnit", {}).get("value"),
         "Additional Shipping Cost Currency": response_prod.get("shippingOptions", [{}])[0].get("additionalShippingCostPerUnit", {}).get("currency"),
         "Shipping Cost Type": response_prod.get("shippingOptions", [{}])[0].get("shippingCostType"),
-        "buyingOptions": response_prod.get("buyingOptions")[0],
-        "bid_count": response_prod.get("bidCount"),
-        "certified_seller": response_prod.get("seller", {}).get("username"),
-        "current_bid_currency": response_prod.get("currentBidPrice", {}).get("currency"),
-        "current_bid_price": response_prod.get("currentBidPrice", {}).get("value"),
+        "Quantity Used For Estimate": response_prod.get("shippingOptions", [{}])[0].get("quantityUsedForEstimate"),
+        "Min Estimated Delivery Date": response_prod.get("shippingOptions", [{}])[0].get("minEstimatedDeliveryDate"),
+        "Max Estimated Delivery Date": response_prod.get("shippingOptions", [{}])[0].get("maxEstimatedDeliveryDate"),
+        "buying Options": response_prod.get("buyingOptions")[0],
+        "Certified Seller": response_prod.get("seller", {}).get("username"),
         "Minimum Price to Bid": response_prod.get("minimumPriceToBid", {}).get("value"),
         "Minimum Price Currency": response_prod.get("minimumPriceToBid", {}).get("currency"),
         "Unique Bidder Count": response_prod.get("uniqueBidderCount"),
-        "listing_id": response_prod.get("itemId"),
-        "integer_id": response_prod.get("legacyItemId"),
-        "listing_type": response_prod.get("buyingOptions"),
-        "Product Price": response_prod.get("price", {}).get("value"),
-        "starting_price_currency": response_prod.get("price", {}).get("currency"),
-        "status": "Active" if response_prod.get("estimatedAvailabilities", [{}])[0].get("estimatedAvailabilityStatus") == "IN_STOCK" else "Unavailable",
-        "Condition": response_prod.get("condition"),
-        "conditionId": response_prod.get("conditionId"),
-        "conditionDescriptors": response_prod.get("conditionDescriptors", [{}])[0].get("name"),
-        "condition_values": response_prod.get("conditionDescriptors", [{}])[0].get("values", [{}])[0].get("content"),
-        "condition_additional_info": response_prod.get("conditionDescriptors", [{}])[0].get("values", [{}])[0].get("additionalInfo"),
-        "returnTerms_returnsAccepted": response_prod.get("returnTerms", {}).get("returnsAccepted"),
-        "returnTerms_refundMethod": response_prod.get("returnTerms", {}).get("refundMethod"),
-        "returnTerms_returnShippingCostPayer": response_prod.get("returnTerms", {}).get("returnShippingCostPayer"),
-        "returnTerms_returnPeriod_value": response_prod.get("returnTerms", {}).get("returnPeriod", {}).get("value"),
-        "returnTerms_returnPeriod_unit": response_prod.get("returnTerms", {}).get("returnPeriod", {}).get("unit"),
-        "paymentMethods": [
+        "Listing Id": response_prod.get("itemId"),
+        "Integer Id": response_prod.get("legacyItemId"),
+        "Listing Type": response_prod.get("buyingOptions"),
+        "Status": "Active" if response_prod.get("estimatedAvailabilities", [{}])[0].get("estimatedAvailabilityStatus") == "IN_STOCK" else "Unavailable",
+        "ReturnTerms returns Accepted": response_prod.get("returnTerms", {}).get("returnsAccepted"),
+        "ReturnTerms refund Method": response_prod.get("returnTerms", {}).get("refundMethod"),
+        "ReturnTerms return Shipping Cost Payer": response_prod.get("returnTerms", {}).get("returnShippingCostPayer"),
+        "ReturnTerms return Period Value": response_prod.get("returnTerms", {}).get("returnPeriod", {}).get("value"),
+        "ReturnTerms return Period Unit": response_prod.get("returnTerms", {}).get("returnPeriod", {}).get("unit"),
+        "Payment Methods": [
             method.get("paymentMethodType") for method in response_prod.get("paymentMethods", [])
         ],
     })
