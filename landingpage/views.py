@@ -406,8 +406,12 @@ def product_search(request):
                 "id": p.id,
                 "title": p.product_title,
                 "link": p.product_link,
+                "selling_type": p.selling_type,
                 "website_name": p.website_name,
                 "price": p.product_price,
+                "current_bid_price": str(p.current_bid_price) if p.current_bid_price else "N/A",
+                "current_bid_currency": p.current_bid_currency,
+                "current_bid_count": p.current_bid_count,
                 "image": product_images_list[0] if product_images_list else "",  # Handle missing images
                 "date" : today,
             })
@@ -434,10 +438,11 @@ def get_product_details(request, product_id):
         except (SyntaxError, ValueError):
             product_images_list = []
 
-    # Convert `condition_descriptors`, `condition_values`, and `payment_methods` to lists if stored as strings
+    # Convert `condition_descriptors`, `condition_values`, `payment_methods`, and `buying_options` to lists if stored as strings
     condition_descriptors_list = product.condition_descriptors.split(",") if product.condition_descriptors else []
     condition_values_list = product.condition_values.split(",") if product.condition_values else []
     payment_methods_list = product.payment_methods.split(",") if product.payment_methods else []
+    buying_options_list = product.buying_options.split(",") if product.buying_options else []
 
     # Convert Decimal fields to string to avoid JSON serialization errors
     product_data = {
@@ -448,26 +453,36 @@ def get_product_details(request, product_id):
         "product_title": product.product_title,
         "product_images": product_images_list,
         "product_price": str(product.product_price) if product.product_price else "N/A",
-        "product_availability_status": product.product_availability_status,
-        "product_availability_quantity": product.product_availability_quantity,
-        "product_sold_quantity": product.product_sold_quantity,
-        "product_remaining_quantity": product.product_remaining_quantity,
+        "product_price_currency": product.product_price_currency,
+        "selling_type": product.selling_type,
+        "current_bid_price": str(product.current_bid_price) if product.current_bid_price else "N/A",
+        "current_bid_currency": product.current_bid_currency,
+        "current_bid_count": product.current_bid_count,
         "description": product.description,
-        "shipping": product.shipping,
-        "est_arrival": product.est_arrival,
         "condition": product.condition,
         "condition_id": product.condition_id,
         "condition_descriptors": condition_descriptors_list,
         "condition_values": condition_values_list,
         "condition_additional_info": product.condition_additional_info,
+        "product_availability_status": product.product_availability_status,
+        "product_availability_quantity": product.product_availability_quantity,
+        "product_sold_quantity": product.product_sold_quantity,
+        "product_remaining_quantity": product.product_remaining_quantity,
+        "shipping_cost": str(product.shipping_cost) if product.shipping_cost else "N/A",
+        "shipping_currency": product.shipping_currency,
+        "shipping_service_code": product.shipping_service_code,
+        "shipping_carrier_code": product.shipping_carrier_code,
+        "shipping_type": product.shipping_type,
+        "additional_shipping_cost_per_unit": str(product.additional_shipping_cost_per_unit) if product.additional_shipping_cost_per_unit else "N/A",
+        "additional_shipping_cost_currency": product.additional_shipping_cost_currency,
+        "shipping_cost_type": product.shipping_cost_type,
+        "estimated_arrival": product.estimated_arrival,
         "brand": product.brand,
         "category": product.category,
         "updated": product.updated,
         "auction_id": product.auction_id,
         "bid_count": product.bid_count,
         "certified_seller": product.certified_seller,
-        "current_bid": str(product.current_bid) if product.current_bid else "N/A",
-        "current_bid_currency": product.current_bid_currency,
         "favorited_count": product.favorited_count,
         "highest_bidder": product.highest_bidder,
         "listing_id": product.listing_id,
@@ -487,7 +502,14 @@ def get_product_details(request, product_id):
         "return_terms_return_shipping_cost_payer": product.return_terms_return_shipping_cost_payer,
         "return_terms_return_period_value": product.return_terms_return_period_value,
         "return_terms_return_period_unit": product.return_terms_return_period_unit,
-        "payment_methods": payment_methods_list
+        "payment_methods": payment_methods_list,
+        "quantity_used_for_estimate": product.quantity_used_for_estimate,
+        "min_estimated_delivery_date": product.min_estimated_delivery_date,
+        "max_estimated_delivery_date": product.max_estimated_delivery_date,
+        "buying_options": buying_options_list,
+        "minimum_price_to_bid": str(product.minimum_price_to_bid) if product.minimum_price_to_bid else "N/A",
+        "minimum_price_currency": product.minimum_price_currency,
+        "unique_bidder_count": product.unique_bidder_count,
     }
 
     # Debugging

@@ -115,11 +115,13 @@ def get_prod(driver, all_location_links):
                     price = price_elements[0].text if price_elements else '-'
 
                     product = normalize_data({
-                        "Website Name": "craigslist",
+                        "Website Name": "Craigslist",
                         "Website URL": web_url,
                         "Product Link": href,
-                        "Product Title": name,
                         "Product Images": images,
+                        "Selling Type" : "Fixed",
+                        "Product Title": name,
+                        "Product Price Currency": "$",
                         "Product Price": price,
                     })
 

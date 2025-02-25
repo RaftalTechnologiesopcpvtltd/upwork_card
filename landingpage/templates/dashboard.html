@@ -38,6 +38,17 @@
         justify-content: space-evenly;
     }
 
+    .openProductModal {
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .openProductModal:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
     .suggestions {
         /* border: 0.5px solid #ccc; */
         max-height: 200px;
@@ -200,6 +211,22 @@
         min-height: 6px;
     }
 
+    .selling_price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .bid {
+        font-size: 1.1rem;
+        color: #007bff;
+    }
+
+    .date {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
         #productCarousel .carousel-indicators {
@@ -241,6 +268,39 @@
             min-width: 16px;
             min-height: 4px;
         }
+    }
+
+    .auction-box,
+    .fixed-price-box {
+        padding: 15px;
+        margin: 10px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        display: inline-block;
+        width: 200px;
+    }
+
+    /* Auction Style - Neon Red */
+    .auction-box {
+        /* Bright neon red */
+        border: 2px solid #ff2200;
+        color: #ff2200;
+        /* White text for contrast */
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    /* Fixed Price Style - Neon Blue */
+    .fixed-price-box {
+        /* Bright neon blue */
+        border: 2px solid #008000;
+        color: #008000;
+        /* White text for contrast */
+        padding: 10px;
+        border-radius: 8px;
     }
 </style>
 
@@ -441,25 +501,46 @@
                         if (response.products.length > 0) {
                             response.products.forEach(product => {
                                 let productHTML = `
-                                    <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
-                                        <div class="ribbon">${product.website_name || "Unknown"}</div> <!-- Ribbon added here -->
-                                        <div style="width: 18rem; border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
-                                            <div style="display: flex; justify-content: center; height: 230.5px !important; width: 230.5px !important; overflow: hidden; padding: 8%; margin-left: 12%;">
-                                                <img src="${product.image}" class="img-fluid" alt="${product.title}">
+                                        <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" 
+                                            data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
+                                            
+                                            <div class="ribbon">${product.website_name || "Unknown"}</div> <!-- Ribbon added here -->
+                                            
+                                            <div style="width: auto; border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
+                                                <div style="display: flex; justify-content: center; height: 230.5px !important; 
+                                                    width: 230.5px !important; overflow: hidden; padding: 8%; margin-left: 12%;">
+                                                    <img src="${product.image}" class="img-fluid" alt="${product.title}">
+                                                </div>
+                                            </div>
+                                            <div class="p-3">
+                                                <h5 class="mt-4 card-title" style="font-size: 18px !important; font-weight: 700 !important;">
+                                                    ${product.title}
+                                                </h5>
+
+                                                <h6 class="mt-4 card-title ${product.selling_type && product.selling_type.includes('Auction') ? 'auction-box' : 'fixed-price-box'}">${product.selling_type || "Unknown"}
+                                                </h6>
+                                                
+                                                
+
+                                                ${product.selling_type && product.selling_type.includes('Auction') ? `
+                                                    <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price: $${product.current_bid_price || "N/A"}</p>
+                                                    <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count: ${product.current_bid_count || "N/A"}</p>
+                                                ` : `
+                                                    <p class="selling_price mb-1">Selling Price: $${product.price || "N/A"}</p>
+                                                `}
+
+                                                <p class="date mb-3"><i class="far fa-calendar-alt me-2"></i> ${product.date || "N/A"}</p>
+
                                             </div>
                                         </div>
-                                        <h5 class="mt-4 card-title" style="font-size: 18px !important; font-weight: 700 !important;">${product.title}</h5>
-                                        <h6 class="mt-4 card-title">Market Place: ${product.website_name || "Unknown"}</h6>
-                                        <h6 class="mt-4 card-title">Price: ${product.price || "N/A"}</h6>
-                                        <h6 class="mt-4 card-title">Dated: ${product.date || "N/A"}</h6>
-                                    </div>
+                                    `;
 
-                                `;
                                 resultsContainer.append(productHTML);
                             });
                         } else {
                             resultsContainer.html("<p>No products found.</p>");
                         }
+
                     },
                     error: function () {
                         $(".category-container").html("<p>Error fetching results.</p>");
@@ -469,6 +550,7 @@
                 $(".category-container").empty();
             }
         });
+
 
         // Fix: Use event delegation for dynamically loaded elements
         $(document).on("click", ".openProductModal", function () {
@@ -558,17 +640,17 @@
 
                     // Auction Info
                     $("#auctionId").text(data.auction_id || "N/A");
-                    $("#currentBid").text(data.current_bid ? `$${data.current_bid}` : "N/A");
+                    $("#currentBid").text(data.current_bid_price ? `$${data.current_bid_price}` : "N/A");
                     $("#highestBidder").text(data.highest_bidder || "No Bids");
-                    $("#bidCount").text(data.bid_count || "0");
+                    $("#bidCount").text(data.current_bid_count || "0");
 
                     // Condition Info
                     $("#condition").text(data.condition || "N/A");
-                    $("#conditionInfo").text(data.condition_additional_info || "No details available");
+                    $("#conditionInfo").text(`${data.condition} ${data.condition_descriptors_list} ${data.condition_values} ${data.condition_additional_info}` || "No details available");
 
                     // Shipping Info
-                    $("#shippingInfo").text(data.shipping || "Not Available");
-                    $("#estArrival").text(data.est_arrival || "Unknown");
+                    $("#shippingInfo").text(data.shipping_cost || "Not Available");
+                    $("#estArrival").text(data.estimated_arrival || "Unknown");
 
                     // Return Policy
                     $("#returnAccepted").text(data.return_terms_returns_accepted || "N/A");
