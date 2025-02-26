@@ -331,36 +331,27 @@
                         <input type="text" id="searchInput" class="form-control" placeholder="Type to search...">
                         <div id="suggestions" class="suggestions"></div>
                     </div>
-                    <!-- <div class="col-lg-12">
+                    <div class="col-lg-12">
                         <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="dateFilter" class="form-label">Date</label>
-                                <select id="dateFilter" class="form-control">
-                                    <option value="">Select Date</option>
-                                    <option value="new">New</option>
-                                    <option value="latest">Latest</option>
-                                    <option value="old">Old</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="soldFilter" class="form-label">Sold Status</label>
+                            <div class="col-md-6 mb-3">
+                                <label for="soldFilter" class="form-label">Selling Status</label>
                                 <select id="soldFilter" class="form-control">
                                     <option value="">Select Status</option>
-                                    <option value="sold">Sold</option>
-                                    <option value="unsold">Unsold</option>
+                                    <option value="Auction">Auction</option>
+                                    <option value="Fixed">Fixed</option>
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label for="marketplaceFilter" class="form-label">Marketplace</label>
                                 <select id="marketplaceFilter" class="form-control">
                                     <option value="">Select Marketplace</option>
-                                    <option value="ebay">eBay</option>
-                                    <option value="amazon">Amazon</option>
-                                    <option value="etsy">Etsy</option>
+                                    {% for marketplace in marketplaces %}
+                                    <option value="{{ marketplace }}">{{ marketplace }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
                 <!-- <div class="text-center mt-3">
                     <button id="searchBtn" class="btn-subscribe btn-dark-custom btn mr-2">Search</button>
@@ -486,14 +477,24 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
-        $("#searchInput").on("keyup", function () {
-            let query = $(this).val().trim();
+        $("#searchInput, #soldFilter, #marketplaceFilter").on("keyup change", function () {
+            let query = $("#searchInput").val().trim();
+            let sellingType = $("#soldFilter").val();
+            let marketplace = $("#marketplaceFilter").val();
 
-            if (query.length > 1) {  // Only search when at least 2 characters
+            console.log("query", query);
+            console.log("marketplace", marketplace);
+
+
+            if (query.length > 1 || sellingType || marketplace) {  // Only search when at least 2 characters
                 $.ajax({
                     url: "/search/",
                     type: "GET",
-                    data: { query: query },
+                    data: {
+                        query: query,
+                        selling_type: sellingType,
+                        marketplace: marketplace
+                    },
                     success: function (response) {
                         let resultsContainer = $(".category-container");
                         resultsContainer.empty();

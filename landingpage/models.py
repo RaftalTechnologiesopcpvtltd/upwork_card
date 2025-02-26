@@ -89,6 +89,84 @@ class Product(models.Model):
         return self.product_title
 
 
+class MyListing(models.Model):
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    website_name = models.CharField(max_length=255, null=True)
+    website_url = models.URLField(null=True)
+    product_link = models.URLField(null=True)
+    product_title = models.CharField(max_length=255, null=True)
+    product_images = models.TextField(null=True)  # Store image URLs as a comma-separated string
+    product_price_currency = models.CharField(max_length=10, null=True)
+    selling_type =   models.CharField(max_length=10, null=True,  default="")
+    product_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    current_bid_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.00)
+    current_bid_currency = models.CharField(max_length=10, null=True, default="USD")
+    current_bid_count = models.IntegerField(null=True, default=0)
+    description = models.TextField(null=True)
+    
+    condition = models.CharField(max_length=255, null=True)
+    condition_id = models.CharField(max_length=100, null=True)
+    condition_descriptors = models.TextField(null=True)  
+    condition_values = models.TextField(null=True)  
+    condition_additional_info = models.TextField(null=True)
+    
+    product_availability_status = models.CharField(max_length=100, null=True)
+    product_availability_quantity = models.IntegerField(null=True, default=0)
+    product_sold_quantity = models.IntegerField(null=True, default=0)
+    product_remaining_quantity = models.IntegerField(null=True, default=0)
+    
+    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.00)
+    shipping_currency = models.CharField(max_length=10, null=True, default="USD")
+    shipping_service_code = models.CharField(max_length=100, null=True)
+    shipping_carrier_code = models.CharField(max_length=100, null=True)
+    shipping_type = models.CharField(max_length=100, null=True)
+    additional_shipping_cost_per_unit = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.00)
+    additional_shipping_cost_currency = models.CharField(max_length=10, null=True, default="USD")
+    shipping_cost_type = models.CharField(max_length=100, null=True)
+    
+    estimated_arrival = models.CharField(max_length=255, null=True)
+    brand = models.CharField(max_length=255, null=True)
+    category = models.CharField(max_length=255, null=True)
+    
+    updated = models.DateTimeField(auto_now=True)  # Automatically updates on save
+    auction_id = models.CharField(max_length=100, null=True)
+    bid_count = models.IntegerField(null=True, default=0)
+    certified_seller = models.BooleanField(null=True, default=False)
+    favorited_count = models.IntegerField(null=True, default=0)
+    highest_bidder = models.CharField(max_length=255, null=True)
+    listing_id = models.CharField(max_length=100, null=True)
+    integer_id = models.IntegerField(null=True)
+    is_owner = models.BooleanField(null=True, default=False)
+    listing_type = models.CharField(max_length=100, null=True)
+    lot_string = models.CharField(max_length=100, null=True)
+    slug = models.SlugField(null=True)
+    starting_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.00)
+    starting_price_currency = models.CharField(max_length=10, null=True, default="USD")
+    is_closed = models.BooleanField(null=True, default=False)
+    
+    user_bid_status = models.CharField(max_length=100, null=True)
+    user_max_bid = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.00)
+    status = models.CharField(max_length=100, null=True)
+    
+    return_terms_returns_accepted = models.BooleanField(null=True, default=False)
+    return_terms_refund_method = models.CharField(max_length=100, null=True)
+    return_terms_return_shipping_cost_payer = models.CharField(max_length=100, null=True)
+    return_terms_return_period_value = models.IntegerField(null=True, default=0)
+    return_terms_return_period_unit = models.CharField(max_length=50, null=True)
+    
+    payment_methods = models.TextField(null=True)  
+    quantity_used_for_estimate = models.IntegerField(null=True, default=1)
+    min_estimated_delivery_date = models.DateField(null=True)
+    max_estimated_delivery_date = models.DateField(null=True)
+    buying_options = models.TextField(null=True)  
+    minimum_price_to_bid = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.00)
+    minimum_price_currency = models.CharField(max_length=10, null=True, default="USD")
+    unique_bidder_count = models.IntegerField(null=True, default=0)
+
+    def __str__(self):
+        return self.product_title
+    
 
 class CustomUser(AbstractUser):
     GENDER_CHOICES =(

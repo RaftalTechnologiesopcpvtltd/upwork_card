@@ -31,11 +31,14 @@ logger.addHandler(console_handler)
 def initialize_driver():
     """Initialize the undetected Chrome driver with required options."""
     options = uc.ChromeOptions()
+    options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
+
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
     driver = uc.Chrome(options=options)
     driver.get("https://www.mercari.com/us/category/3511/")
+    driver.save_screenshot("mercari.png")
     return driver
 
 

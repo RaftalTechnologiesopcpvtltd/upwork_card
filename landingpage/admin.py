@@ -76,3 +76,10 @@ class ProductAdmin(admin.ModelAdmin):
     ordering = ['updated']
 
 admin.site.register(Product, ProductAdmin)
+class MyListingAdmin(admin.ModelAdmin):
+    list_display = ['user','website_name', 'product_title','selling_type', 'product_price', 'brand', 'category', 'updated']
+    search_fields = ['selling_type','website_name', 'product_title', 'brand', 'category']
+    list_filter = ['is_closed', 'certified_seller', 'status']
+    ordering = ['updated']
+
+admin.site.register(MyListing, MyListingAdmin)
