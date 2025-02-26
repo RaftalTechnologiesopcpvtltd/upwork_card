@@ -27,6 +27,7 @@ import re
 import logging
 from bs4 import BeautifulSoup
 from dictionary_normanlizer import *
+import undetected_chromedriver as uc
 
 
 
@@ -63,13 +64,18 @@ def save_to_csv(data, filename="craglist.csv"):
 
 
 def initialize_driver():
-    # Define the path to save the Chrome profile
-    profile_path = os.path.join(os.getcwd(), "profile", "john")  # Profile path: ./profile/john
-    # Create Chrome options
-    chrome_options = Options()
-    chrome_options.add_argument(f"--user-data-dir={profile_path}")  # Set the user data directory
-    driver = webdriver.Chrome(options=chrome_options)
+
+    options = uc.ChromeOptions()
+    options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
+    options.add_argument("--disable-gpu")  # Required for headless mode in some systems
+    options.add_argument("--window-size=1920x1080")  # Set a window size
+    options.add_argument("--no-sandbox")  # Bypass OS security model
+    options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource issues
+
+    # Launch undetected Chrome in headless mode
+    driver = uc.Chrome(options=options)
     driver.get("https://geo.craigslist.org/iso/us")
+    driver.save_screenshot('img.png')
     return driver
 
 def get_all_location(driver):

@@ -106,3 +106,6 @@ class BlogPostForm(forms.ModelForm):
         help_texts = {
             'tags': 'Example: technology, coding, web development'
         }
+
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField()

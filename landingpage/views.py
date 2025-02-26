@@ -386,39 +386,50 @@ def payment_failed(request):
 
 def product_search(request):
     query = request.GET.get("query", "").strip()
+    selling_type = request.GET.get("selling_type", "").strip()
+    marketplace = request.GET.get("marketplace", "").strip()
     today = now().date()
+
+    # Start with all products
+    products = Product.objects.all()
+
+    # Apply filters
     if query:
-        products = Product.objects.filter(product_title__icontains=query)  # Limit to 10 results
-        results = []
+        products = products.filter(product_title__icontains=query)
+    if selling_type:
+        products = products.filter(selling_type=selling_type)
+    if marketplace:
+        products = products.filter(website_name=marketplace)
 
-        for p in products:
-            product_images_str = p.product_images
+    results = []
+    for p in products:
+        product_images_str = p.product_images
 
-            if product_images_str:
-                try:
-                    product_images_list = ast.literal_eval(product_images_str)  # Convert string to list
-                except (SyntaxError, ValueError):
-                    product_images_list = []
-            else:
+        if product_images_str:
+            try:
+                product_images_list = ast.literal_eval(product_images_str)  # Convert string to list
+            except (SyntaxError, ValueError):
                 product_images_list = []
+        else:
+            product_images_list = []
 
-            results.append({
-                "id": p.id,
-                "title": p.product_title,
-                "link": p.product_link,
-                "selling_type": p.selling_type,
-                "website_name": p.website_name,
-                "price": p.product_price,
-                "current_bid_price": str(p.current_bid_price) if p.current_bid_price else "N/A",
-                "current_bid_currency": p.current_bid_currency,
-                "current_bid_count": p.current_bid_count,
-                "image": product_images_list[0] if product_images_list else "",  # Handle missing images
-                "date" : today,
-            })
-    else:
-        results = []
+        results.append({
+            "id": p.id,
+            "title": p.product_title,
+            "link": p.product_link,
+            "selling_type": p.selling_type,
+            "website_name": p.website_name,
+            "price": p.product_price,
+            "current_bid_price": str(p.current_bid_price) if p.current_bid_price else "N/A",
+            "current_bid_currency": p.current_bid_currency,
+            "current_bid_count": p.current_bid_count,
+            "image": product_images_list[0] if product_images_list else "",  # Handle missing images
+            "date": today,
+        })
+        
 
     return JsonResponse({"products": results})
+
 
 import ast
 from django.http import JsonResponse
@@ -527,38 +538,18 @@ def dashboard_view(request):
     """
     slidders = Slidder.objects.all()
     today = now().date()
-
     try:
         # Fetch all products
         products = Product.objects.all()
         # List to store all products with formatted images
-        all_products = []
+        All_brands = []
 
         # Loop through each product
         for product in products:
-            # Convert product_images (string) to a real list
-            product_images_str = product.product_images
-
-            if product_images_str:
-                try:
-                    product_images_list = ast.literal_eval(product_images_str)
-                except (SyntaxError, ValueError):
-                    product_images_list = []
-            else:
-                product_images_list = []
-
-            # Construct the full product object
-            full_product = {
-                "id": product.id,
-                "website_name": product.website_name,
-                "product_link": product.product_link,
-                "product_title": product.product_title,
-                "product_price": product.product_price,
-                "product_images": product_images_list  # Now it's a real list
-            }
-
             # Append to list
-            all_products.append(full_product)
+            All_brands.append(product.website_name)
+            
+        print(set(All_brands))
         subscription = UserSubscription.objects.get(user=request.user)
         stripe_sub = stripe.Subscription.retrieve(subscription.subscription_id)
         
@@ -569,7 +560,7 @@ def dashboard_view(request):
             
         if subscription.active:
             # Render the dashboard page if the subscription is active
-            return render(request, 'dashboard.html',{"slidders" : slidders,"User_Subscription" : subscription,"products" : all_products,"today":today})  # Replace with your dashboard template
+            return render(request, 'dashboard.html',{"slidders" : slidders,"marketplaces":list(set(All_brands)),"User_Subscription" : subscription,"today":today})  # Replace with your dashboard template
         else:
             # Redirect to landing page if the subscription is not active
             return redirect('landingpage')
@@ -811,3 +802,203 @@ def logout_view(request):
     
     
 #     return render(request, 'payment_checkout.html', {'plan': subscription})
+
+import decimal
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+import csv
+
+
+def bulk_upload_products(request):
+    if request.method == "POST":
+        product_list = []
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request, "File is not a CSV!")
+                return redirect('bulk_upload_products')
+            
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
+
+            # Define required columns
+            required_columns = {
+                "Website Name",
+                "Website URL",
+                "Product Link",
+                "Product Images",
+                "Selling Type",
+                "Product Title",
+                "Product Price Currency",
+                "Product Price",
+                "Current Bid Price",
+                "Current Bid Currency",
+                "Current Bid Count",
+                "Description",
+                "Condition",
+                "Condition Id",
+                "Condition Descriptors",
+                "Condition Values",
+                "Condition Additional Info",
+                "Product Availibility status",
+                "Product Availibility Quantity",
+                "Product Sold Quantity",
+                "Product Remaining Quantity",
+                "Shipping Cost",
+                "Shipping Currency",
+                "Shipping Service Code",
+                "Shipping Carrier Code",
+                "Shipping Type",
+                "Additional Shipping Cost Per Unit",
+                "Additional Shipping Cost Currency",
+                "Shipping Cost Type",
+                "Estimated Arrival",
+                "Brand",
+                "Category",
+                "Updated",
+                "Auction Id",
+                "Bid Count",
+                "Certified Seller",
+                "Favorited Count",
+                "Highest Bidder",
+                "Listing Id",
+                "Integer Id",
+                "Is Owner",
+                "Listing Type",
+                "Lot String",
+                "Slug",
+                "Starting Price",
+                "Starting Price Currency",
+                "Is Closed",
+                "User Bid Status",
+                "User Max Bid",
+                "Status",
+                "ReturnTerms returns Accepted", 
+                "ReturnTerms refund Method",
+                "ReturnTerms return Shipping Cost Payer",
+                "ReturnTerms return Period Value",
+                "ReturnTerms return Period Unit",
+                "Payment Methods",
+                "Quantity Used For Estimate",
+                "Min Estimated Delivery Date",
+                "Max Estimated Delivery Date",
+                "Buying Options",
+                "Minimum Price to Bid",
+                "Minimum Price Currency",
+                "Unique Bidder Count"
+            }
+
+            # Get actual CSV headers
+            actual_columns = set(reader.fieldnames)
+
+            # Check for missing columns
+            missing_columns = required_columns - actual_columns
+            if missing_columns:
+                messages.error(request, f"Missing required columns: {', '.join(missing_columns)}")
+                return redirect('bulk_upload_products')
+
+            def safe_int(value, default=0):
+                try:
+                    return int(float(value)) if value else default
+                except (ValueError, TypeError):
+                    return default
+
+            def safe_decimal(value):
+                try:
+                    return decimal.Decimal(value.replace("$", "").replace(",", "")) if value else None
+                except (decimal.InvalidOperation, ValueError, AttributeError):
+                    return None
+
+            def safe_bool(value):
+                return str(value).strip().lower() in ["true", "1", "yes"]
+
+            def safe_date(value):
+                if not value or value.strip() in ["", "None", "null"]:
+                    return None
+                try:
+                    return datetime.strptime(value.strip(), "%Y-%m-%d").date()
+                except ValueError:
+                    return None  # Return None if the format is incorrect
+
+            for row in reader:
+                product = MyListing(
+                    user=request.user,
+                    website_name=row.get("Website Name"),
+                    website_url=row.get("Website URL"),
+                    product_link=row.get("Product Link"),
+                    product_title=row.get("Product Title"),
+                    product_images=row.get("Product Images"),
+                    selling_type=row.get("Selling Type"),
+                    product_price=safe_decimal(row.get("Product Price")),
+                    product_price_currency=row.get("Product Price Currency"),
+                    current_bid_price=safe_decimal(row.get("Current Bid Price")),
+                    current_bid_currency=row.get("Current Bid Currency", "USD"),
+                    current_bid_count=safe_int(row.get("Current Bid Count")),
+                    description=row.get("Description"),
+                    condition=row.get("Condition"),
+                    condition_id=row.get("Condition Id"),
+                    condition_descriptors=row.get("Condition Descriptors"),
+                    condition_values=row.get("Condition Values"),
+                    condition_additional_info=row.get("Condition Additional Info"),
+                    product_availability_status=row.get("Product Availability Status"),
+                    product_availability_quantity=safe_int(row.get("Product Availability Quantity")),
+                    product_sold_quantity=safe_int(row.get("Product Sold Quantity")),
+                    product_remaining_quantity=safe_int(row.get("Product Remaining Quantity")),
+                    shipping_cost=safe_decimal(row.get("Shipping Cost")),
+                    shipping_currency=row.get("Shipping Currency", "USD"),
+                    shipping_service_code=row.get("Shipping Service Code"),
+                    shipping_carrier_code=row.get("Shipping Carrier Code"),
+                    shipping_type=row.get("Shipping Type"),
+                    additional_shipping_cost_per_unit=safe_decimal(row.get("Additional Shipping Cost Per Unit")),
+                    additional_shipping_cost_currency=row.get("Additional Shipping Cost Currency", "USD"),
+                    shipping_cost_type=row.get("Shipping Cost Type"),
+                    estimated_arrival=row.get("Estimated Arrival"),
+                    brand=row.get("Brand"),
+                    category=row.get("Category"),
+                    auction_id=row.get("Auction Id"),
+                    bid_count=safe_int(row.get("Bid Count")),
+                    certified_seller=safe_bool(row.get("Certified Seller")),
+                    favorited_count=safe_int(row.get("Favorited Count")),
+                    highest_bidder=row.get("Highest Bidder"),
+                    listing_id=row.get("Listing Id"),
+                    integer_id=safe_int(row.get("Integer Id")),
+                    is_owner=safe_bool(row.get("Is Owner")),
+                    listing_type=row.get("Listing Type"),
+                    lot_string=row.get("Lot String"),
+                    slug=row.get("Slug"),
+                    starting_price=safe_decimal(row.get("Starting Price")),
+                    starting_price_currency=row.get("Starting Price Currency", "USD"),
+                    is_closed=safe_bool(row.get("Is Closed")),
+                    user_bid_status=row.get("User Bid Status"),
+                    user_max_bid=safe_decimal(row.get("User Max Bid")),
+                    status=row.get("Status"),
+                    return_terms_returns_accepted=safe_bool(row.get("Return Terms Returns Accepted")),
+                    return_terms_refund_method=row.get("Return Terms Refund Method"),
+                    return_terms_return_shipping_cost_payer=row.get("Return Terms Return Shipping Cost Payer"),
+                    return_terms_return_period_value=safe_int(row.get("Return Terms Return Period Value")),
+                    return_terms_return_period_unit=row.get("Return Terms Return Period Unit"),
+                    payment_methods=row.get("Payment Methods"),
+                    quantity_used_for_estimate=safe_int(row.get("Quantity Used For Estimate")),
+                    min_estimated_delivery_date=safe_date(row.get("Min Estimated Delivery Date")),
+                    max_estimated_delivery_date=safe_date(row.get("Max Estimated Delivery Date")),
+                    buying_options=row.get("Buying Options"),
+                    minimum_price_to_bid=safe_decimal(row.get("Minimum Price to Bid")),
+                    minimum_price_currency=row.get("Minimum Price Currency", "USD"),
+                    unique_bidder_count=safe_int(row.get("Unique Bidder Count")),
+                )
+
+                product_list.append(product)
+            
+            if product_list:
+                MyListing.objects.bulk_create(product_list)
+                messages.success(request, "Products uploaded successfully!")
+            else:
+                messages.error(request, "No valid products found to upload.")
+            
+            return redirect('bulk_upload_products')
+    
+    else:
+        form = CSVUploadForm()
+    
+    return render(request, 'bulk_upload.html', {'form': form})
