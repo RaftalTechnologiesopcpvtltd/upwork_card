@@ -11,7 +11,7 @@ urlpatterns = [
     path('my-subscription/', views.my_subscription, name='my_subscription'),
     path('my-dashboard/', views.dashboard_view, name='dashboard_view'),
     path('my-profile/', views.profile, name='profile'),
-    path('create/', views.create_post, name='create_post'),
+    path('create-post/', views.create_post, name='create_post'),
     path('blog_listings/', views.blog_listings, name='blog_listings'),
     path('blog_post/<int:post_id>/', views.blog_post, name='blog_post'),
     path('faq/', views.faq, name='faq'),
@@ -25,5 +25,6 @@ urlpatterns = [
     path("stripe-webhook/", views.stripe_webhook, name="stripe_webhook"),
     path("search/", views.product_search, name="product_search"),
     path('get-product/<int:product_id>/', views.get_product_details, name='get_product_details'),
-    path('bulk-upload/', views.bulk_upload_products, name='bulk_upload_products'),
+    path('product-upload/', views.bulk_upload_products, name='bulk_upload_products'),
+    path('my-products/', views.my_products, name='my_products'),
 ]

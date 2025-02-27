@@ -77,9 +77,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 class MyListingAdmin(admin.ModelAdmin):
-    list_display = ['user','website_name', 'product_title','selling_type', 'product_price', 'brand', 'category', 'updated']
-    search_fields = ['selling_type','website_name', 'product_title', 'brand', 'category']
-    list_filter = ['is_closed', 'certified_seller', 'status']
-    ordering = ['updated']
+    list_display = ['user','product_title']
+    search_fields = ['product_title']
 
 admin.site.register(MyListing, MyListingAdmin)

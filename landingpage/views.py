@@ -18,6 +18,10 @@ import ast
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+import decimal
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+import csv
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -111,130 +115,6 @@ def register_view(request):
         form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})
 
-# # Initialize logger
-# logger = logging.getLogger(__name__)
-
-# # Initialize Razorpay client
-# client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-
-
-# def create_razorpay_order(amount, session_key):
-#     """
-#     Create a Razorpay order.
-#     """
-#     try:
-#         data = {
-#             'amount': amount * 100,  # Amount in paise
-#             'currency': 'INR',
-#             'payment_capture': '0',
-#             'receipt': session_key,
-#         }
-#         response_data = client.order.create(data)
-#         if response_data['status'] == 'created':
-#             logger.info(f"Razorpay order created: {response_data['id']} with session_key: {session_key}")
-#             return response_data['id']
-#         else:
-#             logger.error(f"Failed to create Razorpay order with session_key: {session_key}")
-#             return None
-#     except Exception as e:
-#         logger.error(f"Error while creating Razorpay order: {e}")
-#         return None
-
-
-
-# # Initialize logger
-# logger = logging.getLogger(__name__)
-
-# # Initialize Razorpay client
-# client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-
-
-# def create_razorpay_order(amount, session_key):
-#     """
-#     Create a Razorpay order.
-#     """
-#     razorpay_amount = int(amount * 100)
-#     try:
-#         data = {
-#             'amount': razorpay_amount,  # Amount in paise
-#             'currency': 'INR',
-#             'payment_capture': '0',
-#             'receipt': session_key,
-#         }
-#         response_data = client.order.create(data)
-#         if response_data['status'] == 'created':
-#             logger.info(f"Razorpay order created: {response_data['id']} with session_key: {session_key}")
-#             return response_data['id']
-#         else:
-#             logger.error(f"Failed to create Razorpay order with session_key: {session_key}")
-#             return None
-#     except Exception as e:
-#         logger.error(f"Error while creating Razorpay order: {e}")
-#         return None
-
-
-# def paymenthandler(request):
-#     """
-#     Handle the Razorpay payment callback.
-#     """
-#     if request.method == "POST":
-#         try:
-#             payment_id = request.POST.get('razorpay_payment_id', '')
-#             razorpay_order_id = request.POST.get('razorpay_order_id')
-#             signature = request.POST.get('razorpay_signature')
-
-#             if not (payment_id and razorpay_order_id and signature):
-#                 logger.error(f"Missing parameters: payment_id={payment_id}, razorpay_order_id={razorpay_order_id}, signature={signature}")
-#                 return HttpResponseBadRequest("Missing parameters.")
-
-#             # Verify the payment signature
-#             params_dict = {
-#                 'razorpay_order_id': razorpay_order_id,
-#                 'razorpay_payment_id': payment_id,
-#                 'razorpay_signature': signature
-#             }
-
-#             client.utility.verify_payment_signature(params_dict)
-
-#             # Fetch payment details and capture the payment
-#             payment_details = client.payment.fetch(payment_id)
-#             amount = payment_details['amount']
-
-#             client.payment.capture(payment_id, amount)
-
-#             # Update the subscription status
-#             subscription = UserSubscription.objects.get(receipt=razorpay_order_id)
-#             subscription.active = True
-#             subscription.payment_id = payment_id
-#             subscription.payment_status = 'captured'
-#             subscription.start_date = date.today()
-#             subscription.end_date = date.today() + timedelta(days=subscription.plan.duration_in_days)
-#             subscription.save()
-
-#             logger.info(f"Payment captured successfully for subscription {subscription.id}")
-#             # return redirect("dashboard_view")
-#             return render(request, 'subscription_success.html', {'plan': subscription.plan})
-
-#         except Exception as e:
-#             logger.error(f"Payment handler error: {e}")
-#             return render(request, 'paymentfail.html')
-#     else:
-#         return HttpResponseBadRequest()
-
-
-
-
-# def create_checkout_session(request):
-#     if request.method == "POST":
-#         price_id = request.POST.get("price_id")  # Get from the frontend
-#         customer_email = request.POST.get("email")  # Get customer email
-
-#         # Create a Stripe Checkout Session
-        
-
-#         return JsonResponse({"sessionId": session.id})
-
-#     return JsonResponse({"error": "Invalid request"}, status=400)
 
 @login_required
 def subscribe_to_plan(request, plan_id):
@@ -286,36 +166,6 @@ def subscribe_to_plan(request, plan_id):
             active=False
             )
         return redirect(checkout_session.url, code=303)
-    
-    # Check if the user already has an active subscription
-    
-
-    # # Create Razorpay order
-    # session_key = request.session.session_key or request.session.create()
-    # razorpay_order_id = create_razorpay_order(plan.price, session_key)
-    # if not razorpay_order_id:
-    #     return HttpResponseBadRequest("Failed to create Razorpay order.")
-
-    # if active_subscription:
-    #     if not active_subscription.active:
-    #         # Deactivate the existing subscription and update with new receipt
-    #         active_subscription.receipt = razorpay_order_id
-    #         active_subscription.plan = plan
-    #         active_subscription.save()
-    #     else:
-    #         # If there's already an active subscription, handle it accordingly
-    #         return HttpResponseBadRequest("You already have an active subscription.")
-    # else:
-    #     # Create a new subscription (inactive until payment is confirmed)
-    
-
-    # context = {
-    #     'user': request.user,
-    #     'razorpay_order_id': razorpay_order_id,
-    #     'razorpay_key_id': settings.RAZORPAY_KEY_ID,
-    #     'amount': plan.price,  # Amount in paise
-    #     'plan': plan,
-    # }
 
     context = {
         # 'subscription' : subscription,
@@ -431,10 +281,6 @@ def product_search(request):
     return JsonResponse({"products": results})
 
 
-import ast
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from .models import Product
 
 def get_product_details(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -523,9 +369,6 @@ def get_product_details(request, product_id):
         "unique_bidder_count": product.unique_bidder_count,
     }
 
-    # Debugging
-    print("Product Data:", product_data)  
-
     return JsonResponse(product_data, safe=False)
 
 
@@ -582,7 +425,14 @@ def my_subscription(request):
     """
     View the current active subscription.
     """
-    subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    try:
+        subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    except Exception as e:
+        print(f"Subscription check failed: {e}")
+        subscription = None
+
+    if not (subscription and subscription.active):
+        return redirect("landingpage")
     # stripe_subscription = stripe.Subscription.retrieve(subscription.subscription_id)
     # print(stripe_subscription)
     return render(request, 'my_subscription.html', {'User_Subscription': subscription})
@@ -624,9 +474,16 @@ def stripe_webhook(request):
     return JsonResponse({"status": "success"})
 
 
-
+@login_required
 def create_post(request):
-    subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    try:
+        subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    except Exception as e:
+        print(f"Subscription check failed: {e}")
+        subscription = None
+
+    if not (subscription and subscription.active):
+        return redirect("landingpage")
     if request.method == "POST":
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -640,8 +497,17 @@ def create_post(request):
     
     return render(request, 'post_form.html', {'form': form,'User_Subscription': subscription})
 
+
+@login_required
 def blog_listings(request):
-    subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    try:
+        subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    except Exception as e:
+        print(f"Subscription check failed: {e}")
+        subscription = None
+
+    if not (subscription and subscription.active):
+        return redirect("landingpage")
 
     tag = request.GET.get('tag')  # Get tag from URL
     if tag:
@@ -661,9 +527,16 @@ def blog_listings(request):
         'User_Subscription': subscription,
     })
 
-
+@login_required
 def blog_post(request,post_id):
-    subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    try:
+        subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    except Exception as e:
+        print(f"Subscription check failed: {e}")
+        subscription = None
+
+    if not (subscription and subscription.active):
+        return redirect("landingpage")
     post = get_object_or_404(BlogPost, id=post_id)
     comments = post.comments.filter(parent=None, approved=True)  # Only top-level comments
     form = CommentForm()
@@ -798,207 +671,311 @@ def logout_view(request):
     return redirect('landingpage')
 
 
-# def Subscription_view(request):
-    
-    
-#     return render(request, 'payment_checkout.html', {'plan': subscription})
-
-import decimal
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
-import csv
 
 
+# @login_required
+# def bulk_upload_products(request):
+#     try:
+#         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+#     except Exception as e:
+#         print(f"Subscription check failed: {e}")
+#         subscription = None
+
+#     if not (subscription and subscription.active):
+#         return redirect("landingpage")
+
+#     if request.method == "POST":
+#         form = CSVUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             csv_file = request.FILES["csv_file"]
+#             if not csv_file.name.endswith(".csv"):
+#                 messages.error(request, "File is not a CSV!")
+#                 return redirect("bulk_upload_products")
+
+#             try:
+#                 decoded_file = csv_file.read().decode("utf-8", errors="ignore").splitlines()
+#                 reader = csv.DictReader(decoded_file)
+#             except Exception as e:
+#                 messages.error(request, f"Error reading CSV file: {e}")
+#                 return redirect("bulk_upload_products")
+
+#             required_columns = {
+#                 "Website Name",
+#                 "Website URL",
+#                 "Product Link",
+#                 "Product Images",
+#                 "Selling Type",
+#                 "Product Title",
+#                 "Product Price Currency",
+#                 "Product Price",
+#                 "Current Bid Price",
+#                 "Current Bid Currency",
+#                 "Current Bid Count",
+#                 "Description",
+#                 "Condition",
+#                 "Condition Id",
+#                 "Condition Descriptors",
+#                 "Condition Values",
+#                 "Condition Additional Info",
+#                 "Product Availibility status",
+#                 "Product Availibility Quantity",
+#                 "Product Sold Quantity",
+#                 "Product Remaining Quantity",
+#                 "Shipping Cost",
+#                 "Shipping Currency",
+#                 "Shipping Service Code",
+#                 "Shipping Carrier Code",
+#                 "Shipping Type",
+#                 "Additional Shipping Cost Per Unit",
+#                 "Additional Shipping Cost Currency",
+#                 "Shipping Cost Type",
+#                 "Estimated Arrival",
+#                 "Brand",
+#                 "Category",
+#                 "Updated",
+#                 "Auction Id",
+#                 "Bid Count",
+#                 "Certified Seller",
+#                 "Favorited Count",
+#                 "Highest Bidder",
+#                 "Listing Id",
+#                 "Integer Id",
+#                 "Is Owner",
+#                 "Listing Type",
+#                 "Lot String",
+#                 "Slug",
+#                 "Starting Price",
+#                 "Starting Price Currency",
+#                 "Is Closed",
+#                 "User Bid Status",
+#                 "User Max Bid",
+#                 "Status",
+#                 "ReturnTerms returns Accepted",
+#                 "ReturnTerms refund Method",
+#                 "ReturnTerms return Shipping Cost Payer",
+#                 "ReturnTerms return Period Value",
+#                 "ReturnTerms return Period Unit",
+#                 "Payment Methods",
+#                 "Quantity Used For Estimate",
+#                 "Min Estimated Delivery Date",
+#                 "Max Estimated Delivery Date",
+#                 "Buying Options",
+#                 "Minimum Price to Bid",
+#                 "Minimum Price Currency",
+#                 "Unique Bidder Count",
+#             }
+
+#             actual_columns = set(reader.fieldnames)
+#             missing_columns = required_columns - actual_columns
+#             if missing_columns:
+#                 messages.error(request, f"Missing required columns: {', '.join(missing_columns)}")
+#                 return redirect("bulk_upload_products")
+
+#             def safe_int(value, default=0):
+#                 try:
+#                     return int(float(value)) if value else default
+#                 except (ValueError, TypeError):
+#                     return default
+
+#             def safe_decimal(value):
+#                 try:
+#                     return decimal.Decimal(value.replace("$", "").replace(",", "")) if value else None
+#                 except (decimal.InvalidOperation, ValueError, AttributeError):
+#                     return None
+
+#             def safe_bool(value):
+#                 return str(value).strip().lower() in ["true", "1", "yes"]
+
+#             def safe_date(value):
+#                 if not value or value.strip().lower() in ["", "none", "null"]:
+#                     return None
+#                 try:
+#                     return datetime.strptime(value.strip(), "%Y-%m-%d").date()
+#                 except ValueError:
+#                     return None
+
+#             product_list = []
+#             for row in reader:
+#                 try:
+#                     product = MyListing(
+#                         user=request.user,
+#                         website_name=row.get("Website Name"),
+#                         website_url=row.get("Website URL"),
+#                         product_link=row.get("Product Link"),
+#                         product_title=row.get("Product Title"),
+#                         product_images=row.get("Product Images"),
+#                         selling_type=row.get("Selling Type"),
+#                         product_price=safe_decimal(row.get("Product Price")),
+#                         product_price_currency=row.get("Product Price Currency"),
+#                         current_bid_price=safe_decimal(row.get("Current Bid Price")),
+#                         current_bid_currency=row.get("Current Bid Currency", "USD"),
+#                         current_bid_count=safe_int(row.get("Current Bid Count")),
+#                         description=row.get("Description"),
+#                         condition=row.get("Condition"),
+#                         condition_id=row.get("Condition Id"),
+#                         condition_descriptors=row.get("Condition Descriptors"),
+#                         condition_values=row.get("Condition Values"),
+#                         condition_additional_info=row.get("Condition Additional Info"),
+#                         product_availability_status=row.get("Product Availibility status"),
+#                         product_availability_quantity=safe_int(row.get("Product Availibility Quantity")),
+#                         product_sold_quantity=safe_int(row.get("Product Sold Quantity")),
+#                         product_remaining_quantity=safe_int(row.get("Product Remaining Quantity")),
+#                         shipping_cost=safe_decimal(row.get("Shipping Cost")),
+#                         shipping_currency=row.get("Shipping Currency", "USD"),
+#                         shipping_service_code=row.get("Shipping Service Code"),
+#                         shipping_carrier_code=row.get("Shipping Carrier Code"),
+#                         shipping_type=row.get("Shipping Type"),
+#                         additional_shipping_cost_per_unit=safe_decimal(row.get("Additional Shipping Cost Per Unit")),
+#                         additional_shipping_cost_currency=row.get("Additional Shipping Cost Currency", "USD"),
+#                         shipping_cost_type=row.get("Shipping Cost Type"),
+#                         estimated_arrival=row.get("Estimated Arrival"),
+#                         brand=row.get("Brand"),
+#                         category=row.get("Category"),
+#                         auction_id=row.get("Auction Id"),
+#                         bid_count=safe_int(row.get("Bid Count")),
+#                         certified_seller=safe_bool(row.get("Certified Seller")),
+#                         favorited_count=safe_int(row.get("Favorited Count")),
+#                         highest_bidder=row.get("Highest Bidder"),
+#                         listing_id=row.get("Listing Id"),
+#                         integer_id=safe_int(row.get("Integer Id")),
+#                         is_owner=safe_bool(row.get("Is Owner")),
+#                         listing_type=row.get("Listing Type"),
+#                         lot_string=row.get("Lot String"),
+#                         slug=row.get("Slug"),
+#                         starting_price=safe_decimal(row.get("Starting Price")),
+#                         starting_price_currency=row.get("Starting Price Currency", "USD"),
+#                         is_closed=safe_bool(row.get("Is Closed")),
+#                         user_bid_status=row.get("User Bid Status"),
+#                         user_max_bid=safe_decimal(row.get("User Max Bid")),
+#                         status=row.get("Status"),
+#                     )
+#                     product_list.append(product)
+#                 except Exception as e:
+#                     print(f"Skipping row due to error: {e}")
+
+#             if product_list:
+#                 MyListing.objects.bulk_create(product_list)
+#                 messages.success(request, "Products uploaded successfully!")
+#             else:
+#                 messages.error(request, "No valid products found to upload.")
+
+#             return redirect("bulk_upload_products")
+
+#     form = CSVUploadForm()
+#     return render(request, "bulk_upload.html", {"form": form,'User_Subscription': subscription})
+
+
+
+
+
+@login_required
 def bulk_upload_products(request):
+    try:
+        subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    except Exception as e:
+        print(f"Subscription check failed: {e}")
+        subscription = None
+
+    if not (subscription and subscription.active):
+        return redirect("landingpage")
+
     if request.method == "POST":
-        product_list = []
         form = CSVUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            csv_file = request.FILES['csv_file']
-            if not csv_file.name.endswith('.csv'):
+            csv_file = request.FILES["csv_file"]
+            if not csv_file.name.endswith(".csv"):
                 messages.error(request, "File is not a CSV!")
-                return redirect('bulk_upload_products')
-            
-            decoded_file = csv_file.read().decode('utf-8').splitlines()
-            reader = csv.DictReader(decoded_file)
+                return redirect("bulk_upload_products")
 
-            # Define required columns
+            try:
+                decoded_file = csv_file.read().decode("utf-8", errors="ignore").splitlines()
+                reader = csv.DictReader(decoded_file)
+            except Exception as e:
+                messages.error(request, f"Error reading CSV file: {e}")
+                return redirect("bulk_upload_products")
+
             required_columns = {
-                "Website Name",
-                "Website URL",
-                "Product Link",
-                "Product Images",
-                "Selling Type",
-                "Product Title",
-                "Product Price Currency",
-                "Product Price",
-                "Current Bid Price",
-                "Current Bid Currency",
-                "Current Bid Count",
-                "Description",
-                "Condition",
-                "Condition Id",
-                "Condition Descriptors",
-                "Condition Values",
-                "Condition Additional Info",
-                "Product Availibility status",
-                "Product Availibility Quantity",
-                "Product Sold Quantity",
-                "Product Remaining Quantity",
-                "Shipping Cost",
-                "Shipping Currency",
-                "Shipping Service Code",
-                "Shipping Carrier Code",
-                "Shipping Type",
-                "Additional Shipping Cost Per Unit",
-                "Additional Shipping Cost Currency",
-                "Shipping Cost Type",
-                "Estimated Arrival",
-                "Brand",
-                "Category",
-                "Updated",
-                "Auction Id",
-                "Bid Count",
-                "Certified Seller",
-                "Favorited Count",
-                "Highest Bidder",
-                "Listing Id",
-                "Integer Id",
-                "Is Owner",
-                "Listing Type",
-                "Lot String",
-                "Slug",
-                "Starting Price",
-                "Starting Price Currency",
-                "Is Closed",
-                "User Bid Status",
-                "User Max Bid",
-                "Status",
-                "ReturnTerms returns Accepted", 
-                "ReturnTerms refund Method",
-                "ReturnTerms return Shipping Cost Payer",
-                "ReturnTerms return Period Value",
-                "ReturnTerms return Period Unit",
-                "Payment Methods",
-                "Quantity Used For Estimate",
-                "Min Estimated Delivery Date",
-                "Max Estimated Delivery Date",
-                "Buying Options",
-                "Minimum Price to Bid",
-                "Minimum Price Currency",
-                "Unique Bidder Count"
+                "Product Title"
             }
 
-            # Get actual CSV headers
             actual_columns = set(reader.fieldnames)
-
-            # Check for missing columns
             missing_columns = required_columns - actual_columns
             if missing_columns:
                 messages.error(request, f"Missing required columns: {', '.join(missing_columns)}")
-                return redirect('bulk_upload_products')
+                return redirect("bulk_upload_products")
 
-            def safe_int(value, default=0):
-                try:
-                    return int(float(value)) if value else default
-                except (ValueError, TypeError):
-                    return default
 
-            def safe_decimal(value):
-                try:
-                    return decimal.Decimal(value.replace("$", "").replace(",", "")) if value else None
-                except (decimal.InvalidOperation, ValueError, AttributeError):
-                    return None
-
-            def safe_bool(value):
-                return str(value).strip().lower() in ["true", "1", "yes"]
-
-            def safe_date(value):
-                if not value or value.strip() in ["", "None", "null"]:
-                    return None
-                try:
-                    return datetime.strptime(value.strip(), "%Y-%m-%d").date()
-                except ValueError:
-                    return None  # Return None if the format is incorrect
-
+            product_list = []
             for row in reader:
-                product = MyListing(
-                    user=request.user,
-                    website_name=row.get("Website Name"),
-                    website_url=row.get("Website URL"),
-                    product_link=row.get("Product Link"),
-                    product_title=row.get("Product Title"),
-                    product_images=row.get("Product Images"),
-                    selling_type=row.get("Selling Type"),
-                    product_price=safe_decimal(row.get("Product Price")),
-                    product_price_currency=row.get("Product Price Currency"),
-                    current_bid_price=safe_decimal(row.get("Current Bid Price")),
-                    current_bid_currency=row.get("Current Bid Currency", "USD"),
-                    current_bid_count=safe_int(row.get("Current Bid Count")),
-                    description=row.get("Description"),
-                    condition=row.get("Condition"),
-                    condition_id=row.get("Condition Id"),
-                    condition_descriptors=row.get("Condition Descriptors"),
-                    condition_values=row.get("Condition Values"),
-                    condition_additional_info=row.get("Condition Additional Info"),
-                    product_availability_status=row.get("Product Availability Status"),
-                    product_availability_quantity=safe_int(row.get("Product Availability Quantity")),
-                    product_sold_quantity=safe_int(row.get("Product Sold Quantity")),
-                    product_remaining_quantity=safe_int(row.get("Product Remaining Quantity")),
-                    shipping_cost=safe_decimal(row.get("Shipping Cost")),
-                    shipping_currency=row.get("Shipping Currency", "USD"),
-                    shipping_service_code=row.get("Shipping Service Code"),
-                    shipping_carrier_code=row.get("Shipping Carrier Code"),
-                    shipping_type=row.get("Shipping Type"),
-                    additional_shipping_cost_per_unit=safe_decimal(row.get("Additional Shipping Cost Per Unit")),
-                    additional_shipping_cost_currency=row.get("Additional Shipping Cost Currency", "USD"),
-                    shipping_cost_type=row.get("Shipping Cost Type"),
-                    estimated_arrival=row.get("Estimated Arrival"),
-                    brand=row.get("Brand"),
-                    category=row.get("Category"),
-                    auction_id=row.get("Auction Id"),
-                    bid_count=safe_int(row.get("Bid Count")),
-                    certified_seller=safe_bool(row.get("Certified Seller")),
-                    favorited_count=safe_int(row.get("Favorited Count")),
-                    highest_bidder=row.get("Highest Bidder"),
-                    listing_id=row.get("Listing Id"),
-                    integer_id=safe_int(row.get("Integer Id")),
-                    is_owner=safe_bool(row.get("Is Owner")),
-                    listing_type=row.get("Listing Type"),
-                    lot_string=row.get("Lot String"),
-                    slug=row.get("Slug"),
-                    starting_price=safe_decimal(row.get("Starting Price")),
-                    starting_price_currency=row.get("Starting Price Currency", "USD"),
-                    is_closed=safe_bool(row.get("Is Closed")),
-                    user_bid_status=row.get("User Bid Status"),
-                    user_max_bid=safe_decimal(row.get("User Max Bid")),
-                    status=row.get("Status"),
-                    return_terms_returns_accepted=safe_bool(row.get("Return Terms Returns Accepted")),
-                    return_terms_refund_method=row.get("Return Terms Refund Method"),
-                    return_terms_return_shipping_cost_payer=row.get("Return Terms Return Shipping Cost Payer"),
-                    return_terms_return_period_value=safe_int(row.get("Return Terms Return Period Value")),
-                    return_terms_return_period_unit=row.get("Return Terms Return Period Unit"),
-                    payment_methods=row.get("Payment Methods"),
-                    quantity_used_for_estimate=safe_int(row.get("Quantity Used For Estimate")),
-                    min_estimated_delivery_date=safe_date(row.get("Min Estimated Delivery Date")),
-                    max_estimated_delivery_date=safe_date(row.get("Max Estimated Delivery Date")),
-                    buying_options=row.get("Buying Options"),
-                    minimum_price_to_bid=safe_decimal(row.get("Minimum Price to Bid")),
-                    minimum_price_currency=row.get("Minimum Price Currency", "USD"),
-                    unique_bidder_count=safe_int(row.get("Unique Bidder Count")),
-                )
+                try:
+                    product = MyListing(
+                        user=request.user,
+                        product_title=row.get("Product Title"),
+                    )
+                    product_list.append(product)
+                except Exception as e:
+                    print(f"Skipping row due to error: {e}")
 
-                product_list.append(product)
-            
             if product_list:
                 MyListing.objects.bulk_create(product_list)
                 messages.success(request, "Products uploaded successfully!")
             else:
                 messages.error(request, "No valid products found to upload.")
-            
-            return redirect('bulk_upload_products')
+
+            return redirect("bulk_upload_products")
+
+    form = CSVUploadForm()
+    return render(request, "bulk_upload.html", {"form": form,'User_Subscription': subscription})
+
+from django.db.models import Q
+@login_required
+def my_products(request):
+    try:
+        subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+    except Exception as e:
+        print(f"Subscription check failed: {e}")
+        subscription = None
+
+    if not (subscription and subscription.active):
+        return redirect("landingpage")
     
-    else:
-        form = CSVUploadForm()
-    
-    return render(request, 'bulk_upload.html', {'form': form})
+    my_products = MyListing.objects.filter(user=request.user).values_list("product_title", flat=True)
+
+    # Start with all products
+    products = Product.objects.all()
+
+    # Apply filters using Q objects
+    if my_products:
+        query_filter = Q()
+        for title in my_products:
+            if title:
+                query_filter |= Q(product_title__icontains=title)  # Use OR condition for multiple titles
+        products = products.filter(query_filter)
+
+    # Build results
+    product_results = []
+    for p in products:
+        product_images_str = p.product_images
+
+        if product_images_str:
+            try:
+                product_images_list = ast.literal_eval(product_images_str)  # Convert string to list
+            except (SyntaxError, ValueError):
+                product_images_list = []
+        else:
+            product_images_list = []
+
+        product_results.append({
+            "id": p.id,
+            "title": p.product_title,
+            "link": p.product_link,
+            "selling_type": p.selling_type,
+            "website_name": p.website_name,
+            "price": p.product_price,
+            "current_bid_price": str(p.current_bid_price) if p.current_bid_price else "N/A",
+            "current_bid_currency": p.current_bid_currency,
+            "current_bid_count": p.current_bid_count,
+            "image": product_images_list[0] if product_images_list else "",  # Handle missing images
+            "date": p.updated,
+        })
+    return render(request, "myproducts.html", {'User_Subscription': subscription,'product_results':product_results})
