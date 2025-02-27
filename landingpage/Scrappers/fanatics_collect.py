@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import csv
+import undetected_chromedriver as uc
 import os
 import re
 import logging
@@ -33,15 +34,19 @@ console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(
 logger.addHandler(console_handler)
 
 def initialize_driver():
-    # Define the path to save the Chrome profile
-    profile_path = os.path.join(os.getcwd(), "profile", "john")  # Profile path: ./profile/john
 
-    # Create Chrome options
-    chrome_options = Options()
-    chrome_options.add_argument(f"--user-data-dir={profile_path}")  # Set the user data directory
-    driver = webdriver.Chrome(options=chrome_options)
+    options = uc.ChromeOptions()
+    options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
+    options.add_argument("--disable-gpu")  # Required for headless mode in some systems
+    options.add_argument("--window-size=1920x1080")  # Set a window size
+    options.add_argument("--no-sandbox")  # Bypass OS security model
+    options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource issues
+
+    # Launch undetected Chrome in headless mode
+    driver = uc.Chrome(options=options)
     wait = WebDriverWait(driver, 10)
     driver.get("https://www.fanaticscollect.com/")
+    driver.save_screenshot("fanaticscollect.png")
     return driver
 
 def get_dropdown_links(driver):
@@ -84,7 +89,9 @@ def get_prod_links(driver,all_dropdown_links):
         for bo in buying_option[:1]:
             for i in range(1, 3):
                 driver.get(f"{dropdown_link}&type={bo}&page={i}")
-                time.sleep(10)    
+                time.sleep(10)
+                driver.save_screenshot("fanaticscollect.png")
+
             
                 page_source = driver.page_source
                 # Parse with BeautifulSoup
@@ -509,53 +516,57 @@ def fixed_resp(fixed_prod_ids):
 def extract_listing_details(response):
     try:
         current_bid_amount = response.get("currentBid", {}).get("amountInCents", 0) / 100
-    except TypeError:
+    except :
         current_bid_amount = "N/A"
 
     try:
         user_max_bid = response.get("states", {}).get("userMaxBid", {}).get("amountInCents", 0) / 100
-    except TypeError:
+    except :
         user_max_bid = "N/A"
 
     try:
         starting_price = response.get("startingPrice", {}).get("amountInCents", 0) / 100
-    except TypeError:
+    except :
         starting_price = "N/A"
 
     listing_type = response.get("listingType")
     if "WEEKLY" in listing_type:
+        selling_type = "Auction"
         type = "weekly"
     elif "FIXED" in listing_type:
+        selling_type = "Fixed"
         type = "fixed"
     elif "PREMIER" in listing_type:
+        selling_type = "Premier"
         type = "premier"
 
     return normalize_data({
-        "Website Name": "fanaticscollect",
-        "Website URL": "https://www.fanaticscollect.com/",
-        "Product Link": f"https://www.fanaticscollect.com/{type}/{response.get('id')}/{response.get('slug')}",
-        "Product Title": response.get("title"),
-        "Product Images": [img.get("medium") for img in response.get("imageSets", []) if img.get("medium")],
-        "auction_id": response.get("auction", {}).get("id"),
-        "bid_count": response.get("bidCount"),
-        "certified_seller": response.get("certifiedSeller"),
-        "current_bid": current_bid_amount,
-        "current_bid_currency": response.get("currentBid", {}).get("currency"),
-        "favorited_count": response.get("favoritedCount"),
-        "highest_bidder": response.get("highestBidder"),
-        "listing_id": response.get("id"),
-        "integer_id": response.get("integerId"),
-        "is_owner": response.get("isOwner"),
-        "listing_type": response.get("listingType"),
-        "lot_string": response.get("lotString"),
-        "slug": response.get("slug"),
-        "Product Price": starting_price,
-        "starting_price_currency": response.get("startingPrice", {}).get("currency"),
-        "is_closed": response.get("states", {}).get("isClosed"),
-        "user_bid_status": response.get("states", {}).get("userBidStatus"),
-        "user_max_bid": user_max_bid,
-        "status": response.get("status"),
-    })
+    "Website Name": "fanaticscollect",
+    "Website URL": "https://www.fanaticscollect.com/",
+    "Product Link": f"https://www.fanaticscollect.com/{type}/{response.get('id', 'N/A')}/{response.get('slug', 'N/A')}",
+    "Product Images": [img.get("medium", "N/A") for img in response.get("imageSets", []) if img.get("medium")] or ["N/A"],
+    "Selling Type": selling_type if selling_type is not None else "N/A",
+    "Product Title": response.get("title", "N/A"),
+    "Product Price Currency": response.get("startingPrice", {}).get("currency", "N/A"),
+    "Product Price": starting_price if starting_price is not None else "N/A",
+    "Current Bid Price": current_bid_amount if current_bid_amount is not None else "N/A",
+    "Current Bid Currency": response.get("currentBid", {}).get("currency", "N/A"),
+    "Current Bid Count": response.get("bidCount", "N/A"),
+    "Auction Id": response.get("auction", {}).get("id", "N/A"),
+    "Certified Seller": response.get("certifiedSeller", "N/A"),
+    "Favorited Count": response.get("favoritedCount", "N/A"),
+    "Highest Bidder": response.get("highestBidder", "N/A"),
+    "Listing Id": response.get("id", "N/A"),
+    "Integer Id": response.get("integerId", "N/A"),
+    "Is Owner": response.get("isOwner", "N/A"),
+    "Listing Type": response.get("listingType", "N/A"),
+    "Lot String": response.get("lotString", "N/A"),
+    "Slug": response.get("slug", "N/A"),
+    "Is Closed": response.get("states", {}).get("isClosed", "N/A"),
+    "User Bid Status": response.get("states", {}).get("userBidStatus", "N/A"),
+    "User Max Bid": user_max_bid if user_max_bid is not None else "N/A",
+    "Status": response.get("status", "N/A"),
+})
 
 
 def save_to_csv(data, filename="fanatics_data.csv"):
