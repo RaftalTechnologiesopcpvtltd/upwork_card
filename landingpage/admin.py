@@ -70,10 +70,14 @@ class FAQAdmin(admin.ModelAdmin):
     search_fields = ('question', 'answer')
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['website_name', 'product_title', 'product_price', 'brand', 'category', 'updated']
-    search_fields = ['website_name', 'product_title', 'brand', 'category']
+    list_display = ['website_name', 'product_title','selling_type', 'product_price', 'brand', 'category', 'updated']
+    search_fields = ['selling_type','website_name', 'product_title', 'brand', 'category']
     list_filter = ['is_closed', 'certified_seller', 'status']
     ordering = ['updated']
-    list_per_page = 20  # Adjust this number based on your preference
 
 admin.site.register(Product, ProductAdmin)
+class MyListingAdmin(admin.ModelAdmin):
+    list_display = ['user','product_title']
+    search_fields = ['product_title']
+
+admin.site.register(MyListing, MyListingAdmin)

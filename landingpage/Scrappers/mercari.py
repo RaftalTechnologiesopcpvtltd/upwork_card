@@ -31,11 +31,14 @@ logger.addHandler(console_handler)
 def initialize_driver():
     """Initialize the undetected Chrome driver with required options."""
     options = uc.ChromeOptions()
+    options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
+
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
     driver = uc.Chrome(options=options)
     driver.get("https://www.mercari.com/us/category/3511/")
+    driver.save_screenshot("mercari.png")
     return driver
 
 
@@ -163,7 +166,7 @@ def save_to_csv(data, filename="mercari_data.csv"):
 
 def extract_data(all_card_links, driver):
     """Extract product details from all product links."""
-    for link in all_card_links[:3]:
+    for link in all_card_links:
         driver.get(link)
         time.sleep(5)
 
@@ -191,15 +194,18 @@ def extract_data(all_card_links, driver):
             "Website URL": "https://www.mercari.com/",
             "Product Link": link,
             "Product Images": images,
+            "Selling Type" : "Fixed",
             "Product Title": get_text(driver, 'h1[data-testid="ItemName"]'),
+            "Product Price Currency": "$",
             "Product Price": get_text(driver, 'p[data-testid="ItemPrice"]'),
-            "Shipping": get_text(driver, 'p[data-testid="ItemDetailsDelivery"]'),
-            "Est. Arrival": get_text(driver, 'p[data-testid="ItemDetailsEstArrival"]'),
+            "Description": clean_description(get_text(driver, 'p[data-testid="ItemDetailsDescription"]')),
             "Condition": get_text(driver, 'p[data-testid="ItemDetailsCondition"]'),
+            "Shipping Cost": get_text(driver, 'p[data-testid="ItemDetailsDelivery"]'),
+            "Shipping Currency": "$",
+            "Estimated Arrival": get_text(driver, 'p[data-testid="ItemDetailsEstArrival"]'),
             "Brand": get_text(driver, 'span[data-testid="ItemDetailsBrand"] a'),
             "Category": category,
             "Updated": get_text(driver, 'p[data-testid="ItemDetailExternalUpdated"]'),
-            "Description": clean_description(get_text(driver, 'p[data-testid="ItemDetailsDescription"]'))
         })
 
         logger.info(f"Extracted product: {product_data['Product Title']}")

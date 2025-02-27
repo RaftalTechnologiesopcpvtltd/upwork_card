@@ -43,14 +43,18 @@ logger.addHandler(console_handler)
 
 
 def initialize_driver():
-    # Define the path to save the Chrome profile
-    profile_path = os.path.join(os.getcwd(), "profile", "john")  # Profile path: ./profile/john
+    options = uc.ChromeOptions()
+    # options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
+    options.add_argument("--disable-gpu")  # Required for headless mode in some systems
+    options.add_argument("--window-size=1920x1080")  # Set a window size
+    options.add_argument("--no-sandbox")  # Bypass OS security model
+    options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource issues
 
-    # Create Chrome options
-    chrome_options = Options()
-    chrome_options.add_argument(f"--user-data-dir={profile_path}")  # Set the user data directory
-    driver = webdriver.Chrome(options=chrome_options)
+    # Launch undetected Chrome in headless mode
+    driver = uc.Chrome(options=options)
+    wait = WebDriverWait(driver, 10)
     driver.get("https://offerup.com/search?q=sports+cards")
+    driver.save_screenshot("offerup.png")
     return driver
 
 def get_all_prod_links(driver):
@@ -97,7 +101,7 @@ def save_to_csv(data, filename="OfferUp_data.csv"):
     logger.info(f"Data saved to {filename}")
 
 def get_product(driver,all_prod_links):
-    for links in all_prod_links[:5]:
+    for links in all_prod_links:
         ProductImagesURLS = "-"
         ProductTitle = "-"
         ProductPrice = "-"
@@ -158,15 +162,18 @@ def get_product(driver,all_prod_links):
             "Website URL": "https://offerup.com/",
             "Product Link": links,
             "Product Images": ProductImagesURLS,
+            "Selling Type" : "Fixed",
             "Product Title": ProductTitle,
+            "Product Price Currency": "$",
             "Product Price": ProductPrice,
-            "Shipping": Shipping if Shipping else "-",
-            "Est. Arrival": EstArrival,
+            "Description": Description,
             "Condition": Condition,
+            "Shipping Cost": Shipping if Shipping else "-",
+            "Shipping Currency": "$" if Shipping else "-",
+            "Estimated Arrival": EstArrival,
             "Brand": Brand,
             "Category": Category,
             "Updated": Updated,
-            "Description": Description
         })
 
         logger.info(product_data)
