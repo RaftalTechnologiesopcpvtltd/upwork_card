@@ -1,0 +1,692 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* #navbarTwo {
+        display: none !important;
+    }
+
+    .navbar-btn {
+        margin-left: auto;
+    } */
+
+    body {
+        background-color: #f4f7fe !important;
+    }
+
+    label {
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .clear_btn {
+        border-color: #001531;
+        color: #001531;
+    }
+
+    .clear_btn:hover {
+        background-color: #001531;
+        color: #fafafa;
+
+    }
+
+    .category-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 300px);
+        gap: 10px;
+        justify-content: space-evenly;
+    }
+
+    .openProductModal {
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .openProductModal:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .suggestions {
+        /* border: 0.5px solid #ccc; */
+        max-height: 200px;
+        overflow-y: auto;
+        /* position: absolute; */
+        width: 100%;
+        background: white;
+        z-index: 1000;
+    }
+
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    /* Product Card Container */
+    .product-card {
+        width: 100%;
+        max-width: 18rem;
+        background-color: #EBF4F3;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        padding: 15px;
+        text-align: center;
+        transition: 0.3s ease-in-out;
+    }
+
+    /* Ribbon Style */
+    .ribbon {
+        position: absolute;
+        top: 85px;
+        left: -30px;
+        width: 162px;
+        height: 37px;
+        /* Adjust height as needed */
+        background-color: #ff4d4d;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        transform: rotate(-45deg);
+        /* Tilt the ribbon */
+        transform-origin: top left;
+        z-index: 10;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+
+
+    /* Product Image Styling */
+    .product-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 230px;
+        overflow: hidden;
+    }
+
+    .product-image img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+
+    /* Product Title */
+    .product-title {
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .product-card {
+            max-width: 100%;
+        }
+    }
+
+
+    .suggestion-item:hover {
+        background: #f2f2f2;
+    }
+
+    .carousel-item::before {
+        background: none !important;
+    }
+
+    .changing_btn {
+        background-color: #001531;
+    }
+
+    .changing_btn:hover {
+        border: 1px solid #001531;
+        background: white;
+        color: #001531;
+    }
+
+    .changing_btn i:hover {
+        color: #001531;
+    }
+
+    .carousel-control-prev {
+        left: 0 !important;
+    }
+
+    .carousel-control-next {
+        right: 0 !important;
+    }
+
+    .headings_clr {
+        color: #001531;
+    }
+
+    /* Ensure indicators are centered and aligned properly */
+    #productCarousel .carousel-indicators {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        /* Space between bars */
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        z-index: 10;
+    }
+
+    /* Base styling for the bars */
+    #productCarousel .carousel-indicators [data-bs-target] {
+        width: 25px;
+        /* Default width */
+        height: 6px;
+        /* Default height */
+        background-color: rgba(255, 255, 255, 0.6);
+        /* Light bar */
+        border-radius: 3px;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+        min-width: 18px;
+        /* Ensures visibility on small screens */
+        min-height: 5px;
+    }
+
+    /* Active bar styling */
+    #productCarousel .carousel-indicators .active {
+        width: 35px;
+        /* Bigger active bar */
+        height: 7px;
+        /* Slightly taller */
+        background-color: #001531;
+        /* Active bar color */
+        min-width: 22px;
+        min-height: 6px;
+    }
+
+    .selling_price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .bid {
+        font-size: 1.1rem;
+        color: #007bff;
+    }
+
+    .date {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #productCarousel .carousel-indicators {
+            bottom: 8px;
+            gap: 5px;
+        }
+
+        #productCarousel .carousel-indicators [data-bs-target] {
+            width: 20px;
+            height: 5px;
+            min-width: 16px;
+            min-height: 4px;
+        }
+
+        #productCarousel .carousel-indicators .active {
+            width: 28px;
+            height: 6px;
+            min-width: 18px;
+            min-height: 5px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        #productCarousel .carousel-indicators {
+            bottom: 6px;
+            gap: 4px;
+        }
+
+        #productCarousel .carousel-indicators [data-bs-target] {
+            width: 18px;
+            height: 4px;
+            min-width: 14px;
+            min-height: 3px;
+        }
+
+        #productCarousel .carousel-indicators .active {
+            width: 24px;
+            height: 5px;
+            min-width: 16px;
+            min-height: 4px;
+        }
+    }
+
+    .auction-box,
+    .fixed-price-box {
+        padding: 15px;
+        margin: 10px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        display: inline-block;
+        width: 200px;
+    }
+
+    /* Auction Style - Neon Red */
+    .auction-box {
+        /* Bright neon red */
+        border: 2px solid #ff2200;
+        color: #ff2200;
+        /* White text for contrast */
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    /* Fixed Price Style - Neon Blue */
+    .fixed-price-box {
+        /* Bright neon blue */
+        border: 2px solid #008000;
+        color: #008000;
+        /* White text for contrast */
+        padding: 10px;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="d-flex align-items-center justify-content-end nav_section_block">
+    <!-- <div class="container banner-text-container" style="color: #dee7e9;">
+        <div style="font-size: 36px">
+            <b>My Subscription</b>
+        </div>
+        <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
+    </div> -->
+</div>
+<section id="dashboard">
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-10">
+                <div class="section-title text-center pb-25">
+                    <h3 class="title">My Products!!</h3>
+                    <!-- <p class="text">Search Your Products with the Given Filters!!</p> -->
+                </div> <!-- section title -->
+            </div>
+        </div> <!-- row -->
+
+
+
+        <div id="results">
+            <!-- Example result item -->
+            <div class="category-container">
+                {% for product in product_results %}
+                <div class="my-5 openProductModal position-relative" data-product-id="{{product.id}}"
+                    data-bs-toggle="modal" data-bs-target="#productModal">
+
+                    <div class="ribbon">{{product.website_name}}</div> <!-- Ribbon added here -->
+
+                    <div
+                        style="width: auto; border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
+                        <div style="display: flex; justify-content: center; height: 230.5px !important; 
+                        width: 230.5px !important; overflow: hidden; padding: 8%; margin-left: 12%;">
+                            <img src="{{product.image}}" class="img-fluid" alt="{{product.title}}">
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h5 class="mt-4 card-title" style="font-size: 18px !important; font-weight: 700 !important;">
+                            {{product.title}}
+                        </h5>
+
+                        <h6 class="mt-4 card-title {% if product.selling_type and 'Auction' in product.selling_type %} auction-box {% else %} fixed-price-box {% endif %}">
+                            {{product.selling_type}}
+                        </h6>
+
+
+
+                        {% if product.selling_type and 'Auction' in product.selling_type %}
+                        <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price:
+                            ${{product.current_bid_price}}</p>
+                        <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count: {{product.current_bid_count}}</p>
+                        {% else %}
+                        <p class="selling_price mb-1">Selling Price: ${{product.price}}</p>
+                        {% endif %}
+
+                        <p class="date mb-3"><i class="far fa-calendar-alt me-2"></i> {{product.date}}</p>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- More result items will be dynamically added here -->
+        </div>
+        <!-- Product Modal -->
+        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content rounded-3 shadow-lg">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #001531;">
+                        <h5 class="modal-title text-white" id="productTitle"></h5>
+                        <button data-bs-dismiss="modal" aria-label="Close" class="btn text-white">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div class="modal-body bg-light p-4">
+
+                        <!-- Product Image Slider -->
+                        <div id="productCarousel" class="carousel slide mb-4" data-bs-ride="false">
+                            <div class="carousel-indicators" id="carouselIndicators"></div>
+                            <div class="carousel-inner"></div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                        <!-- Product Title & Price -->
+                        <h3 id="productTitlebtm" class="text-dark text-center"></h3>
+                        <h4 id="productPrice" class="text-success fw-bold text-center"></h4>
+
+                        <!-- Availability & Stock -->
+                        <div class="row text-center">
+                            <p class="col-md-4"><i class="fa-solid fa-box"></i> <strong>Availability:</strong> <span
+                                    id="productAvailability"></span></p>
+                            <p class="col-md-4"><i class="fa-solid fa-layer-group"></i> <strong>Stock:</strong> <span
+                                    id="productStock"></span></p>
+                            <p class="col-md-4"><i class="fa-solid fa-shopping-cart"></i> <strong>Sold:</strong> <span
+                                    id="productSold"></span></p>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="card shadow-sm p-3 mt-3">
+                            <h5 class="headings_clr"><i class="fa-solid fa-info-circle"></i> Description</h5>
+                            <p id="productDescription"></p>
+                        </div>
+
+                        <!-- Auction & Condition -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card shadow-sm p-3 mt-3">
+                                    <h5 class="headings_clr"><i class="fa-solid fa-gavel"></i> Auction Details</h5>
+                                    <p><strong>Auction ID:</strong> <span id="auctionId"></span></p>
+                                    <p><strong>Current Bid:</strong> <span id="currentBid"></span></p>
+                                    <p><strong>Highest Bidder:</strong> <span id="highestBidder"></span></p>
+                                    <p><strong>Bid Count:</strong> <span id="bidCount"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card shadow-sm p-3 mt-3">
+                                    <h5 class="headings_clr"><i class="fa-solid fa-clipboard-check"></i> Condition</h5>
+                                    <p><strong>Condition:</strong> <span id="condition"></span></p>
+                                    <p><strong>Additional Info:</strong> <span id="conditionInfo"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shipping & Returns -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card shadow-sm p-3 mt-3">
+                                    <h5 class="headings_clr"><i class="fa-solid fa-truck"></i> Shipping Details</h5>
+                                    <p><strong>Shipping:</strong> <span id="shippingInfo"></span></p>
+                                    <p><strong>Estimated Arrival:</strong> <span id="estArrival"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card shadow-sm p-3 mt-3">
+                                    <h5 class="headings_clr"><i class="fa-solid fa-undo"></i> Return Policy</h5>
+                                    <p><strong>Returns Accepted:</strong> <span id="returnAccepted"></span></p>
+                                    <p><strong>Refund Method:</strong> <span id="refundMethod"></span></p>
+                                    <p><strong>Return Period:</strong> <span id="returnPeriod"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Details -->
+                        <div class="card shadow-sm p-3 mt-3">
+                            <h5 class="headings_clr"><i class="fa-solid fa-tags"></i> Other Details</h5>
+                            <p><strong>Brand:</strong> <span id="productBrand"></span></p>
+                            <p><strong>Category:</strong> <span id="productCategory"></span></p>
+                            <p><strong>Website:</strong> <a href="#" id="websiteUrl" target="_blank"></a></p>
+                            <p><strong>Product Link:</strong> <a href="#" id="productLink" target="_blank"></a></p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // // $("#searchInput, #soldFilter, #marketplaceFilter").on("keyup change", function () {
+        //     let query = $("#searchInput").val().trim();
+        //     let sellingType = $("#soldFilter").val();
+        //     let marketplace = $("#marketplaceFilter").val();
+
+        //     console.log("query", query);
+        //     console.log("marketplace", marketplace);
+
+
+        //     if (query.length > 1 || sellingType || marketplace) {  // Only search when at least 2 characters
+        //         $.ajax({
+        //             url: "/search/",
+        //             type: "GET",
+        //             data: {
+        //                 query: query,
+        //                 selling_type: sellingType,
+        //                 marketplace: marketplace
+        //             },
+        //             success: function (response) {
+        //                 let resultsContainer = $(".category-container");
+        //                 resultsContainer.empty();
+
+        //                 if (response.products.length > 0) {
+        //                     response.products.forEach(product => {
+        //                         let productHTML = `
+        //                                 <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" 
+        //                                     data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
+                                            
+        //                                     <div class="ribbon">${product.website_name || "Unknown"}</div> <!-- Ribbon added here -->
+                                            
+        //                                     <div style="width: auto; border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
+        //                                         <div style="display: flex; justify-content: center; height: 230.5px !important; 
+        //                                             width: 230.5px !important; overflow: hidden; padding: 8%; margin-left: 12%;">
+        //                                             <img src="${product.image}" class="img-fluid" alt="${product.title}">
+        //                                         </div>
+        //                                     </div>
+        //                                     <div class="p-3">
+        //                                         <h5 class="mt-4 card-title" style="font-size: 18px !important; font-weight: 700 !important;">
+        //                                             ${product.title}
+        //                                         </h5>
+
+        //                                         <h6 class="mt-4 card-title ${product.selling_type && product.selling_type.includes('Auction') ? 'auction-box' : 'fixed-price-box'}">${product.selling_type || "Unknown"}
+        //                                         </h6>
+                                                
+                                                
+
+        //                                         ${product.selling_type && product.selling_type.includes('Auction') ? `
+        //                                             <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price: $${product.current_bid_price || "N/A"}</p>
+        //                                             <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count: ${product.current_bid_count || "N/A"}</p>
+        //                                         ` : `
+        //                                             <p class="selling_price mb-1">Selling Price: $${product.price || "N/A"}</p>
+        //                                         `}
+
+        //                                         <p class="date mb-3"><i class="far fa-calendar-alt me-2"></i> ${product.date || "N/A"}</p>
+
+        //                                     </div>
+        //                                 </div>
+        //                             `;
+
+        //                         resultsContainer.append(productHTML);
+        //                     });
+        //                 } else {
+        //                     resultsContainer.html("<p>No products found.</p>");
+        //                 }
+
+        //             },
+        //             error: function () {
+        //                 $(".category-container").html("<p>Error fetching results.</p>");
+        //             }
+        //         });
+        //     } else {
+        //         $(".category-container").empty();
+        //     }
+        // });
+
+
+        // Fix: Use event delegation for dynamically loaded elements
+        $(document).on("click", ".openProductModal", function () {
+            let productId = $(this).data("product-id");
+
+            fetch(`/get-product/${productId}/`) // Django API URL
+                .then(response => response.json())
+                .then(data => {
+                    if (!data) return;
+
+                    let carouselInner = $("#productCarousel .carousel-inner");
+                    let indicators = $("#carouselIndicators");
+
+                    carouselInner.empty(); // Clear previous images
+                    indicators.empty(); // Clear previous indicators (dots)
+
+                    let images = data.product_images;
+
+                    if (images.length === 0) {
+                        carouselInner.append(`
+                    <div class="carousel-item active">
+                        <img src="/static/default.jpg" class="d-block w-100" alt="No Image Available">
+                    </div>`);
+                    } else {
+                        images.forEach((imgSrc, index) => {
+                            let activeClass = index === 0 ? "active" : "";
+
+                            // Add Image Slide
+                            carouselInner.append(`
+                        <div class="carousel-item ${activeClass}" style="height: 500px; background: white;">
+                            <img src="${imgSrc.trim()}" class="d-block w-100" alt="Product Image" 
+                                 style="height: 100%; object-fit: contain;">
+                        </div>`);
+
+                            // Add Indicator (Dot)
+                            indicators.append(`
+                        <button type="button" data-bs-target="#productCarousel" 
+                                data-bs-slide-to="${index}" class="${activeClass}" aria-label="Slide ${index + 1}"></button>`);
+                        });
+                    }
+
+                    // Remove and re-add navigation buttons if multiple images exist
+                    $(".carousel-control-prev, .carousel-control-next").remove();
+                    if (images.length > 1) {
+                        $("#productCarousel").append(`
+                    <button class="carousel-control-prev changing_btn" type="button" 
+                            data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <i class="lni lni-arrow-left"></i>
+                    </button>
+                    <button class="carousel-control-next changing_btn" type="button" 
+                            data-bs-target="#productCarousel" data-bs-slide="next">
+                        <i class="lni lni-arrow-right"></i>
+                    </button>`);
+                    }
+
+                    // Enable Touch Swipe for Mobile Users
+                    let carouselElement = document.querySelector("#productCarousel");
+                    let touchStartX = 0;
+                    let touchEndX = 0;
+
+                    carouselElement.addEventListener("touchstart", (e) => {
+                        touchStartX = e.changedTouches[0].screenX;
+                    });
+
+                    carouselElement.addEventListener("touchend", (e) => {
+                        touchEndX = e.changedTouches[0].screenX;
+                        handleSwipe();
+                    });
+
+                    function handleSwipe() {
+                        if (touchEndX < touchStartX) {
+                            new bootstrap.Carousel(carouselElement).next();
+                        }
+                        if (touchEndX > touchStartX) {
+                            new bootstrap.Carousel(carouselElement).prev();
+                        }
+                    }
+
+                    // Populate Product Details
+                    $("#productTitle").text(data.product_title || "No Title Available");
+                    $("#productTitlebtm").text(data.product_title || "No Title Available");
+                    $("#productPrice").text(data.product_price ? `$${data.product_price}` : "Price Not Available");
+                    $("#productAvailability").text(data.product_availability_status || "Unknown");
+                    $("#productStock").text(data.product_availability_quantity || "Not Specified");
+                    $("#productSold").text(data.product_sold_quantity || "Not Specified");
+                    $("#productDescription").text(data.description || "No description available.");
+
+                    // Auction Info
+                    $("#auctionId").text(data.auction_id || "N/A");
+                    $("#currentBid").text(data.current_bid_price ? `$${data.current_bid_price}` : "N/A");
+                    $("#highestBidder").text(data.highest_bidder || "No Bids");
+                    $("#bidCount").text(data.current_bid_count || "0");
+
+                    // Condition Info
+                    $("#condition").text(data.condition || "N/A");
+                    $("#conditionInfo").text(`${data.condition} ${data.condition_descriptors_list} ${data.condition_values} ${data.condition_additional_info}` || "No details available");
+
+                    // Shipping Info
+                    $("#shippingInfo").text(data.shipping_cost || "Not Available");
+                    $("#estArrival").text(data.estimated_arrival || "Unknown");
+
+                    // Return Policy
+                    $("#returnAccepted").text(data.return_terms_returns_accepted || "N/A");
+                    $("#refundMethod").text(data.return_terms_refund_method || "N/A");
+                    $("#returnPeriod").text(data.return_terms_return_period_value ?
+                        `${data.return_terms_return_period_value} ${data.return_terms_return_period_unit}` : "N/A");
+
+                    // Additional Info
+                    $("#productBrand").text(data.brand || "N/A");
+                    $("#productCategory").text(data.category || "N/A");
+
+                    // Website & Product Links
+                    if (data.website_url) {
+                        $("#websiteUrl").attr("href", data.website_url).text(data.website_name || "Website").parent().show();
+                    } else {
+                        $("#websiteUrl").parent().hide();
+                    }
+
+                    if (data.product_link) {
+                        $("#productLink").attr("href", data.product_link).text("View Product").parent().show();
+                    } else {
+                        $("#productLink").parent().hide();
+                    }
+
+                    // Show the modal
+                    $("#productModal").modal("show");
+                })
+                .catch(error => console.error("Error fetching product details:", error));
+        });
+
+    });
+</script>
+
+
+
+{% endblock %}
