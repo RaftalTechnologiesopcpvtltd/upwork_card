@@ -28,7 +28,7 @@ console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 logger.addHandler(console_handler)
 
-def initialize_driver():
+def mercari_scraper_initialize_driver():
     """Initialize the undetected Chrome driver with required options."""
     options = uc.ChromeOptions()
     options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
@@ -212,25 +212,25 @@ def extract_data(all_card_links, driver):
         save_to_csv(product_data)
 
 
-def main():
-    """Main execution function."""
-    logger.info("Starting Mercari Scraper...")
+# def main():
+#     """Main execution function."""
+#     logger.info("Starting Mercari Scraper...")
 
-    """Main execution function."""
-    logger.info("Starting Mercari Scraper...")
+#     """Main execution function."""
+#     logger.info("Starting Mercari Scraper...")
     
-    driver = initialize_driver()
+#     driver = initialize_driver()
     
-    try:
-        see_all_links = get_see_all_links(driver)
-        all_card_links = extract_cards_links(driver, see_all_links)
-        extract_data(all_card_links, driver)
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-    finally:
-        driver.quit()
-        logger.info("Scraper finished successfully.")
+#     try:
+#         see_all_links = get_see_all_links(driver)
+#         all_card_links = extract_cards_links(driver, see_all_links)
+#         extract_data(all_card_links, driver)
+#     except Exception as e:
+#         logger.error(f"An error occurred: {e}")
+#     finally:
+#         driver.quit()
+#         logger.info("Scraper finished successfully.")
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
