@@ -42,7 +42,7 @@ console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(
 logger.addHandler(console_handler)
 
 
-def initialize_driver():
+def offerUp_scraper_initialize_driver():
     options = uc.ChromeOptions()
     # options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
     options.add_argument("--disable-gpu")  # Required for headless mode in some systems
@@ -179,10 +179,10 @@ def get_product(driver,all_prod_links):
         logger.info(product_data)
         save_to_csv(product_data, filename="OfferUp_data.csv")
 
-if __name__ == "__main__":
-    logger.info("==============Start==================")
+# if __name__ == "__main__":
+#     logger.info("==============Start==================")
 
-    driver = initialize_driver()
-    all_prod_links = get_all_prod_links(driver)
-    get_product(driver,all_prod_links)
-    logger.info("==============Finished==================")
+#     driver = initialize_driver()
+#     all_prod_links = get_all_prod_links(driver)
+#     get_product(driver,all_prod_links)
+#     logger.info("==============Finished==================")
