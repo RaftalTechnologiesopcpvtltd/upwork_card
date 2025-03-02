@@ -142,10 +142,10 @@ def get_prod(driver, all_location_links):
         except Exception as e:
             print(f"Error searching products: {e}")
 
-if __name__ == "__main__":
-    logger.info("==============Start==================")
+# if __name__ == "__main__":
+#     logger.info("==============Start==================")
 
-    driver = initialize_driver()
-    all_location_links = get_all_location(driver)
-    get_prod(driver,all_location_links)
-    logger.info("==============Finished==================")
+#     driver = initialize_driver()
+#     all_location_links = get_all_location(driver)
+#     get_prod(driver,all_location_links)
+#     logger.info("==============Finished==================")

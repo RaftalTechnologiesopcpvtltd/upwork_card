@@ -33,7 +33,7 @@ console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 logger.addHandler(console_handler)
 
-def initialize_driver():
+def fanatics_scraper_initialize_driver():
 
     options = uc.ChromeOptions()
     options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
@@ -596,48 +596,48 @@ def chunk_list(data_list, chunk_size=100):
 
 
 
-def main():    
-    driver = initialize_driver()
-    wait = WebDriverWait(driver, 10)
-    time.sleep(3)
-    all_dropdown_links = get_dropdown_links(driver)
-    time.sleep(3)
+# def main():    
+#     driver = fanatics_scraper_initialize_driver()
+#     wait = WebDriverWait(driver, 10)
+#     time.sleep(3)
+#     all_dropdown_links = get_dropdown_links(driver)
+#     time.sleep(3)
 
-    all_links = get_prod_links(driver,all_dropdown_links[:2])
-    all_cards_links_weekly = all_links[2]
-    all_cards_links_fixed = all_links[0]
-    all_cards_links_premier = all_links[1]
-    weekly_prod_ids = get_prod_id(all_cards_links_weekly)
-    fixed_prod_ids = get_prod_id(all_cards_links_fixed)
-    premier_prod_ids = get_prod_id(all_cards_links_premier)
+#     all_links = get_prod_links(driver,all_dropdown_links[:2])
+#     all_cards_links_weekly = all_links[2]
+#     all_cards_links_fixed = all_links[0]
+#     all_cards_links_premier = all_links[1]
+#     weekly_prod_ids = get_prod_id(all_cards_links_weekly)
+#     fixed_prod_ids = get_prod_id(all_cards_links_fixed)
+#     premier_prod_ids = get_prod_id(all_cards_links_premier)
 
-    weekly_prod_ids_chunks = chunk_list(weekly_prod_ids)
-    fixed_prod_ids_chunks = chunk_list(fixed_prod_ids)
-    premier_prod_ids_chunks = chunk_list(premier_prod_ids)
+#     weekly_prod_ids_chunks = chunk_list(weekly_prod_ids)
+#     fixed_prod_ids_chunks = chunk_list(fixed_prod_ids)
+#     premier_prod_ids_chunks = chunk_list(premier_prod_ids)
 
-    for chunk in weekly_prod_ids_chunks:
-        products = weekly_resp(chunk)
-        for product in products:
-            data = extract_listing_details(product)
-            save_to_csv(data, filename="fanatics_data.csv")
-        time.sleep(3)
-
-
-
-    for chunk in fixed_prod_ids_chunks:
-        products = fixed_resp(chunk)
-        for product in products:
-            data = extract_listing_details(product)
-            save_to_csv(data, filename="fanatics_data.csv")
-        time.sleep(3)
+#     for chunk in weekly_prod_ids_chunks:
+#         products = weekly_resp(chunk)
+#         for product in products:
+#             data = extract_listing_details(product)
+#             save_to_csv(data, filename="fanatics_data.csv")
+#         time.sleep(3)
 
 
-    for chunk in premier_prod_ids_chunks:
-        products = premier_resp(chunk)
-        for product in products:
-            data = extract_listing_details(product)
-            save_to_csv(data, filename="fanatics_data.csv")
-        time.sleep(3)
+
+#     for chunk in fixed_prod_ids_chunks:
+#         products = fixed_resp(chunk)
+#         for product in products:
+#             data = extract_listing_details(product)
+#             save_to_csv(data, filename="fanatics_data.csv")
+#         time.sleep(3)
 
 
-main()
+#     for chunk in premier_prod_ids_chunks:
+#         products = premier_resp(chunk)
+#         for product in products:
+#             data = extract_listing_details(product)
+#             save_to_csv(data, filename="fanatics_data.csv")
+#         time.sleep(3)
+
+
+# main()
