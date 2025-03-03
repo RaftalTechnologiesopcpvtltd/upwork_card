@@ -41,6 +41,8 @@
                             {% if user.is_authenticated %}
                             <li class="nav-item active"><a class="page-scroll" href="{% url 'profile' %}">My profile</a>
                             </li>
+                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'my_products' %}">My Listing</a>
+                            </li>
                             <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                             </li>
                             {% else %}
@@ -88,6 +90,7 @@
                                 <span>Hi {{ user.first_name }}</span>
                             </a>
                             <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'my_products' %}">My Listing</a>
                                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                             </div>
                         </div>

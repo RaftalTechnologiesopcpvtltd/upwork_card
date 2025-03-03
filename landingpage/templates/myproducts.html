@@ -318,8 +318,8 @@
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-10">
                 <div class="section-title text-center pb-25">
-                    <h3 class="title">My Products!!</h3>
-                    <!-- <p class="text">Search Your Products with the Given Filters!!</p> -->
+                    <h3 class="title mb-2">My Products!!</h3>
+                    <a href="{% url 'bulk_upload_products' %}" class="w-100 btn btn-dark-custom">Upload your list</a>
                 </div> <!-- section title -->
             </div>
         </div> <!-- row -->
@@ -347,7 +347,8 @@
                             {{product.title}}
                         </h5>
 
-                        <h6 class="mt-4 card-title {% if product.selling_type and 'Auction' in product.selling_type %} auction-box {% else %} fixed-price-box {% endif %}">
+                        <h6
+                            class="mt-4 card-title {% if product.selling_type and 'Auction' in product.selling_type %} auction-box {% else %} fixed-price-box {% endif %}">
                             {{product.selling_type}}
                         </h6>
 
@@ -356,7 +357,8 @@
                         {% if product.selling_type and 'Auction' in product.selling_type %}
                         <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price:
                             ${{product.current_bid_price}}</p>
-                        <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count: {{product.current_bid_count}}</p>
+                        <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count:
+                            {{product.current_bid_count}}</p>
                         {% else %}
                         <p class="selling_price mb-1">Selling Price: ${{product.price}}</p>
                         {% endif %}
@@ -506,9 +508,9 @@
         //                         let productHTML = `
         //                                 <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" 
         //                                     data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
-                                            
+
         //                                     <div class="ribbon">${product.website_name || "Unknown"}</div> <!-- Ribbon added here -->
-                                            
+
         //                                     <div style="width: auto; border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
         //                                         <div style="display: flex; justify-content: center; height: 230.5px !important; 
         //                                             width: 230.5px !important; overflow: hidden; padding: 8%; margin-left: 12%;">
@@ -522,8 +524,8 @@
 
         //                                         <h6 class="mt-4 card-title ${product.selling_type && product.selling_type.includes('Auction') ? 'auction-box' : 'fixed-price-box'}">${product.selling_type || "Unknown"}
         //                                         </h6>
-                                                
-                                                
+
+
 
         //                                         ${product.selling_type && product.selling_type.includes('Auction') ? `
         //                                             <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price: $${product.current_bid_price || "N/A"}</p>
