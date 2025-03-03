@@ -927,7 +927,7 @@ def bulk_upload_products(request):
     form = CSVUploadForm()
     return render(request, "bulk_upload.html", {"form": form,'User_Subscription': subscription})
 
-from django.db.models import Q
+
 @login_required
 def my_products(request):
     try:
@@ -939,43 +939,45 @@ def my_products(request):
     if not (subscription and subscription.active):
         return redirect("landingpage")
     
-    my_products = MyListing.objects.filter(user=request.user).values_list("product_title", flat=True)
+    my_products = MyListing.objects.filter(user=request.user).values_list("product_title")
+    print("my_products :",my_products)
 
     # Start with all products
     products = Product.objects.all()
 
     # Apply filters using Q objects
+    product_results = []
     if my_products:
         query_filter = Q()
         for title in my_products:
             if title:
                 query_filter |= Q(product_title__icontains=title)  # Use OR condition for multiple titles
-        products = products.filter(query_filter)
+                products = products.filter(query_filter)
 
-    # Build results
-    product_results = []
-    for p in products:
-        product_images_str = p.product_images
+        # Build results
+        for p in products:
+            product_images_str = p.product_images
 
-        if product_images_str:
-            try:
-                product_images_list = ast.literal_eval(product_images_str)  # Convert string to list
-            except (SyntaxError, ValueError):
+            if product_images_str:
+                try:
+                    product_images_list = ast.literal_eval(product_images_str)  # Convert string to list
+                except (SyntaxError, ValueError):
+                    product_images_list = []
+            else:
                 product_images_list = []
-        else:
-            product_images_list = []
 
-        product_results.append({
-            "id": p.id,
-            "title": p.product_title,
-            "link": p.product_link,
-            "selling_type": p.selling_type,
-            "website_name": p.website_name,
-            "price": p.product_price,
-            "current_bid_price": str(p.current_bid_price) if p.current_bid_price else "N/A",
-            "current_bid_currency": p.current_bid_currency,
-            "current_bid_count": p.current_bid_count,
-            "image": product_images_list[0] if product_images_list else "",  # Handle missing images
-            "date": p.updated,
-        })
+            product_results.append({
+                "id": p.id,
+                "title": p.product_title,
+                "link": p.product_link,
+                "selling_type": p.selling_type,
+                "website_name": p.website_name,
+                "price": p.product_price,
+                "current_bid_price": str(p.current_bid_price) if p.current_bid_price else "N/A",
+                "current_bid_currency": p.current_bid_currency,
+                "current_bid_count": p.current_bid_count,
+                "image": product_images_list[0] if product_images_list else "",  # Handle missing images
+                "date": p.updated,
+            })
+
     return render(request, "myproducts.html", {'User_Subscription': subscription,'product_results':product_results})

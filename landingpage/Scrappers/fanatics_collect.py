@@ -6,7 +6,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import csv
-import undetected_chromedriver as uc
 import os
 import re
 import logging
@@ -18,38 +17,16 @@ import os
 import json
 from dictionary_normanlizer import *
 
-# Configure logging
-log_filename = "fanatics_scraper.log"
-logging.basicConfig(
-    filename=log_filename,
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
-logger = logging.getLogger()
+from logger import *
 
-# Also log to console
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
-logger.addHandler(console_handler)
+fanatics_logger = setup_logger("Fanatics_scraper")
 
-def fanatics_scraper_initialize_driver():
 
-    options = uc.ChromeOptions()
-    options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
-    options.add_argument("--disable-gpu")  # Required for headless mode in some systems
-    options.add_argument("--window-size=1920x1080")  # Set a window size
-    options.add_argument("--no-sandbox")  # Bypass OS security model
-    options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource issues
-
-    # Launch undetected Chrome in headless mode
-    driver = uc.Chrome(options=options)
-    wait = WebDriverWait(driver, 10)
-    driver.get("https://www.fanaticscollect.com/")
-    driver.save_screenshot("fanaticscollect.png")
-    return driver
 
 def get_dropdown_links(driver):
+    driver.get("https://www.fanaticscollect.com/")
+    time.sleep(5)
+    driver.save_screenshot("fanaticscollect.png")
     all_dropdown_links = []
     sports_card = driver.find_element(By.XPATH,'//*[@id="header-menu"]/div[4]/div[2]/div')
     all_links = sports_card.find_elements(By.TAG_NAME,'a')
@@ -76,7 +53,7 @@ def get_prod_id(all_cards_links):
                 type = f"{type}_price"
 
             prod_id.append({"id": extracted_id, "type": type.upper()})
-            print({"id": extracted_id, "type": type.upper()})
+            fanatics_logger.info(f'{{"id": {extracted_id}, "type": "{type.upper()}"}}')
     return prod_id
 
 
@@ -89,9 +66,7 @@ def get_prod_links(driver,all_dropdown_links):
         for bo in buying_option[:1]:
             for i in range(1, 3):
                 driver.get(f"{dropdown_link}&type={bo}&page={i}")
-                time.sleep(10)
-                driver.save_screenshot("fanaticscollect.png")
-
+                time.sleep(10)    
             
                 page_source = driver.page_source
                 # Parse with BeautifulSoup
@@ -569,7 +544,7 @@ def extract_listing_details(response):
 })
 
 
-def save_to_csv(data, filename="fanatics_data.csv"):
+def save_to_csv(data, filename=r"data/fanatics_data.csv"):
     """Save product data to a CSV file."""
     file_exists = os.path.exists(filename)
 
@@ -581,7 +556,7 @@ def save_to_csv(data, filename="fanatics_data.csv"):
 
         writer.writerow(data)
 
-    logger.info(f"Data saved to {filename}")
+    fanatics_logger.info(f"Data saved to {filename}")
 
 
 def chunk_list(data_list, chunk_size=100):
@@ -597,7 +572,7 @@ def chunk_list(data_list, chunk_size=100):
 
 
 # def main():    
-#     driver = fanatics_scraper_initialize_driver()
+#     driver = initialize_driver()
 #     wait = WebDriverWait(driver, 10)
 #     time.sleep(3)
 #     all_dropdown_links = get_dropdown_links(driver)
@@ -619,7 +594,7 @@ def chunk_list(data_list, chunk_size=100):
 #         products = weekly_resp(chunk)
 #         for product in products:
 #             data = extract_listing_details(product)
-#             save_to_csv(data, filename="fanatics_data.csv")
+#             save_to_csv(data, filename="data\fanatics_data.csv")
 #         time.sleep(3)
 
 
@@ -628,7 +603,7 @@ def chunk_list(data_list, chunk_size=100):
 #         products = fixed_resp(chunk)
 #         for product in products:
 #             data = extract_listing_details(product)
-#             save_to_csv(data, filename="fanatics_data.csv")
+#             save_to_csv(data, filename="data\fanatics_data.csv")
 #         time.sleep(3)
 
 
@@ -636,7 +611,7 @@ def chunk_list(data_list, chunk_size=100):
 #         products = premier_resp(chunk)
 #         for product in products:
 #             data = extract_listing_details(product)
-#             save_to_csv(data, filename="fanatics_data.csv")
+#             save_to_csv(data, filename="data\fanatics_data.csv")
 #         time.sleep(3)
 
 

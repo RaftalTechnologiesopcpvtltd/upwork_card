@@ -27,28 +27,13 @@ import re
 import logging
 from bs4 import BeautifulSoup
 from dictionary_normanlizer import *
-import undetected_chromedriver as uc
+from logger import *
 
 
+craglist_logger = setup_logger("Craglist_scraper")
 
 
-# Configure logging
-log_filename = "Craglist_scraper.log"
-logging.basicConfig(
-    filename=log_filename,
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
-logger = logging.getLogger()
-
-# Also log to console
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
-logger.addHandler(console_handler)
-
-
-def save_to_csv(data, filename="craglist.csv"):
+def save_to_csv(data, filename=r"data/craglist.csv"):
     """Save product data to a CSV file."""
     file_exists = os.path.exists(filename)
 
@@ -60,38 +45,28 @@ def save_to_csv(data, filename="craglist.csv"):
 
         writer.writerow(data)
 
-    logger.info(f"Data saved to {filename}")
+    craglist_logger.info(f"Data saved to {filename}")
 
 
-def initialize_driver():
-
-    options = uc.ChromeOptions()
-    options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
-    options.add_argument("--disable-gpu")  # Required for headless mode in some systems
-    options.add_argument("--window-size=1920x1080")  # Set a window size
-    options.add_argument("--no-sandbox")  # Bypass OS security model
-    options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource issues
-
-    # Launch undetected Chrome in headless mode
-    driver = uc.Chrome(options=options)
-    driver.get("https://geo.craigslist.org/iso/us")
-    driver.save_screenshot('img.png')
-    return driver
 
 def get_all_location(driver):
+    driver.get("https://geo.craigslist.org/iso/us")
+    time.sleep(5)
+    driver.save_screenshot("craigslist.png")
+
     all_location  = driver.find_element(By.CLASS_NAME,"simple-page-content").find_elements(By.TAG_NAME,'a')
     all_location_links = []
     for link in all_location:
         href = link.get_attribute("href")
         all_location_links.append(href)
-    print("all_location_links : ",all_location_links)
+    craglist_logger.info(f"all_location_links : {all_location_links}")
     return all_location_links
 
 def get_prod(driver, all_location_links):
     i = 1  # Initialize i
 
     for web_url in all_location_links[:2]:
-        logger.info(f"Going for {web_url}")
+        craglist_logger.info(f"Going for {web_url}")
         driver.get(web_url + "search/cba")
 
         try:
@@ -131,21 +106,22 @@ def get_prod(driver, all_location_links):
                         "Product Price": price,
                     })
 
-                    print(f"======== {i}")
+                    craglist_logger.info(f"======== {i}")
                     # print(product)
-                    save_to_csv(product, filename="craglist.csv")
+                    create_product(product)
+                    save_to_csv(product, filename=r"data/craglist.csv")
                     print("===============================================")
                     i += 1
                 except Exception as e:
-                    print(f"Error processing product: {e}")
+                    craglist_logger.info(f"Error processing product: {e}")
 
         except Exception as e:
-            print(f"Error searching products: {e}")
+            craglist_logger.info(f"Error searching products: {e}")
 
 # if __name__ == "__main__":
-#     logger.info("==============Start==================")
+#     craglist_logger.info("==============Start==================")
 
 #     driver = initialize_driver()
 #     all_location_links = get_all_location(driver)
 #     get_prod(driver,all_location_links)
-#     logger.info("==============Finished==================")
+#     craglist_logger.info("==============Finished==================")
