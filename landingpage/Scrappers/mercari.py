@@ -11,39 +11,17 @@ import re
 import logging
 from bs4 import BeautifulSoup
 from dictionary_normanlizer import *
+from logger import *
 
 
-# Configure logging
-log_filename = "mercari_scraper.log"
-logging.basicConfig(
-    filename=log_filename,
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
-logger = logging.getLogger()
-
-# Also log to console
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
-logger.addHandler(console_handler)
-
-def mercari_scraper_initialize_driver():
-    """Initialize the undetected Chrome driver with required options."""
-    options = uc.ChromeOptions()
-    options.add_argument("--headless=new")  # Use "--headless=new" for newer Chrome versions
-
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-
-    driver = uc.Chrome(options=options)
-    driver.get("https://www.mercari.com/us/category/3511/")
-    driver.save_screenshot("mercari.png")
-    return driver
+mercari_logger = setup_logger("Mercari_scraper")
 
 
 def get_see_all_links(driver):
     """Extract 'See All' category links from the main page."""
+    driver.get("https://www.mercari.com/us/category/3511/")
+    time.sleep(5)
+    driver.save_screenshot("mercary.png")
     try:
         driver.find_element(By.ID, "truste-consent-button").click()
     except NoSuchElementException:
@@ -56,7 +34,7 @@ def get_see_all_links(driver):
         (heading.text.strip(), link.get_attribute('href'))
         for heading, link in zip(see_all_headings, see_all_tags)
     ]
-    logger.info(f"Extracted {len(see_all_links)} 'See All' category links.")
+    mercari_logger.info(f"Extracted {len(see_all_links)} 'See All' category links.")
     return see_all_links
 
 
@@ -64,8 +42,7 @@ def extract_cards_links(driver, see_all_links):
     """Extract all product card links from each category page."""
     time.sleep(3)
     all_card_links = []
-    print("driver : ",driver)
-    print("see_all_links : ",see_all_links)
+    mercari_logger.info(f"see_all_links : {see_all_links}")
 
     for heading, link in see_all_links[:2]:
         driver.get(link)
@@ -79,11 +56,11 @@ def extract_cards_links(driver, see_all_links):
                 # Find all links
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[data-testid="ProductThumbWrapper"]')))
                 cards_tags = driver.find_elements(By.CSS_SELECTOR, 'a[data-testid="ProductThumbWrapper"]')
-                logger.info(f"{heading}: Found {len(cards_tags)} product cards.")
+                mercari_logger.info(f"{heading}: Found {len(cards_tags)} product cards.")
 
                 # If no links are found, stop the loop
                 if not cards_tags:
-                    logger.info(f"{heading}: No more links found. Exiting loop.")
+                    mercari_logger.info(f"{heading}: No more links found. Exiting loop.")
                     break
 
                 last_href = cards_links[-1] if cards_links else None  # Get the last stored href safely
@@ -95,11 +72,11 @@ def extract_cards_links(driver, see_all_links):
                         all_card_links.append(href)
 
                     else:
-                        logger.info(f"{href} is already in cards_links")
+                        mercari_logger.info(f"{href} is already in cards_links")
 
                 # If the last link in cards_links is the same as the last one found, stop scrolling
                 if last_href and last_href == cards_tags[-1].get_attribute("href"):
-                    logger.info(f"{heading}: No new links found. Stopping scrolling.")
+                    mercari_logger.info(f"{heading}: No new links found. Stopping scrolling.")
                     break
 
                 # Scroll to the last element
@@ -107,12 +84,12 @@ def extract_cards_links(driver, see_all_links):
                 time.sleep(3)  # Allow time for loading
 
             except Exception as e:
-                logger.error(f"Error extracting cards from {heading}: {e}")
+                mercari_logger.error(f"Error extracting cards from {heading}: {e}")
                 break
             # i += 1
 
         # all_card_links.append(cards_links)
-        save_links_to_csv(cards_links, file_name)
+        # save_links_to_csv(cards_links, file_name)
 
     return all_card_links
 
@@ -146,10 +123,10 @@ def save_links_to_csv(cards_links, file_name):
         for link in cards_links:
             writer.writerow([link])
 
-    logger.info(f"Links successfully saved to {csv_filename}")
+    mercari_logger.info(f"Links successfully saved to {csv_filename}")
 
 
-def save_to_csv(data, filename="mercari_data.csv"):
+def save_to_csv(data, filename=r"data/mercari_data.csv"):
     """Save product data to a CSV file."""
     file_exists = os.path.exists(filename)
 
@@ -161,7 +138,7 @@ def save_to_csv(data, filename="mercari_data.csv"):
 
         writer.writerow(data)
 
-    logger.info(f"Data saved to {filename}")
+    mercari_logger.info(f"Data saved to {filename}")
 
 
 def extract_data(all_card_links, driver):
@@ -208,16 +185,16 @@ def extract_data(all_card_links, driver):
             "Updated": get_text(driver, 'p[data-testid="ItemDetailExternalUpdated"]'),
         })
 
-        logger.info(f"Extracted product: {product_data['Product Title']}")
+        mercari_logger.info(f"Extracted product: {product_data['Product Title']}")
         save_to_csv(product_data)
 
 
 # def main():
 #     """Main execution function."""
-#     logger.info("Starting Mercari Scraper...")
+#     mercari_logger.info("Starting Mercari Scraper...")
 
 #     """Main execution function."""
-#     logger.info("Starting Mercari Scraper...")
+#     mercari_logger.info("Starting Mercari Scraper...")
     
 #     driver = initialize_driver()
     
@@ -226,10 +203,10 @@ def extract_data(all_card_links, driver):
 #         all_card_links = extract_cards_links(driver, see_all_links)
 #         extract_data(all_card_links, driver)
 #     except Exception as e:
-#         logger.error(f"An error occurred: {e}")
+#         mercari_logger.error(f"An error occurred: {e}")
 #     finally:
 #         driver.quit()
-#         logger.info("Scraper finished successfully.")
+#         mercari_logger.info("Scraper finished successfully.")
 
 
 # if __name__ == "__main__":

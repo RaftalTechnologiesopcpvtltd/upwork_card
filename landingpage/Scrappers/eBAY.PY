@@ -11,58 +11,12 @@ import os
 import logging
 import csv
 from dictionary_normanlizer import *
-
-
-
-
-# Configure logging
-log_filename = "Ebay_scraper.log"
-logging.basicConfig(
-    filename=log_filename,
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
-logger = logging.getLogger()
-
-# Also log to console
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
-logger.addHandler(console_handler)
-
-# Define the path to save the Chrome profile
-profile_path = os.path.join(os.getcwd(), "profile", "john")  # Profile path: ./profile/john
-
-# Create Chrome options
-chrome_options = Options()
-chrome_options.add_argument(f"--user-data-dir={profile_path}")  # Set the user data directory
-
-# eBay API Credentials (Replace with your actual credentials)
-# {CLIENT_ID}:{CLIENT_SECRET}
-CLIENT_ID = "FaizKhan-marketpl-PRD-8d243adb8-5c9e847a"
-CLIENT_SECRET = "PRD-d243adb8c21f-d6c8-4ac8-853c-a081"
-REDIRECT_URI_NAME = "Faiz_Khan-FaizKhan-market-gltmirf"
-REDIRECT_URI = "https://auth.ebay.com/oauth2/authorize?client_id=FaizKhan-marketpl-PRD-8d243adb8-5c9e847a&response_type=code&redirect_uri=Faiz_Khan-FaizKhan-market-gltmirf&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly https://api.ebay.com/oauth/scope/sell.edelivery"
-
-# REDIRECT_URI = "YOUR_REDIRECT_URI"  # Must be the same as registered on eBay Developer Portal
-SCOPES = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly https://api.ebay.com/oauth/scope/sell.edelivery"
-
-# eBay Token URLs (Use the sandbox URL for testing)
-# AUTH_URL = "https://auth.ebay.com/oauth2/authorize"
-TOKEN_URL = "https://api.ebay.com/identity/v1/oauth2/token"
-
-
-import base64
-import requests
-import webbrowser
-import urllib.parse
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
-
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+import json
 import os
+from logger import *
+
+
+ebay_logger = setup_logger("Ebay_scraper")
 
 # Define the path to save the Chrome profile
 profile_path = os.path.join(os.getcwd(), "profile", "john")  # Profile path: ./profile/john
@@ -73,21 +27,43 @@ chrome_options.add_argument(f"--user-data-dir={profile_path}")  # Set the user d
 
 # eBay API Credentials (Replace with your actual credentials)
 # {CLIENT_ID}:{CLIENT_SECRET}
-CLIENT_ID = "FaizKhan-marketpl-PRD-8d243adb8-5c9e847a"
-CLIENT_SECRET = "PRD-d243adb8c21f-d6c8-4ac8-853c-a081"
-REDIRECT_URI_NAME = "Faiz_Khan-FaizKhan-market-gltmirf"
-REDIRECT_URI = "https://auth.ebay.com/oauth2/authorize?client_id=FaizKhan-marketpl-PRD-8d243adb8-5c9e847a&response_type=code&redirect_uri=Faiz_Khan-FaizKhan-market-gltmirf&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly https://api.ebay.com/oauth/scope/sell.edelivery"
-
+CLIENT_ID = "FaizKhan-marketpl-PRD-cdec84608-ca82d8a7"
+CLIENT_SECRET = "PRD-dec846085fd4-6c50-47cd-ade3-7b87"
+REDIRECT_URI_NAME = "Faiz_Khan-FaizKhan-market-mgaex"
+REDIRECT_URI = "https://auth.ebay.com/oauth2/authorize?client_id=FaizKhan-marketpl-PRD-cdec84608-ca82d8a7&response_type=code&redirect_uri=Faiz_Khan-FaizKhan-market-mgaex&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly https://api.ebay.com/oauth/scope/sell.edelivery"
 # REDIRECT_URI = "YOUR_REDIRECT_URI"  # Must be the same as registered on eBay Developer Portal
 SCOPES = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly https://api.ebay.com/oauth/scope/sell.edelivery"
 
 # eBay Token URLs (Use the sandbox URL for testing)
-# AUTH_URL = "https://auth.ebay.com/oauth2/authorize"
+
 TOKEN_URL = "https://api.ebay.com/identity/v1/oauth2/token"
 
-refresh_token = "v^1.1#i^1#I^3#r^1#p^3#f^0#t^Ul4xMF8wOkVCNTJGODRFMDMzMUUwRkRFNUYzN0EyMTBGMUU3QUI0XzFfMSNFXjI2MA=="
-access_token = "v^1.1#i^1#r^0#I^3#f^0#p^3#t^H4sIAAAAAAAAAOVZeYwTVRjf7gESWPjDM+ofZTgMkmnfTGc6R2i1tNvdsrvs0cIKkdQ3M2/acTszZebNXgazLkKIQPCIEjQCBvlDxSMimoj6hyaSqKjReETigcdqNESjgke8ZroHy6ogdiVNnKZp3ntfv/f9ft/x5psBg9NmXLmxaeMP9b7p1bsHwWC1z0fNBDOm1S2eXVN9aV0VmCDg2z04f7B2qOaLJTbUC0WxE9lF07CRv08vGLZYmowQjmWIJrQ1WzSgjmwRy2I61toi0gEgFi0Tm7JZIPypRIRAKlQkluEQCnMQgrA7a4zpzJgRQuU4gQa8IAE6JPMqctdt20Epw8bQwBGCBjRLApqk2QzgRJYRARtgOGY14V+JLFszDVckAIhoyVyx9F9rgq2nNxXaNrKwq4SIpmLJdFsslWhYnlkSnKArOspDGkPs2KeO4qaC/CthwUGn38YuSYtpR5aRbRPB6MgOpyoVY2PG/AvzS1QzYQkIIZljFJ5VocpPCZVJ09IhPr0d3oymkGpJVEQG1nD/mRh12ZCuRzIeHS13VaQSfu+nw4EFTdWQFSEalsZWrUg3dBL+dHu7ZfZoClI8pDRHhamQwFMsEb3eDNEsw1Kje4woGmV40iZx01A0jy/bv9zES5FrMJpMCzOBFleozWizYir2jJkoJ4zRFxZWe/4ccaCD84bnUqS7HPhLwzOTPxYNJ/0/ZfHAUrQqqDwvc0Di1NBfx4OX62cXE1HPLbH29qBnC5JgP6lDqxvhYgHKiJRdeh0dWZoihliVDrk5TSphQSUZQVVJiVXCJKUiBBCSJFng/yehgbGlSQ5G4+ExeaGEL0KkZbOI2s2CJvcTk0VKlWY0GPrsCJHHuCgGg729vYHeUMC0ckEaACp4TWtLWs4jHRLjstqZhUmtFBayW4BdeRH3F11r+tyoczc3ckQ0ZCnt0ML9aVQouBNjMXuKbdHJs38DMl7QXAYy7haVhbHJtDFSyoKmoB5NRllNqSxktJuH4TDv5bpA8wAwZYEsmDnNaEU4b1YYzMa2tsaWhrKwufUT4spCRXEhng8BhgJlIYsViylddzCUCihVYY5jKYYrMyiLjlNpWdffg0K9WWTigf6yoHlnrKhBVcRmNzL+Yd30cv0cYu1sSHY2pJuymbbmhuVloe1EqoXsfMbDWmlxGuuINcfcq7WZ0zuDMWctlUknzIG+ZQOLUVjS9J5MsdARjudoOQYMRedX2bqQYvO4q6vLTsb7mmJg6SoZ8plkLhIpi6Q0ki1UYXVqhWRi2MwoVlBiwsaAZKsdS3O9QbySx7lYnu02ehs748u0PsNeUR741lylZfro+ToFZ2vmLFJ83GYv1/97kNZIYmZLVSjrjsoC2pCruHqtQEZRGF6lBAZAlqcZWkI8onlVVeWQguiyj98Kw5uE2kBzHhrj/RvZ3pkgeYVmQlCReJKVBcQzHCzzXK40N0/VsWx7vdo5h+bl+mnheTpsVwksagHvziEgm3rQhA7Oe1PZktXl3SIjRbPc1jnrWFpledYL6GwpoieFNpkrYF2zyqtYHoWV2PWkElNw15VAPZVWnpQQG5IFBZEqzwkkQ/MsKUkKR7rtEAVl9wPk8jqiiu/0atecGdmkiQkPmP70WDF46iP9aFXpooZ8z4Mh33PVPh9YAhZQ88DcaTUramtmXWprGAXcviNgazkDYsdCgW7UX4SaVX1+1WuzW5SbmlqOD0rOU13fX8VX1U94o7B7Dbhk/J3CjBpq5oQXDODykyt11JyL62kW0O6XYxnArgbzTq7WUhfVXrBr59c9/gP5Ban1y3a8fN5w8/qun24A9eNCPl9dVe2Qryq58MsD3Vuf3Z+5/6v3pMb4b3PpWW8VrKaPDydOQFP/9NrFrwrDN1+4M3n3Ne8DJnHdz0cXvXSieceGgec5xox/+ELjAx/cyvKXzfts3/a3jx4fjmnHjl18T+HD+w5VPXnX09PMg3uO/n5l/tAr+drdW25/53EwfW3LiQOHxMtOLDy8a92ebcMP5Lc8+N2iI4+yu94khb1XfNv8wsHZM++1k48kCG0zp8Zvuy49f/6M9R36tk1Hc8Pgk4G17+5/4pvF8+R9+7cOzdHQe8Pyr09f/f0vXOb1zQ+lj9Wdd28WkgefeWPvms9v/GLL9L5rdzJPPrLd/Oj1vgfhj3c+XP8if2TfHW8fWffWrMPLblkU3vDYphFf/gFgRJbJ6xkAAA=="
+TOKEN_FILE = r"landingpage/Scrappers/tokens.json"
 
+def save_tokens(access_token, refresh_token):
+    """Save access and refresh tokens to a JSON file."""
+    tokens = {
+        "access_token": access_token,
+        "refresh_token": refresh_token
+    }
+    with open(TOKEN_FILE, "w") as file:
+        json.dump(tokens, file, indent=4)
+    print("Tokens saved successfully.")
+
+def load_tokens():
+    """Load tokens from the JSON file."""
+    if not os.path.exists(TOKEN_FILE):
+        print("Token file not found.")
+        return None
+
+    try:
+        with open(TOKEN_FILE, "r") as file:
+            tokens = json.load(file)
+            return tokens
+    except json.JSONDecodeError:
+        print("Error reading token file. File may be corrupted.")
+        return None
+    
 
 def get_authorization_code():
     """
@@ -100,38 +76,29 @@ def get_authorization_code():
 
     auth_url = REDIRECT_URI
     
-    logger.info("Opening the following URL in your browser for authorization:")
-    logger.info(auth_url)
+    ebay_logger.info("Opening the following URL in your browser for authorization:")
+    ebay_logger.info(auth_url)
 
     # Open the authorization URL in the default web browser
     driver = webdriver.Chrome(options=chrome_options)
 
-    # Open any website to initialize the profile
-    # driver.get("https://www.google.com")
 
-    # Wait to ensure the profile is saved properly
-    # import time
-    # time.sleep(5)
-
-    # Close the browser
-    # driver.quit()
-
-    logger.info(f"Chrome profile created and saved at: {profile_path}")
+    ebay_logger.info(f"Chrome profile created and saved at: {profile_path}")
 
     # Now you can interact with the browser, for example:
-    driver.get("https://auth.ebay.com/oauth2/authorize?client_id=FaizKhan-marketpl-PRD-8d243adb8-5c9e847a&response_type=code&redirect_uri=Faiz_Khan-FaizKhan-market-gltmirf&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly https://api.ebay.com/oauth/scope/sell.edelivery")
+    # driver.get("https://auth.ebay.com/oauth2/authorize?client_id=FaizKhan-marketpl-PRD-8d243adb8-5c9e847a&response_type=code&redirect_uri=Faiz_Khan-FaizKhan-market-gltmirf&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly https://api.ebay.com/oauth/scope/sell.edelivery")
+    driver.get(auth_url)
 
-
-    logger.info("\nAfter authorizing, eBay will redirect you to your redirect URI with a code.")
+    ebay_logger.info("\nAfter authorizing, eBay will redirect you to your redirect URI with a code.")
     auth_code = None
     while True:
         current_url = driver.current_url
         if "isAuthSuccessful=true" in current_url:
-            logger.info("success")
+            ebay_logger.info("success")
             auth_code = current_url.split("code=")[1].split("&expires_in")[0]
             break
         elif "isAuthSuccessful=true" in current_url:
-            logger.info("Fail")
+            ebay_logger.info("Fail")
             # auth_code = current_url.split("code=")[1].split("&expires_in")[0]
             break
     
@@ -161,12 +128,15 @@ def exchange_code_for_tokens(auth_code):
 
     if response.status_code == 200:
         token_data = response.json()
-        logger.info("\nAccess Token:", token_data["access_token"])
-        logger.info("Refresh Token:", token_data["refresh_token"])
-        logger.info("Access Token Expiry:", token_data["expires_in"], "seconds")
+        ebay_logger.info(f"\nAccess Token: {token_data['access_token']}")
+        ebay_logger.info(f"Refresh Token: {token_data['refresh_token']}")
+        ebay_logger.info(f"Access Token Expiry: {token_data["expires_in"]} seconds")
+        access_token = token_data["access_token"]
+        refresh_token = token_data["refresh_token"]
+        save_tokens(access_token, refresh_token)
         return token_data["access_token"], token_data["refresh_token"]
     else:
-        logger.info("\nError retrieving tokens:", response.status_code, response.text)
+        ebay_logger.info(f"\nError retrieving tokens: {response.status_code} {response.text}")
         return None, None
 
 
@@ -192,18 +162,20 @@ def refresh_access_token(refresh_token):
 
     if response.status_code == 200:
         token_data = response.json()
-        logger.info("\nNew Access Token:", token_data["access_token"])
-        logger.info("New Access Token Expiry:", token_data["expires_in"], "seconds")
+        ebay_logger.info(f"\nNew Access Token: {token_data['access_token']}")
+        ebay_logger.info(f"New Access Token Expiry: {token_data["expires_in"]} seconds")
+        access_token = token_data["access_token"]
+        save_tokens(access_token, refresh_token)
         return token_data["access_token"]
     else:
-        logger.info("\nError refreshing access token:", response.status_code, response.text)
+        ebay_logger.info(f"\nError retrieving tokens: {response.status_code} {response.text}")
         return None
     
 def get_prod_ids(itemSummaries):
     item_ids = []
     for id in itemSummaries:
         item_ids.append(id.get('itemId'))
-        # logger.info(id.get('itemId'))
+        # ebay_logger.info(id.get('itemId'))
     return  item_ids
 
 def search_api_request(url, method="GET", headers=None, token=None, timeout=10):
@@ -323,7 +295,7 @@ def get_data(response_prod):
     })
     return extracted_data
 
-def save_to_csv(data, filename="Ebay_data.csv"):
+def save_to_csv(data, filename=r"data/Ebay_data.csv"):
     """Save product data to a CSV file."""
     file_exists = os.path.exists(filename)
 
@@ -335,51 +307,58 @@ def save_to_csv(data, filename="Ebay_data.csv"):
 
         writer.writerow(data)
 
-    logger.info(f"Data saved to {filename}")
+    ebay_logger.info(f"Data saved to {filename}")
 
 
 # if __name__ == "__main__":
-#     logger.info("### eBay OAuth2 Token Handling ###\n")
+#     ebay_logger.info("### eBay OAuth2 Token Handling ###\n")
 
 #     # Step 1: Get the Authorization Code (Manual Step)
 #     auth_code = get_authorization_code()
 
 #     # Step 2: Exchange Authorization Code for Access and Refresh Tokens
 #     access_token, refresh_token = exchange_code_for_tokens(auth_code)
-#     logger.info("Access Token : ",access_token)
-#     logger.info("Referesh Token : ",refresh_token)
+#     ebay_logger.info("Access Token : ",access_token)
+#     ebay_logger.info("Referesh Token : ",refresh_token)
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
+#     tokens = load_tokens()
+#     search_key = "Sports Trading Card"
+#     if tokens:
+#         print("Loaded Tokens:", tokens)
+#         refresh_token = tokens['refresh_token']
+#         access_token = tokens['access_token']
+#     search_url = f"https://api.ebay.com/buy/browse/v1/item_summary/search?q={search_key}&limit=200&offset=0&filter=buyingOptions:{{FIXED_PRICE|BEST_OFFER|AUCTION}}" # Start with the first API endpoint
+#     i = 0
+#     while search_url:
+#         if i == 2:
+#             break
+#         else:
+#             i+=1
+#         ebay_logger.info(f"Processing page: {search_url}")
 
-    search_url = "https://api.ebay.com/buy/browse/v1/item_summary/search?q=Sports Trading Card&limit=200&offset=0&filter=buyingOptions:{FIXED_PRICE|BEST_OFFER|AUCTION}"  # Start with the first API endpoint
-    i = 0
-    while search_url:
-        if i == 2:
-            break
-        else:
-            i+=1
-        logger.info("Processing page:", search_url)
+#         search_response = search_api_request(search_url, method="GET", token=access_token)  # Make API request and parse JSON
+        
 
-        search_response = search_api_request(search_url, method="GET", token=access_token)  # Make API request and parse JSON
-        if refresh_token:   
-            # Later, check if the token is expired
-            if 'Unauthorized' in search_response.get('error',''):
-                logger.info("Access token has expired. Refreshing token...")
-                access_token = refresh_access_token(refresh_token)
-                search_response = search_api_request(search_url, method="GET", token=access_token)  # Make API request and parse JSON
-            else:
-                logger.info("Access token is still valid.")
-        itemSummaries = search_response.get('itemSummaries')
-        product_ids = get_prod_ids(itemSummaries)
-        for prod_id in product_ids:
-            url = f"https://api.ebay.com/buy/browse/v1/item/{prod_id}"
+#         if refresh_token:   
+#             # Later, check if the token is expired
+#             if 'Unauthorized' in search_response.get('error',''):
+#                 ebay_logger.info("Access token has expired. Refreshing token...")
+#                 access_token = refresh_access_token(refresh_token)
+#                 search_response = search_api_request(search_url, method="GET", token=access_token)  # Make API request and parse JSON
+#             else:
+#                 ebay_logger.info("Access token is still valid.")
+#         itemSummaries = search_response.get('itemSummaries')
+#         product_ids = get_prod_ids(itemSummaries)
+#         for prod_id in product_ids:
+#             url = f"https://api.ebay.com/buy/browse/v1/item/{prod_id}"
 
-            response_prod = api_request_product(url, method="GET", token=access_token)
-            data = get_data(response_prod)
-            save_to_csv(data, filename="Ebay_data.csv")
-            time.sleep(3)
-        # Extract the 'next' URL from the response
-        search_url = search_response.get('next')  # Will be None if no more pages
+#             response_prod = api_request_product(url, method="GET", token=access_token)
+#             data = get_data(response_prod)
+#             save_to_csv(data, filename=r"data/Ebay_data.csv")
+#             time.sleep(3)
+#         # Extract the 'next' URL from the response
+#         search_url = search_response.get('next')  # Will be None if no more pages
 
-    logger.info("All pages processed.")
+#     ebay_logger.info("All pages processed.")
