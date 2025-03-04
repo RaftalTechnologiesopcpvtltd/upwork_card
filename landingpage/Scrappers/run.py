@@ -10,6 +10,7 @@ from fanatics_collect import *
 from eBAY import *
 from offerUp import *
 from mercari import *
+from Fivemiles import *
 import traceback  # Import traceback module
 import os
 import sys
@@ -242,14 +243,128 @@ def ebay_scrapper():
             url = f"https://api.ebay.com/buy/browse/v1/item/{prod_id}"
 
             response_prod = api_request_product(url, method="GET", token=access_token)
-            data = get_data(response_prod)
-            create_product(data)
-            save_to_csv(data, filename=r"landingpage/data/Ebay_data.csv")
+            ebay_data = ebay_get_data(response_prod)
+            create_product(ebay_data)
+            save_to_csv(ebay_data, filename=r"landingpage/data/Ebay_data.csv")
             time.sleep(3)
         # Extract the 'next' URL from the response
         search_url = search_response.get('next')  # Will be None if no more pages
 
     print("All pages processed.")
+
+# ========================== 5Miles Scraper ==========================
+def five_miles_scrapper(driver):
+    All_cities_links = get_all_city_links(driver)
+    for link in All_cities_links[:10]:
+        driver.get(f"{link}/sport%20cards")
+        try:
+            data = driver.find_element(By.ID, "container").get_attribute("data-initdataitems")
+            parsed_data = json.loads(data)  # Convert the JSON string into a Python dictionary
+            for p_data in parsed_data:
+                id = p_data['id']
+                title = clean_description(p_data['title'])
+                price = p_data['local_price']
+                desc = clean_description(p_data['desc'])
+                images = [img['imageLink'] for img in p_data.get('images', [])]
+                product_data = normalize_data({
+                    "Website Name": "5miles",
+                    "Website URL": "https://www.5miles.com/",
+                    "Product Link": f"https://www.5miles.com/item/{id}/{title.replace(" ","-")}",
+                    "Product Images": images,
+                    "Selling Type" : "Fixed",
+                    "Product Title": title,
+                    "Product Price Currency": "$",
+                    "Product Price": price,
+                    "Description": desc,
+                })
+                # fivemiles_logger.info(product_data)
+                create_product(product_data)
+                save_to_csv(product_data, filename=r"landingpage/data/5miles_data.csv")
+        except Exception as e:
+            fivemiles_logger.info(f"Error in : {link} and Error is : {e}")
+            # fivemiles_logger.info("===============================================")
+
+
+def offerUp_scrapper(driver):
+    all_prod_links = get_all_prod_links(driver)
+    for links in all_prod_links:
+        ProductImagesURLS = "-"
+        ProductTitle = "-"
+        ProductPrice = "-"
+        Shipping = "-"
+        EstArrival = "-"
+        Condition = "-"
+        Brand = "-"
+        Category = "-"
+        Updated = "-"
+        Description = "-"
+
+        driver.get(links)
+
+        time.sleep(3)
+
+        details_div = driver.find_element(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[1]/div/div[3]/div[1]') if driver.find_elements(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[1]/div/div[3]/div[1]') else "-"
+
+        info_div = details_div.find_elements(By.TAG_NAME, "p") if details_div != "-" else "-"
+
+        ProductTitle = details_div.find_element(By.TAG_NAME, "h1").text.strip() if details_div != "-" and details_div.find_elements(By.TAG_NAME, "h1") else "-"
+
+        Brand = driver.find_element(By.TAG_NAME, "dd").find_element(By.TAG_NAME, "p").text if driver.find_elements(By.TAG_NAME, "dd") else "-"
+
+        try:
+            # Try to find the first description
+            description_element = driver.find_element(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[5]/div[2]/div[2]/div/p')
+            Description = description_element.text.strip()
+        except:
+            try:
+                # If the first one fails, try the alternative XPath
+                description_element = driver.find_element(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[3]/div[2]/div[2]/div/p')
+                Description = description_element.text.strip()
+            except:
+                # If both fail, assign "-"
+                Description = "-"
+        # Description = driver.find_element(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[5]/div[2]/div[2]/div/p').text.strip() if driver.find_elements(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[5]/div[2]/div[2]/div/p') else "-"
+
+        images_div = driver.find_element(By.XPATH,'//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[1]/div/div[1]/div[1]/div/div').find_elements(By.TAG_NAME,"img")
+
+        ProductImagesURLS = [img.get_attribute('src') for img in images_div] if images_div else "-"
+
+        ProductPrice = driver.find_element(By.XPATH,'//*[@id="page-content"]/div[2]/main/div[1]/div/div[1]/div/div[3]/div[1]/div[1]/div/div/p').text.strip()
+
+        for info in info_div:
+            # logger.info(info.text.strip())
+            if "$" in info.text.strip():
+                if ProductPrice and "Ships" in info.text.strip():
+                    Shipping = info.text.strip() if info.text.strip() else "-"
+            elif "updated" in info.text.strip() or "about" in info.text.strip() or "hours" in info.text.strip() or "minutes" in info.text.strip() or "seconds" in info.text.strip():
+                Updated = info.text.strip() if info.text.strip() else "-"
+            elif "Condition" in info.text.strip():
+                Condition = info.text.strip() if info.text.strip() else "-"
+            else:
+                Category = info.text.strip() if info.text.strip() else "-"
+
+        product_data = normalize_data({
+            "Website Name": "OfferUP",
+            "Website URL": "https://offerup.com/",
+            "Product Link": links,
+            "Product Images": ProductImagesURLS,
+            "Selling Type" : "Fixed",
+            "Product Title": ProductTitle,
+            "Product Price Currency": "$",
+            "Product Price": ProductPrice,
+            "Description": Description,
+            "Condition": Condition,
+            "Shipping Cost": Shipping if Shipping else "-",
+            "Shipping Currency": "$" if Shipping else "-",
+            "Estimated Arrival": EstArrival,
+            "Brand": Brand,
+            "Category": Category,
+            "Updated": Updated,
+        })
+        create_product(product_data)
+        save_to_csv(product_data, filename=r"landingpage/data/OfferUp_data.csv")
+
+
 
 # ========================== Running Scrapers in Parallel ==========================
 
@@ -314,7 +429,8 @@ def run_scraper(scraper_func, instance_id):
 def run_multiple_scrapers():
     """Runs all scrapers in parallel."""
     # scrapers = [fanatics_scraper, mercari_scraper, craglist_scraper]
-    scrapers = [mercari_scraper]
+    scrapers = [five_miles_scrapper,fanatics_scraper,craglist_scraper,offerUp_scrapper]
+    # scrapers = []
     processes = []
 
     for i, scraper in enumerate(scrapers):
@@ -323,7 +439,7 @@ def run_multiple_scrapers():
         processes.append(p)
 
     # Run eBay scraper directly (since it does not require ChromeDriver)
-    # ebay_scrapper()
+    ebay_scrapper()
 
     for p in processes:
         p.join()
