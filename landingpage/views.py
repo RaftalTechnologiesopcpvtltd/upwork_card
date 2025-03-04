@@ -928,6 +928,12 @@ def bulk_upload_products(request):
     return render(request, "bulk_upload.html", {"form": form,'User_Subscription': subscription})
 
 
+import ast
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from .models import UserSubscription, MyListing, Product
+
 @login_required
 def my_products(request):
     try:
@@ -938,21 +944,19 @@ def my_products(request):
 
     if not (subscription and subscription.active):
         return redirect("landingpage")
-    
-    my_products = MyListing.objects.filter(user=request.user).values_list("product_title")
-    print("my_products :",my_products)
 
-    # Start with all products
-    products = Product.objects.all()
+    # Get the product titles as a list of strings
+    my_products = list(MyListing.objects.filter(user=request.user).values_list("product_title", flat=True))
 
-    # Apply filters using Q objects
     product_results = []
-    if my_products:
+
+    if my_products:  # Ensure there are products to filter
         query_filter = Q()
         for title in my_products:
             if title:
-                query_filter |= Q(product_title__icontains=title)  # Use OR condition for multiple titles
-                products = products.filter(query_filter)
+                query_filter |= Q(product_title__icontains=title)  # OR condition for multiple titles
+
+        products = Product.objects.filter(query_filter)  # Query products only once
 
         # Build results
         for p in products:
@@ -961,6 +965,8 @@ def my_products(request):
             if product_images_str:
                 try:
                     product_images_list = ast.literal_eval(product_images_str)  # Convert string to list
+                    if not isinstance(product_images_list, list):
+                        product_images_list = []
                 except (SyntaxError, ValueError):
                     product_images_list = []
             else:
@@ -980,4 +986,4 @@ def my_products(request):
                 "date": p.updated,
             })
 
-    return render(request, "myproducts.html", {'User_Subscription': subscription,'product_results':product_results})
+    return render(request, "myproducts.html", {"User_Subscription": subscription, "product_results": product_results})
