@@ -234,7 +234,7 @@ def api_request_product(url, method="GET", headers=None, token=None, timeout=10)
     except requests.exceptions.RequestException as e:
         return {"error": str(e)}
     
-def get_data(response_prod):
+def ebay_get_data(response_prod):
     if "FIXED" in response_prod.get("buyingOptions")[0]:
         selling_type = "Fixed Price"
     else:

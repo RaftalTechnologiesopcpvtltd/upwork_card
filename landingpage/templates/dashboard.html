@@ -49,20 +49,7 @@
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
     }
 
-    .suggestions {
-        /* border: 0.5px solid #ccc; */
-        max-height: 200px;
-        overflow-y: auto;
-        /* position: absolute; */
-        width: 100%;
-        background: white;
-        z-index: 1000;
-    }
-
-    .suggestion-item {
-        padding: 8px;
-        cursor: pointer;
-    }
+    
 
     /* Product Card Container */
     .product-card {
@@ -132,17 +119,13 @@
     }
 
 
-    .suggestion-item:hover {
-        background: #f2f2f2;
-    }
+    
 
     .carousel-item::before {
         background: none !important;
     }
 
-    .changing_btn {
-        background-color: #001531;
-    }
+    
 
     .changing_btn:hover {
         border: 1px solid #001531;
@@ -154,7 +137,7 @@
         color: #001531;
     }
 
-    .carousel-control-prev {
+    /* .carousel-control-prev {
         left: 0 !important;
     }
 
@@ -164,7 +147,7 @@
 
     .headings_clr {
         color: #001531;
-    }
+    } */
 
     /* Ensure indicators are centered and aligned properly */
     #productCarousel .carousel-indicators {
@@ -225,6 +208,9 @@
     .date {
         font-size: 0.9rem;
         color: #6c757d;
+    }
+    .carousel-inner {
+        padding: 10px;
     }
 
     /* Responsive adjustments */
@@ -369,100 +355,117 @@
         </div>
         <!-- Product Modal -->
         <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content rounded-3 shadow-lg">
-                    <!-- Modal Header -->
-                    <div class="modal-header" style="background-color: #001531;">
-                        <h5 class="modal-title text-white" id="productTitle"></h5>
-                        <button data-bs-dismiss="modal" aria-label="Close" class="btn text-white">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header border-0 bg-light">
+                        <h5 class="modal-title visually-hidden" id="productTitle">Product Details</h5>
+                        <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                     </div>
-                    <!-- Modal Body -->
-                    <div class="modal-body bg-light p-4">
-
-                        <!-- Product Image Slider -->
-                        <div id="productCarousel" class="carousel slide mb-4" data-bs-ride="false">
-                            <div class="carousel-indicators" id="carouselIndicators"></div>
-                            <div class="carousel-inner"></div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
-                                data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
-                                data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            </button>
-                        </div>
-
-                        <!-- Product Title & Price -->
-                        <h3 id="productTitlebtm" class="text-dark text-center"></h3>
-                        <h4 id="productPrice" class="text-success fw-bold text-center"></h4>
-
-                        <!-- Availability & Stock -->
-                        <div class="row text-center">
-                            <p class="col-md-4"><i class="fa-solid fa-box"></i> <strong>Availability:</strong> <span
-                                    id="productAvailability"></span></p>
-                            <p class="col-md-4"><i class="fa-solid fa-layer-group"></i> <strong>Stock:</strong> <span
-                                    id="productStock"></span></p>
-                            <p class="col-md-4"><i class="fa-solid fa-shopping-cart"></i> <strong>Sold:</strong> <span
-                                    id="productSold"></span></p>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="card shadow-sm p-3 mt-3">
-                            <h5 class="headings_clr"><i class="fa-solid fa-info-circle"></i> Description</h5>
-                            <p id="productDescription"></p>
-                        </div>
-
-                        <!-- Auction & Condition -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card shadow-sm p-3 mt-3">
-                                    <h5 class="headings_clr"><i class="fa-solid fa-gavel"></i> Auction Details</h5>
-                                    <p><strong>Auction ID:</strong> <span id="auctionId"></span></p>
-                                    <p><strong>Current Bid:</strong> <span id="currentBid"></span></p>
-                                    <p><strong>Highest Bidder:</strong> <span id="highestBidder"></span></p>
-                                    <p><strong>Bid Count:</strong> <span id="bidCount"></span></p>
+                    <div class="modal-body p-0">
+                        <div class="row g-0">
+                            <!-- Product Images Carousel - Left Side -->
+                            <div class="col-lg-6">
+                                <div id="productCarousel" class="carousel slide">
+                                    <div class="carousel-indicators" id="carouselIndicators">
+                                        <!-- <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button> -->
+                                    </div>
+                                    <div class="carousel-inner">
+                                        <!-- <div class="carousel-item active">
+                      <img src="https://placehold.co/800x500/3d4db7/ffffff" class="d-block product-image" alt="Product image 1">
+                    </div>
+                    <div class="carousel-item">
+                      <img src="https://placehold.co/800x500/1565c0/ffffff" class="d-block product-image" alt="Product image 2">
+                    </div>
+                    <div class="carousel-item">
+                      <img src="https://placehold.co/800x500/0d47a1/ffffff" class="d-block product-image" alt="Product image 3">
+                    </div> -->
+                                    </div>
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#productCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#productCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="card shadow-sm p-3 mt-3">
-                                    <h5 class="headings_clr"><i class="fa-solid fa-clipboard-check"></i> Condition</h5>
-                                    <p><strong>Condition:</strong> <span id="condition"></span></p>
-                                    <p><strong>Additional Info:</strong> <span id="conditionInfo"></span></p>
+
+                            <!-- Product Information - Right Side -->
+                            <div class="col-lg-6">
+                                <div class="p-4 p-lg-5">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h2 class="h3 fw-bold mb-1" id="productTitlebtm"></h2>
+                                        </div>
+                                        <!-- <div class="badge bg-primary p-2 fs-6">New Arrival</div> -->
+                                    </div>
+
+                                    <div class="d-flex align-items-center mb-4">
+                                        <h3 id="productPrice" class="h4 fw-bold mb-0 me-3"></h3>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h4 class="h6 fw-bold mb-3">Bidding Information</h4>
+                                        <div class="d-flex flex-wrap">
+                                            <div class="me-4 mb-2">
+                                                <span class="d-block text-muted small">Current Bid</span>
+                                                <span class="fw-bold">$299.99</span>
+                                            </div>
+                                            <div class="me-4 mb-2">
+                                                <span class="d-block text-muted small">Bids</span>
+                                                <span class="fw-bold">23</span>
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="d-block text-muted small">Time Left</span>
+                                                <span class="fw-bold">2d 14h 32m</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <ul class="nav nav-tabs mb-3" id="productTabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                                                data-bs-target="#description" type="button" role="tab"
+                                                aria-controls="description" aria-selected="true">
+                                                Description
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="specs-tab" data-bs-toggle="tab"
+                                                data-bs-target="#specs" type="button" role="tab" aria-controls="specs"
+                                                aria-selected="false">
+                                                Condition
+                                            </button>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content" id="productTabContent">
+                                        <div class="tab-pane fade show active" id="description" role="tabpanel"
+                                            aria-labelledby="description-tab">
+                                            <p id="productDescription"></p>
+                                        </div>
+                                        <div class="tab-pane fade" id="specs" role="tabpanel"
+                                            aria-labelledby="specs-tab">
+                                            <ul class="list-unstyled">
+                                                <li class="mb-2" id="condition"></li>
+                                                <li class="mb-2" id="conditionInfo"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap gap-2 mt-4">
+                                        <a style="margin-right: 5px;" id="websiteUrl" target="_blank" class="btn btn-primary">Visit Website</a>
+                                        <a id="productLink" target="_blank" class="btn btn-outline-primary">Visit
+                                            Product</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Shipping & Returns -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card shadow-sm p-3 mt-3">
-                                    <h5 class="headings_clr"><i class="fa-solid fa-truck"></i> Shipping Details</h5>
-                                    <p><strong>Shipping:</strong> <span id="shippingInfo"></span></p>
-                                    <p><strong>Estimated Arrival:</strong> <span id="estArrival"></span></p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card shadow-sm p-3 mt-3">
-                                    <h5 class="headings_clr"><i class="fa-solid fa-undo"></i> Return Policy</h5>
-                                    <p><strong>Returns Accepted:</strong> <span id="returnAccepted"></span></p>
-                                    <p><strong>Refund Method:</strong> <span id="refundMethod"></span></p>
-                                    <p><strong>Return Period:</strong> <span id="returnPeriod"></span></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Additional Details -->
-                        <div class="card shadow-sm p-3 mt-3">
-                            <h5 class="headings_clr"><i class="fa-solid fa-tags"></i> Other Details</h5>
-                            <p><strong>Brand:</strong> <span id="productBrand"></span></p>
-                            <p><strong>Category:</strong> <span id="productCategory"></span></p>
-                            <p><strong>Website:</strong> <a href="#" id="websiteUrl" target="_blank"></a></p>
-                            <p><strong>Product Link:</strong> <a href="#" id="productLink" target="_blank"></a></p>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -473,8 +476,8 @@
 
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <script>
     $(document).ready(function () {
         $("#searchInput, #soldFilter, #marketplaceFilter").on("keyup change", function () {
@@ -572,8 +575,8 @@
 
                     if (images.length === 0) {
                         carouselInner.append(`
-                    <div class="carousel-item active">
-                        <img src="/static/default.jpg" class="d-block w-100" alt="No Image Available">
+                    <div class="carousel-item active" style="height: 500px; background: white;">
+                        <img src=""  class="d-block w-100" alt="No Image Available">
                     </div>`);
                     } else {
                         images.forEach((imgSrc, index) => {
@@ -582,7 +585,7 @@
                             // Add Image Slide
                             carouselInner.append(`
                         <div class="carousel-item ${activeClass}" style="height: 500px; background: white;">
-                            <img src="${imgSrc.trim()}" class="d-block w-100" alt="Product Image" 
+                            <img src="${imgSrc.trim()}" class="d-block product-image" alt="Product Image" 
                                  style="height: 100%; object-fit: contain;">
                         </div>`);
 
