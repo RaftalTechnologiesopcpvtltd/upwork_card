@@ -25,6 +25,10 @@ urlpatterns = [
     path("stripe-webhook/", views.stripe_webhook, name="stripe_webhook"),
     path("search/", views.product_search, name="product_search"),
     path('get-product/<int:product_id>/', views.get_product_details, name='get_product_details'),
+    path('download-template/', views.download_csv_template, name='download_csv_template'),
     path('product-upload/', views.bulk_upload_products, name='bulk_upload_products'),
     path('My-products/', views.my_products, name='my_products'),
+    path('favourites/', views.fav_view, name='favourites'),
+    path('add-to-favourites/', views.add_to_favourites, name='add_to_favourites'),
+    path('remove-from-favourites/', views.remove_from_favourites, name='remove_from_favourites'),
 ]

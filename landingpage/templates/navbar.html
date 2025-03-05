@@ -31,15 +31,14 @@
                             {% endif %}
                             <li class="nav-item active"><a class="page-scroll" href="{% url 'landingpage' %}">Home</a>
                             </li>
-                            <li class="nav-item"><a class="page-scroll" href="{% url 'my_subscription' %}">My
-                                Subscription</a></li>
+                            <li class="nav-item"><a class="page-scroll" href="{% url 'favourites' %}">Favorites</a></li>
                                 <li class="nav-item"><a class="page-scroll" href="{% url 'blog_listings' %}">All Blogs</a>
                             </li>
                             <li class="nav-item"><a class="page-scroll" href="{% url 'create_post' %}">Create Blogs</a>
                             </li>
                             <li class="nav-item"><a class="page-scroll" href="{% url 'faq' %}">FAQs</a></li>
                             {% if user.is_authenticated %}
-                            <li class="nav-item active"><a class="page-scroll" href="{% url 'profile' %}">My profile</a>
+                            <li class="nav-item active  d-lg-none"><a class="page-scroll" href="{% url 'profile' %}">My profile</a>
                             </li>
                             <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'my_products' %}">My Listing</a>
                             </li>
@@ -67,8 +66,7 @@
                             <li class="nav-item"><a class="page-scroll" href="#about">About</a></li>
                             <li class="nav-item"><a class="page-scroll" href="{% url 'faq' %}">FAQs</a></li>
                             {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="page-scroll" href="{% url 'profile' %}">My profile</a>
-                            </li>
+                            
                             <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                             </li>
                             {% else %}
@@ -90,6 +88,8 @@
                                 <span>Hi {{ user.first_name }}</span>
                             </a>
                             <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
+                                <a class="dropdown-item" href="{% url 'my_subscription' %}">My Subscriptiong</a>
                                 <a class="dropdown-item" href="{% url 'my_products' %}">My Listing</a>
                                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                             </div>
