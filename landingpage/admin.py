@@ -81,3 +81,9 @@ class MyListingAdmin(admin.ModelAdmin):
     search_fields = ['product_title']
 
 admin.site.register(MyListing, MyListingAdmin)
+
+
+class FavouritesAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at')
+
+admin.site.register(Favourites, FavouritesAdmin)

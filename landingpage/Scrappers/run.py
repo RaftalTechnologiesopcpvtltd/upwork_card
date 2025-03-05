@@ -42,30 +42,39 @@ def fanatics_scraper(driver):
         # driver = fanatics_scraper_initialize_driver(driver)
 
         all_dropdown_links = get_dropdown_links(driver)
-        all_links = get_prod_links(driver, all_dropdown_links[:2])
+        time.sleep(3)
 
+        all_links = get_prod_links(driver,all_dropdown_links[1:3])
         all_cards_links_weekly = all_links[2]
         all_cards_links_fixed = all_links[0]
         all_cards_links_premier = all_links[1]
+        weekly_prod_ids = get_prod_id(all_cards_links_weekly)
+        print("weekly_prod_ids :",weekly_prod_ids)
+        fixed_prod_ids = get_prod_id(all_cards_links_fixed)
+        premier_prod_ids = get_prod_id(all_cards_links_premier)
 
-        weekly_prod_ids_chunks = chunk_list(get_prod_id(all_cards_links_weekly))
-        fixed_prod_ids_chunks = chunk_list(get_prod_id(all_cards_links_fixed))
-        premier_prod_ids_chunks = chunk_list(get_prod_id(all_cards_links_premier))
+        weekly_prod_ids_chunks = chunk_list(weekly_prod_ids)
+        print("weekly_prod_ids_chunks :",weekly_prod_ids_chunks)
+        fixed_prod_ids_chunks = chunk_list(fixed_prod_ids)
+        premier_prod_ids_chunks = chunk_list(premier_prod_ids)
 
         for chunk in weekly_prod_ids_chunks:
-            for product in weekly_resp(chunk):
+            products = weekly_resp(chunk)
+            for product in products:
                 create_product(extract_listing_details(product))
                 save_to_csv(extract_listing_details(product), filename=r"landingpage/data/fanatics_data.csv")
             time.sleep(3)
 
         for chunk in fixed_prod_ids_chunks:
-            for product in fixed_resp(chunk):
+            products = fixed_resp(chunk)
+            for product in products:
                 create_product(extract_listing_details(product))
                 save_to_csv(extract_listing_details(product), filename=r"landingpage/data/fanatics_data.csv")
             time.sleep(3)
 
         for chunk in premier_prod_ids_chunks:
-            for product in premier_resp(chunk):
+            products = premier_resp(chunk)
+            for product in products:
                 create_product(extract_listing_details(product))
                 save_to_csv(extract_listing_details(product), filename=r"landingpage/data/fanatics_data.csv")
             time.sleep(3)
@@ -430,7 +439,7 @@ def run_multiple_scrapers():
     """Runs all scrapers in parallel."""
     # scrapers = [fanatics_scraper, mercari_scraper, craglist_scraper]
     scrapers = [five_miles_scrapper,fanatics_scraper,craglist_scraper,offerUp_scrapper]
-    # scrapers = []
+    # scrapers = [fanatics_scraper]
     processes = []
 
     for i, scraper in enumerate(scrapers):

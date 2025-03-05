@@ -16,12 +16,63 @@ from selenium.webdriver.chrome.options import Options
 import os
 import json
 from dictionary_normanlizer import *
+import undetected_chromedriver as uc
+import multiprocessing
+import shutil
+import tempfile
+import os
+import time
+import logging
+import traceback  # Import traceback module
+import os
+import sys
+import os
+import time
+import shutil
+import tempfile
+import traceback
+import undetected_chromedriver as uc
+from selenium_stealth import stealth
+from fake_useragent import UserAgent
 
 from logger import *
 
 fanatics_logger = setup_logger("Fanatics_scraper")
+CHROMEDRIVER_PATH = r"landingpage/Scrappers/chromedriver.exe"
+def init_driver():
+    """Each browser instance runs its own unique scraping task."""
+    temp_dir = tempfile.mkdtemp(prefix=f"chrome_instance_{2}_")
 
+    driver_folder = os.path.join(temp_dir, "chromedriver")
+    os.makedirs(driver_folder, exist_ok=True)
+    driver_path = shutil.copy(CHROMEDRIVER_PATH, driver_folder)
 
+    options = uc.ChromeOptions()
+    options.add_argument(f"--user-data-dir={temp_dir}")  # Unique profile
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    # options.add_argument("--headless=new")  # New headless mode
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--start-maximized")
+
+    # Generate a random user-agent
+    ua = UserAgent()
+    options.add_argument(f"user-agent={ua.random}")
+    # Initialize undetected_chromedriver with the copied binary
+
+    driver = uc.Chrome(driver_executable_path=driver_path, options=options)
+
+    # Apply selenium stealth to avoid detection
+    stealth(driver,
+        languages=["en-US", "en"],
+        vendor="Google Inc.",
+        platform="Win32",
+        webgl_vendor="Intel Inc.",
+        renderer="Intel Iris OpenGL Engine",
+        fix_hairline=True
+    )
+    return driver
 
 def get_dropdown_links(driver):
     driver.get("https://www.fanaticscollect.com/")
@@ -32,7 +83,7 @@ def get_dropdown_links(driver):
     all_links = sports_card.find_elements(By.TAG_NAME,'a')
     for link in all_links:
         all_dropdown_links.append(link.get_attribute('href').split('&')[0])
-        # print(link.get_attribute('href').split('&')[0])
+        print(link.get_attribute('href').split('&')[0])
     return all_dropdown_links
 
 def get_prod_id(all_cards_links):
@@ -58,7 +109,7 @@ def get_prod_id(all_cards_links):
 
 
 def get_prod_links(driver,all_dropdown_links):
-    buying_option = ['WEEKLY','FIXED','PREMIER']
+    buying_option = ['FIXED','PREMIER']
     all_cards_links_weekly = []
     all_cards_links_fixed = []
     all_cards_links_premier = []
@@ -157,6 +208,8 @@ def premier_resp(premier_prod_ids):
                 ...Money
                 __typename
             }
+            description
+            defaultItemDescription
             status
             lotString
             isOwner
@@ -292,6 +345,8 @@ def weekly_resp(weekly_prod_ids):
                 ...Money
                 __typename
             }
+            description
+            defaultItemDescription
             status
             lotString
             isOwner
@@ -426,6 +481,8 @@ def fixed_resp(fixed_prod_ids):
                     ...Money
                     __typename
                 }
+                description
+                defaultItemDescription
                 status
                 lotString
                 isOwner
@@ -524,6 +581,7 @@ def extract_listing_details(response):
     "Product Title": response.get("title", "N/A"),
     "Product Price Currency": response.get("startingPrice", {}).get("currency", "N/A"),
     "Product Price": starting_price if starting_price is not None else "N/A",
+    "Description" : response.get("defaultItemDescription", "N/A"),
     "Current Bid Price": current_bid_amount if current_bid_amount is not None else "N/A",
     "Current Bid Currency": response.get("currentBid", {}).get("currency", "N/A"),
     "Current Bid Count": response.get("bidCount", "N/A"),
@@ -572,7 +630,7 @@ def chunk_list(data_list, chunk_size=100):
 
 
 # def main():    
-#     driver = initialize_driver()
+#     driver = init_driver()
 #     wait = WebDriverWait(driver, 10)
 #     time.sleep(3)
 #     all_dropdown_links = get_dropdown_links(driver)
@@ -583,10 +641,12 @@ def chunk_list(data_list, chunk_size=100):
 #     all_cards_links_fixed = all_links[0]
 #     all_cards_links_premier = all_links[1]
 #     weekly_prod_ids = get_prod_id(all_cards_links_weekly)
+#     print("weekly_prod_ids :",weekly_prod_ids)
 #     fixed_prod_ids = get_prod_id(all_cards_links_fixed)
 #     premier_prod_ids = get_prod_id(all_cards_links_premier)
 
 #     weekly_prod_ids_chunks = chunk_list(weekly_prod_ids)
+#     print("weekly_prod_ids_chunks :",weekly_prod_ids_chunks)
 #     fixed_prod_ids_chunks = chunk_list(fixed_prod_ids)
 #     premier_prod_ids_chunks = chunk_list(premier_prod_ids)
 
@@ -594,7 +654,8 @@ def chunk_list(data_list, chunk_size=100):
 #         products = weekly_resp(chunk)
 #         for product in products:
 #             data = extract_listing_details(product)
-#             save_to_csv(data, filename="data\fanatics_data.csv")
+#             print("data :",data)
+#             save_to_csv(data, filename=r"landingpage/data/fanatics_data.csv")
 #         time.sleep(3)
 
 
@@ -603,7 +664,7 @@ def chunk_list(data_list, chunk_size=100):
 #         products = fixed_resp(chunk)
 #         for product in products:
 #             data = extract_listing_details(product)
-#             save_to_csv(data, filename="data\fanatics_data.csv")
+#             save_to_csv(data, filename=r"landingpage/data/fanatics_data.csv")
 #         time.sleep(3)
 
 
@@ -611,7 +672,7 @@ def chunk_list(data_list, chunk_size=100):
 #         products = premier_resp(chunk)
 #         for product in products:
 #             data = extract_listing_details(product)
-#             save_to_csv(data, filename="data\fanatics_data.csv")
+#             save_to_csv(data, filename=r"landingpage/data/fanatics_data.csv")
 #         time.sleep(3)
 
 
