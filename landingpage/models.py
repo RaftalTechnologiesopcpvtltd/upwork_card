@@ -7,6 +7,7 @@ from datetime import timedelta
 from datetime import date
 from taggit.managers import TaggableManager  # Import taggit
 import stripe
+from django.utils import timezone
 from django.conf import settings
 
 
@@ -87,6 +88,14 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_title
+
+class Favourites(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.product.product_title}'
 
 
 class MyListing(models.Model):

@@ -22,6 +22,12 @@ import decimal
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 import csv
+from django.http import HttpResponse
+import ast
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from .models import UserSubscription, MyListing, Product
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -62,7 +68,7 @@ def Landing_page(request):
     return render(request, 'home.html',context)
 
 
-import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -247,7 +253,7 @@ def product_search(request):
     if query:
         products = products.filter(product_title__icontains=query)
     if selling_type:
-        products = products.filter(selling_type=selling_type)
+        products = products.filter(selling_type__icontains=selling_type)
     if marketplace:
         products = products.filter(website_name=marketplace)
 
@@ -280,7 +286,33 @@ def product_search(request):
 
     return JsonResponse({"products": results})
 
-
+@login_required
+def fav_view(request):
+    fav_products = Favourites.objects.filter(user=request.user)
+    fav_results = []
+    for fav_prod in fav_products:
+        product_images_list = []
+        if fav_prod.product.product_images:
+            try:
+                product_images_list = ast.literal_eval(fav_prod.product.product_images)
+                if not isinstance(product_images_list, list):  # Ensure it's a list
+                    product_images_list = []
+            except (SyntaxError, ValueError):
+                product_images_list = []
+        fav_results.append({
+            "id": fav_prod.id,
+            "title": fav_prod.product.product_title,
+            "link": fav_prod.product.product_link,
+            "selling_type": fav_prod.product.selling_type,
+            "website_name": fav_prod.product.website_name,
+            "price": fav_prod.product.product_price,
+            "current_bid_price": str(fav_prod.product.current_bid_price) if fav_prod.product.current_bid_price else "N/A",
+            "current_bid_currency": fav_prod.product.current_bid_currency,
+            "current_bid_count": fav_prod.product.current_bid_count,
+            "image": product_images_list[0] if product_images_list else "",  # Handle missing images
+            "decscription" : fav_prod.product.description,
+        })
+    return render(request, 'favourites.html',{"fav_products":fav_results})
 
 def get_product_details(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -864,9 +896,46 @@ def logout_view(request):
 #     form = CSVUploadForm()
 #     return render(request, "bulk_upload.html", {"form": form,'User_Subscription': subscription})
 
+# @require_POST
+@login_required
+def add_to_favourites(request):
+    product_id = request.POST.get('product_id')
+    product = get_object_or_404(Product, id=product_id)
+    
+    wishlist_item, created = Favourites.objects.get_or_create(user=request.user, product=product)
+    
+    if created:
+        return JsonResponse({'status': 'success', 'message': 'Product added to wishlist'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Product already in wishlist'})
 
+@csrf_exempt
+@login_required
+def remove_from_favourites(request):
+    if request.method == 'POST':
+        wishlist_item_id = request.POST.get('product_id')
+        print(wishlist_item_id)
+        wishlist_item = get_object_or_404(Favourites, id=wishlist_item_id, user=request.user)
+        wishlist_item.delete()
+        return JsonResponse({'status': 'success', 'message': 'Product removed from wishlist'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
+def download_csv_template(request):
+    # Define the CSV headers based on your expected format
+    header = ["Product Title"]
 
+    # Create HTTP response with CSV content type
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="product_template.csv"'
+
+    # Create a CSV writer object
+    writer = csv.writer(response)
+
+    # Write the header to the CSV file
+    writer.writerow(header)
+
+    return response
 
 @login_required
 def bulk_upload_products(request):
@@ -927,12 +996,6 @@ def bulk_upload_products(request):
     form = CSVUploadForm()
     return render(request, "bulk_upload.html", {"form": form,'User_Subscription': subscription})
 
-
-import ast
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from .models import UserSubscription, MyListing, Product
 
 @login_required
 def my_products(request):
