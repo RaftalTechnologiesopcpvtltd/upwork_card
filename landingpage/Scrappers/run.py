@@ -11,6 +11,7 @@ from eBAY import *
 from offerUp import *
 from mercari import *
 from Fivemiles import *
+from facebook_scrapper import *
 import traceback  # Import traceback module
 import os
 import sys
@@ -373,11 +374,110 @@ def offerUp_scrapper(driver):
         create_product(product_data)
         save_to_csv(product_data, filename=r"landingpage/data/OfferUp_data.csv")
 
+def facebook_scrapper(driver):
+    #all fb code will be added
+    prod_links = get_face_prod_links(driver)
+    for links in prod_links:
+        driver.get(links)
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        title = soup.find("h1").text.strip()
+        link = links
 
+
+        # Find all images where 'alt' contains the product title
+        filtered_images = [
+            img.get("src") for img in soup.find_all("img")
+            if img.get("alt") and title.lower() in img.get("alt").lower()
+        ]
+        price_info = soup.find("span",class_="x193iq5w xeuugli x13faqbe x1vvkbs x1xmvt09 x1lliihq x1s928wv xhkezso x1gmr53x x1cpjm7i x1fgarty x1943h6x xudqn12 x676frb x1lkfr7t x1lbecb7 xk50ysn xzsf02u").text.strip().split('·')
+        description = clean_description(soup.find("div",class_="xz9dl7a x4uap5 xsag5q8 xkhd6sd x126k92a").text.strip())
+        if 'Condition' in soup.find("div",class_="x1cy8zhl x78zum5 x1qughib x1y1aw1k x4uap5 xwib8y2 xkhd6sd").text:
+            condition = soup.find("span",class_="x1e558r4 xp4054r x3hqpx7").text.strip()
+        price = price_info[0].strip()
+        price_text = price.strip()
+
+        # Use regex to extract the first price
+        match = re.findall(r'\$\d{1,3}(?:,\d{3})*(?:\.\d+)?', price_text)  # Find all prices like $25, $40
+        if match:
+            actual_price = match[0]  # First one is the actual price
+        try:
+            Status = price_info[1].strip()
+        except:
+            Status = "-"
+        images = filtered_images
+        # Print the filtered image URLs
+        prod_data = normalize_data({
+            "Website Name": "Facebook",
+            "Website URL": "https://www.facebook.com/marketplace",
+            "Product Link": link,
+            "Product Images": images,
+            "Selling Type" : "Fixed",
+            "Product Title": clean_description(title),
+            "Product Price Currency": "$",
+            "Product Price": actual_price,
+            "Description": description,
+            "Condition": condition,
+            "Status" : Status,
+        })
+        save_to_csv(prod_data, filename=r"landingpage/data/facebook_data.csv")
+        create_product(prod_data)
 
 # ========================== Running Scrapers in Parallel ==========================
 
 CHROMEDRIVER_PATH = r"landingpage/Scrappers/chromedriver.exe"
+def run_fb_scraper(scraper_func, instance_id):
+    try:
+        # Create a temporary directory for ChromeDriver
+        temp_dir = tempfile.mkdtemp(prefix="chrome_instance_")
+        driver_folder = os.path.join(temp_dir, "chromedriver")
+        os.makedirs(driver_folder, exist_ok=True)
+
+        # Copy ChromeDriver to the temp directory
+        driver_path = shutil.copy(CHROMEDRIVER_PATH, driver_folder)
+
+        # Use the local Chrome profile directory in your PWD
+        profile_path = os.path.join(os.getcwd(), "Scrappers", "profile", "john")
+
+
+        # Set up Chrome options
+        options = uc.ChromeOptions()
+
+        options.add_argument(f"--user-data-dir={profile_path}")  # Set the user data directory  # Use local profile
+        # options.add_argument(f"--profile-directory={PROFILE_NAME}")  # Ensure the correct profile is used
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        # options.add_argument("--headless=new")  # New headless mode
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument("--start-maximized")
+
+        # Generate a random user-agent
+        ua = UserAgent()
+        options.add_argument(f"user-agent={ua.random}")
+
+        # Initialize undetected_chromedriver with copied ChromeDriver
+        driver = uc.Chrome(driver_executable_path=driver_path, options=options)
+
+        # Apply Selenium Stealth
+        stealth(driver,
+            languages=["en-US", "en"],
+            vendor="Google Inc.",
+            platform="Win32",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True
+        )
+        scraper_func(driver)  # Now this works because scrapers accept a driver argument
+
+        time.sleep(5)
+
+    except Exception as e:
+        print(f"Error in instance {instance_id}: {e}")
+        print(traceback.format_exc())  # Proper traceback logging
+
+        # Cloudflare fallback: Try using cloudscraper if Selenium fails
+        print(f"[Instance {instance_id}] Attempting Cloudscraper fallback...")
+
 
 def run_scraper(scraper_func, instance_id):
     """Each browser instance runs its own unique scraping task."""
@@ -393,7 +493,7 @@ def run_scraper(scraper_func, instance_id):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-blink-features=AutomationControlled")
-        options.add_argument("--headless=new")  # New headless mode
+        # options.add_argument("--headless=new")  # New headless mode
         options.add_argument("--window-size=1920,1080")
         options.add_argument("--start-maximized")
 
@@ -438,17 +538,20 @@ def run_scraper(scraper_func, instance_id):
 def run_multiple_scrapers():
     """Runs all scrapers in parallel."""
     # scrapers = [fanatics_scraper, mercari_scraper, craglist_scraper]
-    scrapers = [five_miles_scrapper,fanatics_scraper,craglist_scraper,offerUp_scrapper]
-    # scrapers = [fanatics_scraper]
+    # scrapers = [five_miles_scrapper,fanatics_scraper,craglist_scraper,offerUp_scrapper,facebook_scrapper]
+    scrapers = [facebook_scrapper]
     processes = []
 
     for i, scraper in enumerate(scrapers):
-        p = multiprocessing.Process(target=run_scraper, args=(scraper, i))
+        if 'facebook' in scraper.__name__:
+            p = multiprocessing.Process(target=run_fb_scraper, args=(scraper, i))
+        else:
+            p = multiprocessing.Process(target=run_scraper, args=(scraper, i))
         p.start()
         processes.append(p)
 
     # Run eBay scraper directly (since it does not require ChromeDriver)
-    ebay_scrapper()
+    # ebay_scrapper()
 
     for p in processes:
         p.join()

@@ -1,0 +1,590 @@
+2025-03-03 14:43:36,095 - INFO - all_location_links : ['https://abilene.craigslist.org/', 'https://akroncanton.craigslist.org/', 'https://albanyga.craigslist.org/', 'https://albany.craigslist.org/', 'https://albuquerque.craigslist.org/', 'https://altoona.craigslist.org/', 'https://amarillo.craigslist.org/', 'https://ames.craigslist.org/', 'https://anchorage.craigslist.org/', 'https://annapolis.craigslist.org/', 'https://annarbor.craigslist.org/', 'https://appleton.craigslist.org/', 'https://asheville.craigslist.org/', 'https://ashtabula.craigslist.org/', 'https://athensga.craigslist.org/', 'https://athensohio.craigslist.org/', 'https://atlanta.craigslist.org/', 'https://auburn.craigslist.org/', 'https://augusta.craigslist.org/', 'https://austin.craigslist.org/', 'https://bakersfield.craigslist.org/', 'https://baltimore.craigslist.org/', 'https://batonrouge.craigslist.org/', 'https://battlecreek.craigslist.org/', 'https://beaumont.craigslist.org/', 'https://bellingham.craigslist.org/', 'https://bemidji.craigslist.org/', 'https://bend.craigslist.org/', 'https://billings.craigslist.org/', 'https://binghamton.craigslist.org/', 'https://bham.craigslist.org/', 'https://bismarck.craigslist.org/', 'https://bloomington.craigslist.org/', 'https://bn.craigslist.org/', 'https://boise.craigslist.org/', 'https://boone.craigslist.org/', 'https://boston.craigslist.org/', 'https://boulder.craigslist.org/', 'https://bgky.craigslist.org/', 'https://bozeman.craigslist.org/', 'https://brainerd.craigslist.org/', 'https://brownsville.craigslist.org/', 'https://brunswick.craigslist.org/', 'https://buffalo.craigslist.org/', 'https://butte.craigslist.org/', 'https://capecod.craigslist.org/', 'https://catskills.craigslist.org/', 'https://cedarrapids.craigslist.org/', 'https://cenla.craigslist.org/', 'https://centralmich.craigslist.org/', 'https://cnj.craigslist.org/', 'https://chambana.craigslist.org/', 'https://charleston.craigslist.org/', 'https://charlestonwv.craigslist.org/', 'https://charlotte.craigslist.org/', 'https://charlottesville.craigslist.org/', 'https://chattanooga.craigslist.org/', 'https://chautauqua.craigslist.org/', 'https://chicago.craigslist.org/', 'https://chico.craigslist.org/', 'https://chillicothe.craigslist.org/', 'https://cincinnati.craigslist.org/', 'https://clarksville.craigslist.org/', 'https://cleveland.craigslist.org/', 'https://clovis.craigslist.org/', 'https://collegestation.craigslist.org/', 'https://cosprings.craigslist.org/', 'https://columbiamo.craigslist.org/', 'https://columbia.craigslist.org/', 'https://columbusga.craigslist.org/', 'https://columbus.craigslist.org/', 'https://cookeville.craigslist.org/', 'https://corpuschristi.craigslist.org/', 'https://corvallis.craigslist.org/', 'https://chambersburg.craigslist.org/', 'https://dallas.craigslist.org/', 'https://danville.craigslist.org/', 'https://daytona.craigslist.org/', 'https://dayton.craigslist.org/', 'https://decatur.craigslist.org/', 'https://nacogdoches.craigslist.org/', 'https://delaware.craigslist.org/', 'https://delrio.craigslist.org/', 'https://denver.craigslist.org/', 'https://desmoines.craigslist.org/', 'https://detroit.craigslist.org/', 'https://dothan.craigslist.org/', 'https://dubuque.craigslist.org/', 'https://duluth.craigslist.org/', 'https://eastco.craigslist.org/', 'https://newlondon.craigslist.org/', 'https://eastky.craigslist.org/', 'https://montana.craigslist.org/', 'https://eastnc.craigslist.org/', 'https://martinsburg.craigslist.org/', 'https://easternshore.craigslist.org/', 'https://eastidaho.craigslist.org/', 'https://eastoregon.craigslist.org/', 'https://eauclaire.craigslist.org/', 'https://elko.craigslist.org/', 'https://elmira.craigslist.org/', 'https://elpaso.craigslist.org/', 'https://erie.craigslist.org/', 'https://eugene.craigslist.org/', 'https://evansville.craigslist.org/', 'https://fairbanks.craigslist.org/', 'https://fargo.craigslist.org/', 'https://farmington.craigslist.org/', 'https://fayar.craigslist.org/', 'https://fayetteville.craigslist.org/', 'https://fingerlakes.craigslist.org/', 'https://flagstaff.craigslist.org/', 'https://flint.craigslist.org/', 'https://shoals.craigslist.org/', 'https://florencesc.craigslist.org/', 'https://keys.craigslist.org/', 'https://fortcollins.craigslist.org/', 'https://fortdodge.craigslist.org/', 'https://fortsmith.craigslist.org/', 'https://fortwayne.craigslist.org/', 'https://frederick.craigslist.org/', 'https://fredericksburg.craigslist.org/', 'https://fresno.craigslist.org/', 'https://fortmyers.craigslist.org/', 'https://gadsden.craigslist.org/', 'https://gainesville.craigslist.org/', 'https://galveston.craigslist.org/', 'https://glensfalls.craigslist.org/', 'https://goldcountry.craigslist.org/', 'https://grandforks.craigslist.org/', 'https://grandisland.craigslist.org/', 'https://grandrapids.craigslist.org/', 'https://greatfalls.craigslist.org/', 'https://greenbay.craigslist.org/', 'https://greensboro.craigslist.org/', 'https://greenville.craigslist.org/', 'https://gulfport.craigslist.org/', 'https://hanford.craigslist.org/', 'https://harrisburg.craigslist.org/', 'https://harrisonburg.craigslist.org/', 'https://hartford.craigslist.org/', 'https://hattiesburg.craigslist.org/', 'https://honolulu.craigslist.org/', 'https://cfl.craigslist.org/', 'https://helena.craigslist.org/', 'https://hickory.craigslist.org/', 'https://rockies.craigslist.org/', 'https://hiltonhead.craigslist.org/', 'https://holland.craigslist.org/', 'https://houma.craigslist.org/', 'https://houston.craigslist.org/', 'https://hudsonvalley.craigslist.org/', 'https://humboldt.craigslist.org/', 'https://huntington.craigslist.org/', 'https://huntsville.craigslist.org/', 'https://imperial.craigslist.org/', 'https://indianapolis.craigslist.org/', 'https://inlandempire.craigslist.org/', 'https://iowacity.craigslist.org/', 'https://ithaca.craigslist.org/', 'https://jxn.craigslist.org/', 'https://jackson.craigslist.org/', 'https://jacksontn.craigslist.org/', 'https://jacksonville.craigslist.org/', 'https://onslow.craigslist.org/', 'https://janesville.craigslist.org/', 'https://jerseyshore.craigslist.org/', 'https://jonesboro.craigslist.org/', 'https://joplin.craigslist.org/', 'https://kalamazoo.craigslist.org/', 'https://kalispell.craigslist.org/', 'https://kansascity.craigslist.org/', 'https://kenai.craigslist.org/', 'https://kpr.craigslist.org/', 'https://racine.craigslist.org/', 'https://killeen.craigslist.org/', 'https://kirksville.craigslist.org/', 'https://klamath.craigslist.org/', 'https://knoxville.craigslist.org/', 'https://kokomo.craigslist.org/', 'https://lacrosse.craigslist.org/', 'https://lafayette.craigslist.org/', 'https://tippecanoe.craigslist.org/', 'https://lakecharles.craigslist.org/', 'https://lakeland.craigslist.org/', 'https://loz.craigslist.org/', 'https://lancaster.craigslist.org/', 'https://lansing.craigslist.org/', 'https://laredo.craigslist.org/', 'https://lasalle.craigslist.org/', 'https://lascruces.craigslist.org/', 'https://lasvegas.craigslist.org/', 'https://lawrence.craigslist.org/', 'https://lawton.craigslist.org/', 'https://allentown.craigslist.org/', 'https://lewiston.craigslist.org/', 'https://lexington.craigslist.org/', 'https://limaohio.craigslist.org/', 'https://lincoln.craigslist.org/', 'https://littlerock.craigslist.org/', 'https://logan.craigslist.org/', 'https://longisland.craigslist.org/', 'https://losangeles.craigslist.org/', 'https://louisville.craigslist.org/', 'https://lubbock.craigslist.org/', 'https://lynchburg.craigslist.org/', 'https://macon.craigslist.org/', 'https://madison.craigslist.org/', 'https://maine.craigslist.org/', 'https://ksu.craigslist.org/', 'https://mankato.craigslist.org/', 'https://mansfield.craigslist.org/', 'https://masoncity.craigslist.org/', 'https://mattoon.craigslist.org/', 'https://mcallen.craigslist.org/', 'https://meadville.craigslist.org/', 'https://medford.craigslist.org/', 'https://memphis.craigslist.org/', 'https://mendocino.craigslist.org/', 'https://merced.craigslist.org/', 'https://meridian.craigslist.org/', 'https://milwaukee.craigslist.org/', 'https://minneapolis.craigslist.org/', 'https://missoula.craigslist.org/', 'https://mobile.craigslist.org/', 'https://modesto.craigslist.org/', 'https://mohave.craigslist.org/', 'https://monroe.craigslist.org/', 'https://monroemi.craigslist.org/', 'https://monterey.craigslist.org/', 'https://montgomery.craigslist.org/', 'https://morgantown.craigslist.org/', 'https://moseslake.craigslist.org/', 'https://muncie.craigslist.org/', 'https://muskegon.craigslist.org/', 'https://myrtlebeach.craigslist.org/', 'https://nashville.craigslist.org/', 'https://nh.craigslist.org/', 'https://newhaven.craigslist.org/', 'https://neworleans.craigslist.org/', 'https://blacksburg.craigslist.org/', 'https://newyork.craigslist.org/', 'https://norfolk.craigslist.org/', 'https://lakecity.craigslist.org/', 'https://nd.craigslist.org/', 'https://nesd.craigslist.org/', 'https://nmi.craigslist.org/', 'https://wheeling.craigslist.org/', 'https://northernwi.craigslist.org/', 'https://newjersey.craigslist.org/', 'https://northmiss.craigslist.org/', 'https://northplatte.craigslist.org/', 'https://nwct.craigslist.org/', 'https://nwga.craigslist.org/', 'https://nwks.craigslist.org/', 'https://enid.craigslist.org/', 'https://ocala.craigslist.org/', 'https://odessa.craigslist.org/', 'https://ogden.craigslist.org/', 'https://okaloosa.craigslist.org/', 'https://oklahomacity.craigslist.org/', 'https://olympic.craigslist.org/', 'https://omaha.craigslist.org/', 'https://oneonta.craigslist.org/', 'https://orangecounty.craigslist.org/', 'https://oregoncoast.craigslist.org/', 'https://orlando.craigslist.org/', 'https://outerbanks.craigslist.org/', 'https://owensboro.craigslist.org/', 'https://palmsprings.craigslist.org/', 'https://panamacity.craigslist.org/', 'https://parkersburg.craigslist.org/', 'https://pensacola.craigslist.org/', 'https://peoria.craigslist.org/', 'https://philadelphia.craigslist.org/', 'https://phoenix.craigslist.org/', 'https://csd.craigslist.org/', 'https://pittsburgh.craigslist.org/', 'https://plattsburgh.craigslist.org/', 'https://poconos.craigslist.org/', 'https://porthuron.craigslist.org/', 'https://portland.craigslist.org/', 'https://potsdam.craigslist.org/', 'https://prescott.craigslist.org/', 'https://provo.craigslist.org/', 'https://pueblo.craigslist.org/', 'https://pullman.craigslist.org/', 'https://quadcities.craigslist.org/', 'https://raleigh.craigslist.org/', 'https://rapidcity.craigslist.org/', 'https://reading.craigslist.org/', 'https://redding.craigslist.org/', 'https://reno.craigslist.org/', 'https://providence.craigslist.org/', 'https://richmondin.craigslist.org/', 'https://richmond.craigslist.org/', 'https://roanoke.craigslist.org/', 'https://rmn.craigslist.org/', 'https://rochester.craigslist.org/', 'https://rockford.craigslist.org/', 'https://roseburg.craigslist.org/', 'https://roswell.craigslist.org/', 'https://sacramento.craigslist.org/', 'https://saginaw.craigslist.org/', 'https://salem.craigslist.org/', 'https://salina.craigslist.org/', 'https://saltlakecity.craigslist.org/', 'https://sanangelo.craigslist.org/', 'https://sanantonio.craigslist.org/', 'https://sandiego.craigslist.org/', 'https://sandusky.craigslist.org/', 'https://slo.craigslist.org/', 'https://sanmarcos.craigslist.org/', 'https://santabarbara.craigslist.org/', 'https://santafe.craigslist.org/', 'https://santamaria.craigslist.org/', 'https://sarasota.craigslist.org/', 'https://savannah.craigslist.org/', 'https://scottsbluff.craigslist.org/', 'https://scranton.craigslist.org/', 'https://seattle.craigslist.org/', 'https://sfbay.craigslist.org/', 'https://sheboygan.craigslist.org/', 'https://showlow.craigslist.org/', 'https://shreveport.craigslist.org/', 'https://sierravista.craigslist.org/', 'https://siouxcity.craigslist.org/', 'https://siouxfalls.craigslist.org/', 'https://siskiyou.craigslist.org/', 'https://skagit.craigslist.org/', 'https://southbend.craigslist.org/', 'https://southcoast.craigslist.org/', 'https://sd.craigslist.org/', 'https://juneau.craigslist.org/', 'https://ottumwa.craigslist.org/', 'https://seks.craigslist.org/', 'https://semo.craigslist.org/', 'https://carbondale.craigslist.org/', 'https://smd.craigslist.org/', 'https://swv.craigslist.org/', 'https://miami.craigslist.org/', 'https://southjersey.craigslist.org/', 'https://swks.craigslist.org/', 'https://swmi.craigslist.org/', 'https://marshall.craigslist.org/', 'https://natchez.craigslist.org/', 'https://bigbend.craigslist.org/', 'https://swva.craigslist.org/', 'https://spacecoast.craigslist.org/', 'https://spokane.craigslist.org/', 'https://springfieldil.craigslist.org/', 'https://springfield.craigslist.org/', 'https://pennstate.craigslist.org/', 'https://statesboro.craigslist.org/', 'https://staugustine.craigslist.org/', 'https://stcloud.craigslist.org/', 'https://stgeorge.craigslist.org/', 'https://stillwater.craigslist.org/', 'https://stjoseph.craigslist.org/', 'https://stlouis.craigslist.org/', 'https://stockton.craigslist.org/', 'https://susanville.craigslist.org/', 'https://syracuse.craigslist.org/', 'https://tallahassee.craigslist.org/', 'https://tampa.craigslist.org/', 'https://terrehaute.craigslist.org/', 'https://texarkana.craigslist.org/', 'https://texoma.craigslist.org/', 'https://thumb.craigslist.org/', 'https://toledo.craigslist.org/', 'https://topeka.craigslist.org/', 'https://treasure.craigslist.org/', 'https://tricities.craigslist.org/', 'https://tucson.craigslist.org/', 'https://tulsa.craigslist.org/', 'https://tuscaloosa.craigslist.org/', 'https://tuscarawas.craigslist.org/', 'https://twinfalls.craigslist.org/', 'https://twintiers.craigslist.org/', 'https://easttexas.craigslist.org/', 'https://up.craigslist.org/', 'https://utica.craigslist.org/', 'https://valdosta.craigslist.org/', 'https://ventura.craigslist.org/', 'https://vermont.craigslist.org/', 'https://victoriatx.craigslist.org/', 'https://visalia.craigslist.org/', 'https://waco.craigslist.org/', 'https://washingtondc.craigslist.org/', 'https://waterloo.craigslist.org/', 'https://watertown.craigslist.org/', 'https://wausau.craigslist.org/', 'https://wenatchee.craigslist.org/', 'https://quincy.craigslist.org/', 'https://westky.craigslist.org/', 'https://westmd.craigslist.org/', 'https://westernmass.craigslist.org/', 'https://westslope.craigslist.org/', 'https://wv.craigslist.org/', 'https://wichitafalls.craigslist.org/', 'https://wichita.craigslist.org/', 'https://williamsport.craigslist.org/', 'https://wilmington.craigslist.org/', 'https://winchester.craigslist.org/', 'https://winstonsalem.craigslist.org/', 'https://worcester.craigslist.org/', 'https://wyoming.craigslist.org/', 'https://yakima.craigslist.org/', 'https://york.craigslist.org/', 'https://youngstown.craigslist.org/', 'https://yubasutter.craigslist.org/', 'https://yuma.craigslist.org/', 'https://zanesville.craigslist.org/']
+2025-03-03 14:43:36,101 - INFO - Going for https://abilene.craigslist.org/
+2025-03-03 14:43:49,336 - INFO - ======== 1
+2025-03-03 14:43:49,355 - INFO - Error processing product: ['“$80” value must be a decimal number.']
+2025-03-03 14:43:49,442 - INFO - ======== 1
+2025-03-03 14:43:49,443 - INFO - Error processing product: ['“$100” value must be a decimal number.']
+2025-03-03 14:43:49,529 - INFO - ======== 1
+2025-03-03 14:43:49,530 - INFO - Error processing product: ['“$60” value must be a decimal number.']
+2025-03-03 14:43:49,617 - INFO - ======== 1
+2025-03-03 14:43:49,618 - INFO - Error processing product: ['“$60” value must be a decimal number.']
+2025-03-03 14:43:49,677 - INFO - ======== 1
+2025-03-03 14:43:49,679 - INFO - Error processing product: ['“-” value must be a decimal number.']
+2025-03-03 14:43:49,765 - INFO - ======== 1
+2025-03-03 14:43:49,767 - INFO - Error processing product: ['“$40” value must be a decimal number.']
+2025-03-03 14:43:49,853 - INFO - ======== 1
+2025-03-03 14:43:49,855 - INFO - Error processing product: ['“$300” value must be a decimal number.']
+2025-03-03 14:43:49,930 - INFO - ======== 1
+2025-03-03 14:43:49,932 - INFO - Error processing product: ['“$80” value must be a decimal number.']
+2025-03-03 14:43:50,007 - INFO - ======== 1
+2025-03-03 14:43:50,008 - INFO - Error processing product: ['“$300” value must be a decimal number.']
+2025-03-03 14:43:50,089 - INFO - ======== 1
+2025-03-03 14:43:50,090 - INFO - Error processing product: ['“$100” value must be a decimal number.']
+2025-03-03 14:43:50,165 - INFO - ======== 1
+2025-03-03 14:43:50,167 - INFO - Error processing product: ['“$200” value must be a decimal number.']
+2025-03-03 14:43:50,243 - INFO - ======== 1
+2025-03-03 14:43:50,244 - INFO - Error processing product: ['“$80” value must be a decimal number.']
+2025-03-03 14:43:50,321 - INFO - ======== 1
+2025-03-03 14:43:50,322 - INFO - Error processing product: ['“$225” value must be a decimal number.']
+2025-03-03 14:43:50,405 - INFO - ======== 1
+2025-03-03 14:43:50,406 - INFO - Error processing product: ['“$40” value must be a decimal number.']
+2025-03-03 14:43:50,498 - INFO - ======== 1
+2025-03-03 14:43:50,500 - INFO - Error processing product: ['“$600” value must be a decimal number.']
+2025-03-03 14:43:50,581 - INFO - ======== 1
+2025-03-03 14:43:50,582 - INFO - Error processing product: ['“$1,795” value must be a decimal number.']
+2025-03-03 14:43:50,674 - INFO - ======== 1
+2025-03-03 14:43:50,676 - INFO - Error processing product: ['“$975” value must be a decimal number.']
+2025-03-03 14:43:50,768 - INFO - ======== 1
+2025-03-03 14:43:50,770 - INFO - Error processing product: ['“$200” value must be a decimal number.']
+2025-03-03 14:43:50,856 - INFO - ======== 1
+2025-03-03 14:43:50,857 - INFO - Error processing product: ['“$500” value must be a decimal number.']
+2025-03-03 14:43:50,958 - INFO - ======== 1
+2025-03-03 14:43:50,960 - INFO - Error processing product: ['“$125” value must be a decimal number.']
+2025-03-03 14:43:51,045 - INFO - ======== 1
+2025-03-03 14:43:51,046 - INFO - Error processing product: ['“$75” value must be a decimal number.']
+2025-03-03 14:43:51,146 - INFO - ======== 1
+2025-03-03 14:43:51,148 - INFO - Error processing product: ['“free” value must be a decimal number.']
+2025-03-03 14:43:51,239 - INFO - ======== 1
+2025-03-03 14:43:51,240 - INFO - Error processing product: ['“$150” value must be a decimal number.']
+2025-03-03 14:43:51,324 - INFO - ======== 1
+2025-03-03 14:43:51,326 - INFO - Error processing product: ['“$350” value must be a decimal number.']
+2025-03-03 14:43:51,412 - INFO - ======== 1
+2025-03-03 14:43:51,413 - INFO - Error processing product: ['“$350” value must be a decimal number.']
+2025-03-03 14:43:51,497 - INFO - ======== 1
+2025-03-03 14:43:51,499 - INFO - Error processing product: ['“$30” value must be a decimal number.']
+2025-03-03 14:43:51,581 - INFO - ======== 1
+2025-03-03 14:43:51,583 - INFO - Error processing product: ['“$350” value must be a decimal number.']
+2025-03-03 14:43:51,666 - INFO - ======== 1
+2025-03-03 14:43:51,667 - INFO - Error processing product: ['“$30” value must be a decimal number.']
+2025-03-03 14:43:51,748 - INFO - ======== 1
+2025-03-03 14:43:51,750 - INFO - Error processing product: ['“$400” value must be a decimal number.']
+2025-03-03 14:43:51,828 - INFO - ======== 1
+2025-03-03 14:43:51,829 - INFO - Error processing product: ['“$2,500” value must be a decimal number.']
+2025-03-03 14:43:51,909 - INFO - ======== 1
+2025-03-03 14:43:51,910 - INFO - Error processing product: ['“$33” value must be a decimal number.']
+2025-03-03 14:43:51,986 - INFO - ======== 1
+2025-03-03 14:43:51,987 - INFO - Error processing product: ['“$25” value must be a decimal number.']
+2025-03-03 14:43:52,067 - INFO - ======== 1
+2025-03-03 14:43:52,068 - INFO - Error processing product: ['“$600” value must be a decimal number.']
+2025-03-03 14:43:52,138 - INFO - ======== 1
+2025-03-03 14:43:52,140 - INFO - Error processing product: ['“$85” value must be a decimal number.']
+2025-03-03 14:43:52,225 - INFO - ======== 1
+2025-03-03 14:43:52,226 - INFO - Error processing product: ['“$40” value must be a decimal number.']
+2025-03-03 14:43:52,313 - INFO - ======== 1
+2025-03-03 14:43:52,314 - INFO - Error processing product: ['“$300” value must be a decimal number.']
+2025-03-03 14:43:52,392 - INFO - ======== 1
+2025-03-03 14:43:52,393 - INFO - Error processing product: ['“$100” value must be a decimal number.']
+2025-03-03 14:43:52,473 - INFO - ======== 1
+2025-03-03 14:43:52,474 - INFO - Error processing product: ['“$4,500” value must be a decimal number.']
+2025-03-03 14:43:52,551 - INFO - ======== 1
+2025-03-03 14:43:52,553 - INFO - Error processing product: ['“$30” value must be a decimal number.']
+2025-03-03 14:43:52,630 - INFO - ======== 1
+2025-03-03 14:43:52,632 - INFO - Error processing product: ['“$300” value must be a decimal number.']
+2025-03-03 14:43:52,711 - INFO - ======== 1
+2025-03-03 14:43:52,712 - INFO - Error processing product: ['“$40” value must be a decimal number.']
+2025-03-03 14:43:52,798 - INFO - ======== 1
+2025-03-03 14:43:52,800 - INFO - Error processing product: ['“$800” value must be a decimal number.']
+2025-03-03 14:43:52,875 - INFO - ======== 1
+2025-03-03 14:43:52,876 - INFO - Error processing product: ['“$800” value must be a decimal number.']
+2025-03-03 14:43:52,909 - INFO - ======== 1
+2025-03-03 14:43:52,910 - INFO - Error processing product: ['“-” value must be a decimal number.']
+2025-03-03 14:43:52,947 - INFO - ======== 1
+2025-03-03 14:43:52,949 - INFO - Error processing product: ['“-” value must be a decimal number.']
+2025-03-03 14:43:52,949 - INFO - Going for https://akroncanton.craigslist.org/
+2025-03-03 14:56:42,190 - INFO - all_location_links : ['https://abilene.craigslist.org/', 'https://akroncanton.craigslist.org/', 'https://albanyga.craigslist.org/', 'https://albany.craigslist.org/', 'https://albuquerque.craigslist.org/', 'https://altoona.craigslist.org/', 'https://amarillo.craigslist.org/', 'https://ames.craigslist.org/', 'https://anchorage.craigslist.org/', 'https://annapolis.craigslist.org/', 'https://annarbor.craigslist.org/', 'https://appleton.craigslist.org/', 'https://asheville.craigslist.org/', 'https://ashtabula.craigslist.org/', 'https://athensga.craigslist.org/', 'https://athensohio.craigslist.org/', 'https://atlanta.craigslist.org/', 'https://auburn.craigslist.org/', 'https://augusta.craigslist.org/', 'https://austin.craigslist.org/', 'https://bakersfield.craigslist.org/', 'https://baltimore.craigslist.org/', 'https://batonrouge.craigslist.org/', 'https://battlecreek.craigslist.org/', 'https://beaumont.craigslist.org/', 'https://bellingham.craigslist.org/', 'https://bemidji.craigslist.org/', 'https://bend.craigslist.org/', 'https://billings.craigslist.org/', 'https://binghamton.craigslist.org/', 'https://bham.craigslist.org/', 'https://bismarck.craigslist.org/', 'https://bloomington.craigslist.org/', 'https://bn.craigslist.org/', 'https://boise.craigslist.org/', 'https://boone.craigslist.org/', 'https://boston.craigslist.org/', 'https://boulder.craigslist.org/', 'https://bgky.craigslist.org/', 'https://bozeman.craigslist.org/', 'https://brainerd.craigslist.org/', 'https://brownsville.craigslist.org/', 'https://brunswick.craigslist.org/', 'https://buffalo.craigslist.org/', 'https://butte.craigslist.org/', 'https://capecod.craigslist.org/', 'https://catskills.craigslist.org/', 'https://cedarrapids.craigslist.org/', 'https://cenla.craigslist.org/', 'https://centralmich.craigslist.org/', 'https://cnj.craigslist.org/', 'https://chambana.craigslist.org/', 'https://charleston.craigslist.org/', 'https://charlestonwv.craigslist.org/', 'https://charlotte.craigslist.org/', 'https://charlottesville.craigslist.org/', 'https://chattanooga.craigslist.org/', 'https://chautauqua.craigslist.org/', 'https://chicago.craigslist.org/', 'https://chico.craigslist.org/', 'https://chillicothe.craigslist.org/', 'https://cincinnati.craigslist.org/', 'https://clarksville.craigslist.org/', 'https://cleveland.craigslist.org/', 'https://clovis.craigslist.org/', 'https://collegestation.craigslist.org/', 'https://cosprings.craigslist.org/', 'https://columbiamo.craigslist.org/', 'https://columbia.craigslist.org/', 'https://columbusga.craigslist.org/', 'https://columbus.craigslist.org/', 'https://cookeville.craigslist.org/', 'https://corpuschristi.craigslist.org/', 'https://corvallis.craigslist.org/', 'https://chambersburg.craigslist.org/', 'https://dallas.craigslist.org/', 'https://danville.craigslist.org/', 'https://daytona.craigslist.org/', 'https://dayton.craigslist.org/', 'https://decatur.craigslist.org/', 'https://nacogdoches.craigslist.org/', 'https://delaware.craigslist.org/', 'https://delrio.craigslist.org/', 'https://denver.craigslist.org/', 'https://desmoines.craigslist.org/', 'https://detroit.craigslist.org/', 'https://dothan.craigslist.org/', 'https://dubuque.craigslist.org/', 'https://duluth.craigslist.org/', 'https://eastco.craigslist.org/', 'https://newlondon.craigslist.org/', 'https://eastky.craigslist.org/', 'https://montana.craigslist.org/', 'https://eastnc.craigslist.org/', 'https://martinsburg.craigslist.org/', 'https://easternshore.craigslist.org/', 'https://eastidaho.craigslist.org/', 'https://eastoregon.craigslist.org/', 'https://eauclaire.craigslist.org/', 'https://elko.craigslist.org/', 'https://elmira.craigslist.org/', 'https://elpaso.craigslist.org/', 'https://erie.craigslist.org/', 'https://eugene.craigslist.org/', 'https://evansville.craigslist.org/', 'https://fairbanks.craigslist.org/', 'https://fargo.craigslist.org/', 'https://farmington.craigslist.org/', 'https://fayar.craigslist.org/', 'https://fayetteville.craigslist.org/', 'https://fingerlakes.craigslist.org/', 'https://flagstaff.craigslist.org/', 'https://flint.craigslist.org/', 'https://shoals.craigslist.org/', 'https://florencesc.craigslist.org/', 'https://keys.craigslist.org/', 'https://fortcollins.craigslist.org/', 'https://fortdodge.craigslist.org/', 'https://fortsmith.craigslist.org/', 'https://fortwayne.craigslist.org/', 'https://frederick.craigslist.org/', 'https://fredericksburg.craigslist.org/', 'https://fresno.craigslist.org/', 'https://fortmyers.craigslist.org/', 'https://gadsden.craigslist.org/', 'https://gainesville.craigslist.org/', 'https://galveston.craigslist.org/', 'https://glensfalls.craigslist.org/', 'https://goldcountry.craigslist.org/', 'https://grandforks.craigslist.org/', 'https://grandisland.craigslist.org/', 'https://grandrapids.craigslist.org/', 'https://greatfalls.craigslist.org/', 'https://greenbay.craigslist.org/', 'https://greensboro.craigslist.org/', 'https://greenville.craigslist.org/', 'https://gulfport.craigslist.org/', 'https://hanford.craigslist.org/', 'https://harrisburg.craigslist.org/', 'https://harrisonburg.craigslist.org/', 'https://hartford.craigslist.org/', 'https://hattiesburg.craigslist.org/', 'https://honolulu.craigslist.org/', 'https://cfl.craigslist.org/', 'https://helena.craigslist.org/', 'https://hickory.craigslist.org/', 'https://rockies.craigslist.org/', 'https://hiltonhead.craigslist.org/', 'https://holland.craigslist.org/', 'https://houma.craigslist.org/', 'https://houston.craigslist.org/', 'https://hudsonvalley.craigslist.org/', 'https://humboldt.craigslist.org/', 'https://huntington.craigslist.org/', 'https://huntsville.craigslist.org/', 'https://imperial.craigslist.org/', 'https://indianapolis.craigslist.org/', 'https://inlandempire.craigslist.org/', 'https://iowacity.craigslist.org/', 'https://ithaca.craigslist.org/', 'https://jxn.craigslist.org/', 'https://jackson.craigslist.org/', 'https://jacksontn.craigslist.org/', 'https://jacksonville.craigslist.org/', 'https://onslow.craigslist.org/', 'https://janesville.craigslist.org/', 'https://jerseyshore.craigslist.org/', 'https://jonesboro.craigslist.org/', 'https://joplin.craigslist.org/', 'https://kalamazoo.craigslist.org/', 'https://kalispell.craigslist.org/', 'https://kansascity.craigslist.org/', 'https://kenai.craigslist.org/', 'https://kpr.craigslist.org/', 'https://racine.craigslist.org/', 'https://killeen.craigslist.org/', 'https://kirksville.craigslist.org/', 'https://klamath.craigslist.org/', 'https://knoxville.craigslist.org/', 'https://kokomo.craigslist.org/', 'https://lacrosse.craigslist.org/', 'https://lafayette.craigslist.org/', 'https://tippecanoe.craigslist.org/', 'https://lakecharles.craigslist.org/', 'https://lakeland.craigslist.org/', 'https://loz.craigslist.org/', 'https://lancaster.craigslist.org/', 'https://lansing.craigslist.org/', 'https://laredo.craigslist.org/', 'https://lasalle.craigslist.org/', 'https://lascruces.craigslist.org/', 'https://lasvegas.craigslist.org/', 'https://lawrence.craigslist.org/', 'https://lawton.craigslist.org/', 'https://allentown.craigslist.org/', 'https://lewiston.craigslist.org/', 'https://lexington.craigslist.org/', 'https://limaohio.craigslist.org/', 'https://lincoln.craigslist.org/', 'https://littlerock.craigslist.org/', 'https://logan.craigslist.org/', 'https://longisland.craigslist.org/', 'https://losangeles.craigslist.org/', 'https://louisville.craigslist.org/', 'https://lubbock.craigslist.org/', 'https://lynchburg.craigslist.org/', 'https://macon.craigslist.org/', 'https://madison.craigslist.org/', 'https://maine.craigslist.org/', 'https://ksu.craigslist.org/', 'https://mankato.craigslist.org/', 'https://mansfield.craigslist.org/', 'https://masoncity.craigslist.org/', 'https://mattoon.craigslist.org/', 'https://mcallen.craigslist.org/', 'https://meadville.craigslist.org/', 'https://medford.craigslist.org/', 'https://memphis.craigslist.org/', 'https://mendocino.craigslist.org/', 'https://merced.craigslist.org/', 'https://meridian.craigslist.org/', 'https://milwaukee.craigslist.org/', 'https://minneapolis.craigslist.org/', 'https://missoula.craigslist.org/', 'https://mobile.craigslist.org/', 'https://modesto.craigslist.org/', 'https://mohave.craigslist.org/', 'https://monroe.craigslist.org/', 'https://monroemi.craigslist.org/', 'https://monterey.craigslist.org/', 'https://montgomery.craigslist.org/', 'https://morgantown.craigslist.org/', 'https://moseslake.craigslist.org/', 'https://muncie.craigslist.org/', 'https://muskegon.craigslist.org/', 'https://myrtlebeach.craigslist.org/', 'https://nashville.craigslist.org/', 'https://nh.craigslist.org/', 'https://newhaven.craigslist.org/', 'https://neworleans.craigslist.org/', 'https://blacksburg.craigslist.org/', 'https://newyork.craigslist.org/', 'https://norfolk.craigslist.org/', 'https://lakecity.craigslist.org/', 'https://nd.craigslist.org/', 'https://nesd.craigslist.org/', 'https://nmi.craigslist.org/', 'https://wheeling.craigslist.org/', 'https://northernwi.craigslist.org/', 'https://newjersey.craigslist.org/', 'https://northmiss.craigslist.org/', 'https://northplatte.craigslist.org/', 'https://nwct.craigslist.org/', 'https://nwga.craigslist.org/', 'https://nwks.craigslist.org/', 'https://enid.craigslist.org/', 'https://ocala.craigslist.org/', 'https://odessa.craigslist.org/', 'https://ogden.craigslist.org/', 'https://okaloosa.craigslist.org/', 'https://oklahomacity.craigslist.org/', 'https://olympic.craigslist.org/', 'https://omaha.craigslist.org/', 'https://oneonta.craigslist.org/', 'https://orangecounty.craigslist.org/', 'https://oregoncoast.craigslist.org/', 'https://orlando.craigslist.org/', 'https://outerbanks.craigslist.org/', 'https://owensboro.craigslist.org/', 'https://palmsprings.craigslist.org/', 'https://panamacity.craigslist.org/', 'https://parkersburg.craigslist.org/', 'https://pensacola.craigslist.org/', 'https://peoria.craigslist.org/', 'https://philadelphia.craigslist.org/', 'https://phoenix.craigslist.org/', 'https://csd.craigslist.org/', 'https://pittsburgh.craigslist.org/', 'https://plattsburgh.craigslist.org/', 'https://poconos.craigslist.org/', 'https://porthuron.craigslist.org/', 'https://portland.craigslist.org/', 'https://potsdam.craigslist.org/', 'https://prescott.craigslist.org/', 'https://provo.craigslist.org/', 'https://pueblo.craigslist.org/', 'https://pullman.craigslist.org/', 'https://quadcities.craigslist.org/', 'https://raleigh.craigslist.org/', 'https://rapidcity.craigslist.org/', 'https://reading.craigslist.org/', 'https://redding.craigslist.org/', 'https://reno.craigslist.org/', 'https://providence.craigslist.org/', 'https://richmondin.craigslist.org/', 'https://richmond.craigslist.org/', 'https://roanoke.craigslist.org/', 'https://rmn.craigslist.org/', 'https://rochester.craigslist.org/', 'https://rockford.craigslist.org/', 'https://roseburg.craigslist.org/', 'https://roswell.craigslist.org/', 'https://sacramento.craigslist.org/', 'https://saginaw.craigslist.org/', 'https://salem.craigslist.org/', 'https://salina.craigslist.org/', 'https://saltlakecity.craigslist.org/', 'https://sanangelo.craigslist.org/', 'https://sanantonio.craigslist.org/', 'https://sandiego.craigslist.org/', 'https://sandusky.craigslist.org/', 'https://slo.craigslist.org/', 'https://sanmarcos.craigslist.org/', 'https://santabarbara.craigslist.org/', 'https://santafe.craigslist.org/', 'https://santamaria.craigslist.org/', 'https://sarasota.craigslist.org/', 'https://savannah.craigslist.org/', 'https://scottsbluff.craigslist.org/', 'https://scranton.craigslist.org/', 'https://seattle.craigslist.org/', 'https://sfbay.craigslist.org/', 'https://sheboygan.craigslist.org/', 'https://showlow.craigslist.org/', 'https://shreveport.craigslist.org/', 'https://sierravista.craigslist.org/', 'https://siouxcity.craigslist.org/', 'https://siouxfalls.craigslist.org/', 'https://siskiyou.craigslist.org/', 'https://skagit.craigslist.org/', 'https://southbend.craigslist.org/', 'https://southcoast.craigslist.org/', 'https://sd.craigslist.org/', 'https://juneau.craigslist.org/', 'https://ottumwa.craigslist.org/', 'https://seks.craigslist.org/', 'https://semo.craigslist.org/', 'https://carbondale.craigslist.org/', 'https://smd.craigslist.org/', 'https://swv.craigslist.org/', 'https://miami.craigslist.org/', 'https://southjersey.craigslist.org/', 'https://swks.craigslist.org/', 'https://swmi.craigslist.org/', 'https://marshall.craigslist.org/', 'https://natchez.craigslist.org/', 'https://bigbend.craigslist.org/', 'https://swva.craigslist.org/', 'https://spacecoast.craigslist.org/', 'https://spokane.craigslist.org/', 'https://springfieldil.craigslist.org/', 'https://springfield.craigslist.org/', 'https://pennstate.craigslist.org/', 'https://statesboro.craigslist.org/', 'https://staugustine.craigslist.org/', 'https://stcloud.craigslist.org/', 'https://stgeorge.craigslist.org/', 'https://stillwater.craigslist.org/', 'https://stjoseph.craigslist.org/', 'https://stlouis.craigslist.org/', 'https://stockton.craigslist.org/', 'https://susanville.craigslist.org/', 'https://syracuse.craigslist.org/', 'https://tallahassee.craigslist.org/', 'https://tampa.craigslist.org/', 'https://terrehaute.craigslist.org/', 'https://texarkana.craigslist.org/', 'https://texoma.craigslist.org/', 'https://thumb.craigslist.org/', 'https://toledo.craigslist.org/', 'https://topeka.craigslist.org/', 'https://treasure.craigslist.org/', 'https://tricities.craigslist.org/', 'https://tucson.craigslist.org/', 'https://tulsa.craigslist.org/', 'https://tuscaloosa.craigslist.org/', 'https://tuscarawas.craigslist.org/', 'https://twinfalls.craigslist.org/', 'https://twintiers.craigslist.org/', 'https://easttexas.craigslist.org/', 'https://up.craigslist.org/', 'https://utica.craigslist.org/', 'https://valdosta.craigslist.org/', 'https://ventura.craigslist.org/', 'https://vermont.craigslist.org/', 'https://victoriatx.craigslist.org/', 'https://visalia.craigslist.org/', 'https://waco.craigslist.org/', 'https://washingtondc.craigslist.org/', 'https://waterloo.craigslist.org/', 'https://watertown.craigslist.org/', 'https://wausau.craigslist.org/', 'https://wenatchee.craigslist.org/', 'https://quincy.craigslist.org/', 'https://westky.craigslist.org/', 'https://westmd.craigslist.org/', 'https://westernmass.craigslist.org/', 'https://westslope.craigslist.org/', 'https://wv.craigslist.org/', 'https://wichitafalls.craigslist.org/', 'https://wichita.craigslist.org/', 'https://williamsport.craigslist.org/', 'https://wilmington.craigslist.org/', 'https://winchester.craigslist.org/', 'https://winstonsalem.craigslist.org/', 'https://worcester.craigslist.org/', 'https://wyoming.craigslist.org/', 'https://yakima.craigslist.org/', 'https://york.craigslist.org/', 'https://youngstown.craigslist.org/', 'https://yubasutter.craigslist.org/', 'https://yuma.craigslist.org/', 'https://zanesville.craigslist.org/']
+2025-03-03 14:56:42,196 - INFO - Going for https://abilene.craigslist.org/
+2025-03-03 14:56:58,030 - INFO - ======== 1
+2025-03-03 14:56:58,240 - INFO - ======== 2
+2025-03-03 14:56:58,366 - INFO - ======== 3
+2025-03-03 14:56:58,519 - INFO - ======== 4
+2025-03-03 14:56:58,594 - INFO - ======== 5
+2025-03-03 14:56:58,721 - INFO - ======== 6
+2025-03-03 14:56:58,817 - INFO - ======== 7
+2025-03-03 14:56:58,919 - INFO - ======== 8
+2025-03-03 14:56:59,022 - INFO - ======== 9
+2025-03-03 14:56:59,149 - INFO - ======== 10
+2025-03-03 14:56:59,267 - INFO - ======== 11
+2025-03-03 14:56:59,364 - INFO - ======== 12
+2025-03-03 14:56:59,459 - INFO - ======== 13
+2025-03-03 14:56:59,561 - INFO - ======== 14
+2025-03-03 14:56:59,667 - INFO - ======== 15
+2025-03-03 14:56:59,761 - INFO - ======== 16
+2025-03-03 14:56:59,858 - INFO - ======== 17
+2025-03-03 14:56:59,960 - INFO - ======== 18
+2025-03-03 14:57:00,074 - INFO - ======== 19
+2025-03-03 14:57:00,182 - INFO - ======== 20
+2025-03-03 14:57:00,278 - INFO - ======== 21
+2025-03-03 14:57:00,366 - INFO - ======== 22
+2025-03-03 14:57:00,464 - INFO - ======== 23
+2025-03-03 14:57:00,571 - INFO - ======== 24
+2025-03-03 14:57:00,673 - INFO - ======== 25
+2025-03-03 14:57:00,778 - INFO - ======== 26
+2025-03-03 14:57:00,878 - INFO - ======== 27
+2025-03-03 14:57:00,989 - INFO - ======== 28
+2025-03-03 14:57:01,100 - INFO - ======== 29
+2025-03-03 14:57:01,206 - INFO - ======== 30
+2025-03-03 14:57:01,302 - INFO - ======== 31
+2025-03-03 14:57:01,404 - INFO - ======== 32
+2025-03-03 14:57:01,499 - INFO - ======== 33
+2025-03-03 14:57:01,584 - INFO - ======== 34
+2025-03-03 14:57:01,685 - INFO - ======== 35
+2025-03-03 14:57:01,789 - INFO - ======== 36
+2025-03-03 14:57:01,882 - INFO - ======== 37
+2025-03-03 14:57:01,991 - INFO - ======== 38
+2025-03-03 14:57:02,097 - INFO - ======== 39
+2025-03-03 14:57:02,197 - INFO - ======== 40
+2025-03-03 14:57:02,302 - INFO - ======== 41
+2025-03-03 14:57:02,409 - INFO - ======== 42
+2025-03-03 14:57:02,511 - INFO - ======== 43
+2025-03-03 14:57:02,565 - INFO - ======== 44
+2025-03-03 14:57:02,621 - INFO - ======== 45
+2025-03-03 14:57:02,636 - INFO - Going for https://akroncanton.craigslist.org/
+2025-03-03 14:57:31,232 - INFO - ======== 46
+2025-03-03 14:57:31,335 - INFO - ======== 47
+2025-03-03 14:57:31,431 - INFO - ======== 48
+2025-03-03 14:57:31,537 - INFO - ======== 49
+2025-03-03 14:57:31,638 - INFO - ======== 50
+2025-03-03 14:57:31,742 - INFO - ======== 51
+2025-03-03 14:57:31,842 - INFO - ======== 52
+2025-03-03 14:57:31,944 - INFO - ======== 53
+2025-03-03 14:57:32,072 - INFO - ======== 54
+2025-03-03 14:57:32,158 - INFO - ======== 55
+2025-03-03 14:57:32,257 - INFO - ======== 56
+2025-03-03 14:57:32,346 - INFO - ======== 57
+2025-03-03 14:57:32,446 - INFO - ======== 58
+2025-03-03 14:57:32,551 - INFO - ======== 59
+2025-03-03 14:57:32,668 - INFO - ======== 60
+2025-03-03 14:57:32,774 - INFO - ======== 61
+2025-03-03 14:57:32,849 - INFO - ======== 62
+2025-03-03 14:57:32,944 - INFO - ======== 63
+2025-03-03 14:57:33,046 - INFO - ======== 64
+2025-03-03 14:57:33,141 - INFO - ======== 65
+2025-03-03 14:57:33,243 - INFO - ======== 66
+2025-03-03 14:57:33,338 - INFO - ======== 67
+2025-03-03 14:57:33,431 - INFO - ======== 68
+2025-03-03 14:57:33,514 - INFO - ======== 69
+2025-03-03 14:57:33,622 - INFO - ======== 70
+2025-03-03 14:57:33,721 - INFO - ======== 71
+2025-03-03 14:57:33,830 - INFO - ======== 72
+2025-03-03 14:57:33,947 - INFO - ======== 73
+2025-03-03 14:57:34,066 - INFO - ======== 74
+2025-03-03 14:57:34,158 - INFO - ======== 75
+2025-03-03 14:57:34,255 - INFO - ======== 76
+2025-03-03 14:57:34,350 - INFO - ======== 77
+2025-03-03 14:57:34,442 - INFO - ======== 78
+2025-03-03 14:57:34,521 - INFO - ======== 79
+2025-03-03 14:57:34,592 - INFO - ======== 80
+2025-03-03 14:57:34,660 - INFO - ======== 81
+2025-03-03 14:57:34,734 - INFO - ======== 82
+2025-03-03 14:57:34,835 - INFO - ======== 83
+2025-03-03 14:57:34,926 - INFO - ======== 84
+2025-03-03 14:57:35,018 - INFO - ======== 85
+2025-03-03 14:57:35,116 - INFO - ======== 86
+2025-03-03 14:57:35,219 - INFO - ======== 87
+2025-03-03 14:57:35,319 - INFO - ======== 88
+2025-03-03 14:57:35,410 - INFO - ======== 89
+2025-03-03 14:57:35,479 - INFO - ======== 90
+2025-03-03 14:57:35,549 - INFO - ======== 91
+2025-03-03 14:57:35,618 - INFO - ======== 92
+2025-03-03 14:57:35,707 - INFO - ======== 93
+2025-03-03 14:57:35,794 - INFO - ======== 94
+2025-03-03 14:57:35,887 - INFO - ======== 95
+2025-03-03 14:57:35,975 - INFO - ======== 96
+2025-03-03 14:57:36,074 - INFO - ======== 97
+2025-03-03 14:57:36,161 - INFO - ======== 98
+2025-03-03 14:57:36,248 - INFO - ======== 99
+2025-03-03 14:57:36,339 - INFO - ======== 100
+2025-03-03 14:57:36,450 - INFO - ======== 101
+2025-03-03 14:57:36,548 - INFO - ======== 102
+2025-03-03 14:57:36,652 - INFO - ======== 103
+2025-03-03 14:57:36,754 - INFO - ======== 104
+2025-03-03 14:57:36,834 - INFO - ======== 105
+2025-03-03 15:16:32,518 - INFO - all_location_links : ['https://abilene.craigslist.org/', 'https://akroncanton.craigslist.org/', 'https://albanyga.craigslist.org/', 'https://albany.craigslist.org/', 'https://albuquerque.craigslist.org/', 'https://altoona.craigslist.org/', 'https://amarillo.craigslist.org/', 'https://ames.craigslist.org/', 'https://anchorage.craigslist.org/', 'https://annapolis.craigslist.org/', 'https://annarbor.craigslist.org/', 'https://appleton.craigslist.org/', 'https://asheville.craigslist.org/', 'https://ashtabula.craigslist.org/', 'https://athensga.craigslist.org/', 'https://athensohio.craigslist.org/', 'https://atlanta.craigslist.org/', 'https://auburn.craigslist.org/', 'https://augusta.craigslist.org/', 'https://austin.craigslist.org/', 'https://bakersfield.craigslist.org/', 'https://baltimore.craigslist.org/', 'https://batonrouge.craigslist.org/', 'https://battlecreek.craigslist.org/', 'https://beaumont.craigslist.org/', 'https://bellingham.craigslist.org/', 'https://bemidji.craigslist.org/', 'https://bend.craigslist.org/', 'https://billings.craigslist.org/', 'https://binghamton.craigslist.org/', 'https://bham.craigslist.org/', 'https://bismarck.craigslist.org/', 'https://bloomington.craigslist.org/', 'https://bn.craigslist.org/', 'https://boise.craigslist.org/', 'https://boone.craigslist.org/', 'https://boston.craigslist.org/', 'https://boulder.craigslist.org/', 'https://bgky.craigslist.org/', 'https://bozeman.craigslist.org/', 'https://brainerd.craigslist.org/', 'https://brownsville.craigslist.org/', 'https://brunswick.craigslist.org/', 'https://buffalo.craigslist.org/', 'https://butte.craigslist.org/', 'https://capecod.craigslist.org/', 'https://catskills.craigslist.org/', 'https://cedarrapids.craigslist.org/', 'https://cenla.craigslist.org/', 'https://centralmich.craigslist.org/', 'https://cnj.craigslist.org/', 'https://chambana.craigslist.org/', 'https://charleston.craigslist.org/', 'https://charlestonwv.craigslist.org/', 'https://charlotte.craigslist.org/', 'https://charlottesville.craigslist.org/', 'https://chattanooga.craigslist.org/', 'https://chautauqua.craigslist.org/', 'https://chicago.craigslist.org/', 'https://chico.craigslist.org/', 'https://chillicothe.craigslist.org/', 'https://cincinnati.craigslist.org/', 'https://clarksville.craigslist.org/', 'https://cleveland.craigslist.org/', 'https://clovis.craigslist.org/', 'https://collegestation.craigslist.org/', 'https://cosprings.craigslist.org/', 'https://columbiamo.craigslist.org/', 'https://columbia.craigslist.org/', 'https://columbusga.craigslist.org/', 'https://columbus.craigslist.org/', 'https://cookeville.craigslist.org/', 'https://corpuschristi.craigslist.org/', 'https://corvallis.craigslist.org/', 'https://chambersburg.craigslist.org/', 'https://dallas.craigslist.org/', 'https://danville.craigslist.org/', 'https://daytona.craigslist.org/', 'https://dayton.craigslist.org/', 'https://decatur.craigslist.org/', 'https://nacogdoches.craigslist.org/', 'https://delaware.craigslist.org/', 'https://delrio.craigslist.org/', 'https://denver.craigslist.org/', 'https://desmoines.craigslist.org/', 'https://detroit.craigslist.org/', 'https://dothan.craigslist.org/', 'https://dubuque.craigslist.org/', 'https://duluth.craigslist.org/', 'https://eastco.craigslist.org/', 'https://newlondon.craigslist.org/', 'https://eastky.craigslist.org/', 'https://montana.craigslist.org/', 'https://eastnc.craigslist.org/', 'https://martinsburg.craigslist.org/', 'https://easternshore.craigslist.org/', 'https://eastidaho.craigslist.org/', 'https://eastoregon.craigslist.org/', 'https://eauclaire.craigslist.org/', 'https://elko.craigslist.org/', 'https://elmira.craigslist.org/', 'https://elpaso.craigslist.org/', 'https://erie.craigslist.org/', 'https://eugene.craigslist.org/', 'https://evansville.craigslist.org/', 'https://fairbanks.craigslist.org/', 'https://fargo.craigslist.org/', 'https://farmington.craigslist.org/', 'https://fayar.craigslist.org/', 'https://fayetteville.craigslist.org/', 'https://fingerlakes.craigslist.org/', 'https://flagstaff.craigslist.org/', 'https://flint.craigslist.org/', 'https://shoals.craigslist.org/', 'https://florencesc.craigslist.org/', 'https://keys.craigslist.org/', 'https://fortcollins.craigslist.org/', 'https://fortdodge.craigslist.org/', 'https://fortsmith.craigslist.org/', 'https://fortwayne.craigslist.org/', 'https://frederick.craigslist.org/', 'https://fredericksburg.craigslist.org/', 'https://fresno.craigslist.org/', 'https://fortmyers.craigslist.org/', 'https://gadsden.craigslist.org/', 'https://gainesville.craigslist.org/', 'https://galveston.craigslist.org/', 'https://glensfalls.craigslist.org/', 'https://goldcountry.craigslist.org/', 'https://grandforks.craigslist.org/', 'https://grandisland.craigslist.org/', 'https://grandrapids.craigslist.org/', 'https://greatfalls.craigslist.org/', 'https://greenbay.craigslist.org/', 'https://greensboro.craigslist.org/', 'https://greenville.craigslist.org/', 'https://gulfport.craigslist.org/', 'https://hanford.craigslist.org/', 'https://harrisburg.craigslist.org/', 'https://harrisonburg.craigslist.org/', 'https://hartford.craigslist.org/', 'https://hattiesburg.craigslist.org/', 'https://honolulu.craigslist.org/', 'https://cfl.craigslist.org/', 'https://helena.craigslist.org/', 'https://hickory.craigslist.org/', 'https://rockies.craigslist.org/', 'https://hiltonhead.craigslist.org/', 'https://holland.craigslist.org/', 'https://houma.craigslist.org/', 'https://houston.craigslist.org/', 'https://hudsonvalley.craigslist.org/', 'https://humboldt.craigslist.org/', 'https://huntington.craigslist.org/', 'https://huntsville.craigslist.org/', 'https://imperial.craigslist.org/', 'https://indianapolis.craigslist.org/', 'https://inlandempire.craigslist.org/', 'https://iowacity.craigslist.org/', 'https://ithaca.craigslist.org/', 'https://jxn.craigslist.org/', 'https://jackson.craigslist.org/', 'https://jacksontn.craigslist.org/', 'https://jacksonville.craigslist.org/', 'https://onslow.craigslist.org/', 'https://janesville.craigslist.org/', 'https://jerseyshore.craigslist.org/', 'https://jonesboro.craigslist.org/', 'https://joplin.craigslist.org/', 'https://kalamazoo.craigslist.org/', 'https://kalispell.craigslist.org/', 'https://kansascity.craigslist.org/', 'https://kenai.craigslist.org/', 'https://kpr.craigslist.org/', 'https://racine.craigslist.org/', 'https://killeen.craigslist.org/', 'https://kirksville.craigslist.org/', 'https://klamath.craigslist.org/', 'https://knoxville.craigslist.org/', 'https://kokomo.craigslist.org/', 'https://lacrosse.craigslist.org/', 'https://lafayette.craigslist.org/', 'https://tippecanoe.craigslist.org/', 'https://lakecharles.craigslist.org/', 'https://lakeland.craigslist.org/', 'https://loz.craigslist.org/', 'https://lancaster.craigslist.org/', 'https://lansing.craigslist.org/', 'https://laredo.craigslist.org/', 'https://lasalle.craigslist.org/', 'https://lascruces.craigslist.org/', 'https://lasvegas.craigslist.org/', 'https://lawrence.craigslist.org/', 'https://lawton.craigslist.org/', 'https://allentown.craigslist.org/', 'https://lewiston.craigslist.org/', 'https://lexington.craigslist.org/', 'https://limaohio.craigslist.org/', 'https://lincoln.craigslist.org/', 'https://littlerock.craigslist.org/', 'https://logan.craigslist.org/', 'https://longisland.craigslist.org/', 'https://losangeles.craigslist.org/', 'https://louisville.craigslist.org/', 'https://lubbock.craigslist.org/', 'https://lynchburg.craigslist.org/', 'https://macon.craigslist.org/', 'https://madison.craigslist.org/', 'https://maine.craigslist.org/', 'https://ksu.craigslist.org/', 'https://mankato.craigslist.org/', 'https://mansfield.craigslist.org/', 'https://masoncity.craigslist.org/', 'https://mattoon.craigslist.org/', 'https://mcallen.craigslist.org/', 'https://meadville.craigslist.org/', 'https://medford.craigslist.org/', 'https://memphis.craigslist.org/', 'https://mendocino.craigslist.org/', 'https://merced.craigslist.org/', 'https://meridian.craigslist.org/', 'https://milwaukee.craigslist.org/', 'https://minneapolis.craigslist.org/', 'https://missoula.craigslist.org/', 'https://mobile.craigslist.org/', 'https://modesto.craigslist.org/', 'https://mohave.craigslist.org/', 'https://monroe.craigslist.org/', 'https://monroemi.craigslist.org/', 'https://monterey.craigslist.org/', 'https://montgomery.craigslist.org/', 'https://morgantown.craigslist.org/', 'https://moseslake.craigslist.org/', 'https://muncie.craigslist.org/', 'https://muskegon.craigslist.org/', 'https://myrtlebeach.craigslist.org/', 'https://nashville.craigslist.org/', 'https://nh.craigslist.org/', 'https://newhaven.craigslist.org/', 'https://neworleans.craigslist.org/', 'https://blacksburg.craigslist.org/', 'https://newyork.craigslist.org/', 'https://norfolk.craigslist.org/', 'https://lakecity.craigslist.org/', 'https://nd.craigslist.org/', 'https://nesd.craigslist.org/', 'https://nmi.craigslist.org/', 'https://wheeling.craigslist.org/', 'https://northernwi.craigslist.org/', 'https://newjersey.craigslist.org/', 'https://northmiss.craigslist.org/', 'https://northplatte.craigslist.org/', 'https://nwct.craigslist.org/', 'https://nwga.craigslist.org/', 'https://nwks.craigslist.org/', 'https://enid.craigslist.org/', 'https://ocala.craigslist.org/', 'https://odessa.craigslist.org/', 'https://ogden.craigslist.org/', 'https://okaloosa.craigslist.org/', 'https://oklahomacity.craigslist.org/', 'https://olympic.craigslist.org/', 'https://omaha.craigslist.org/', 'https://oneonta.craigslist.org/', 'https://orangecounty.craigslist.org/', 'https://oregoncoast.craigslist.org/', 'https://orlando.craigslist.org/', 'https://outerbanks.craigslist.org/', 'https://owensboro.craigslist.org/', 'https://palmsprings.craigslist.org/', 'https://panamacity.craigslist.org/', 'https://parkersburg.craigslist.org/', 'https://pensacola.craigslist.org/', 'https://peoria.craigslist.org/', 'https://philadelphia.craigslist.org/', 'https://phoenix.craigslist.org/', 'https://csd.craigslist.org/', 'https://pittsburgh.craigslist.org/', 'https://plattsburgh.craigslist.org/', 'https://poconos.craigslist.org/', 'https://porthuron.craigslist.org/', 'https://portland.craigslist.org/', 'https://potsdam.craigslist.org/', 'https://prescott.craigslist.org/', 'https://provo.craigslist.org/', 'https://pueblo.craigslist.org/', 'https://pullman.craigslist.org/', 'https://quadcities.craigslist.org/', 'https://raleigh.craigslist.org/', 'https://rapidcity.craigslist.org/', 'https://reading.craigslist.org/', 'https://redding.craigslist.org/', 'https://reno.craigslist.org/', 'https://providence.craigslist.org/', 'https://richmondin.craigslist.org/', 'https://richmond.craigslist.org/', 'https://roanoke.craigslist.org/', 'https://rmn.craigslist.org/', 'https://rochester.craigslist.org/', 'https://rockford.craigslist.org/', 'https://roseburg.craigslist.org/', 'https://roswell.craigslist.org/', 'https://sacramento.craigslist.org/', 'https://saginaw.craigslist.org/', 'https://salem.craigslist.org/', 'https://salina.craigslist.org/', 'https://saltlakecity.craigslist.org/', 'https://sanangelo.craigslist.org/', 'https://sanantonio.craigslist.org/', 'https://sandiego.craigslist.org/', 'https://sandusky.craigslist.org/', 'https://slo.craigslist.org/', 'https://sanmarcos.craigslist.org/', 'https://santabarbara.craigslist.org/', 'https://santafe.craigslist.org/', 'https://santamaria.craigslist.org/', 'https://sarasota.craigslist.org/', 'https://savannah.craigslist.org/', 'https://scottsbluff.craigslist.org/', 'https://scranton.craigslist.org/', 'https://seattle.craigslist.org/', 'https://sfbay.craigslist.org/', 'https://sheboygan.craigslist.org/', 'https://showlow.craigslist.org/', 'https://shreveport.craigslist.org/', 'https://sierravista.craigslist.org/', 'https://siouxcity.craigslist.org/', 'https://siouxfalls.craigslist.org/', 'https://siskiyou.craigslist.org/', 'https://skagit.craigslist.org/', 'https://southbend.craigslist.org/', 'https://southcoast.craigslist.org/', 'https://sd.craigslist.org/', 'https://juneau.craigslist.org/', 'https://ottumwa.craigslist.org/', 'https://seks.craigslist.org/', 'https://semo.craigslist.org/', 'https://carbondale.craigslist.org/', 'https://smd.craigslist.org/', 'https://swv.craigslist.org/', 'https://miami.craigslist.org/', 'https://southjersey.craigslist.org/', 'https://swks.craigslist.org/', 'https://swmi.craigslist.org/', 'https://marshall.craigslist.org/', 'https://natchez.craigslist.org/', 'https://bigbend.craigslist.org/', 'https://swva.craigslist.org/', 'https://spacecoast.craigslist.org/', 'https://spokane.craigslist.org/', 'https://springfieldil.craigslist.org/', 'https://springfield.craigslist.org/', 'https://pennstate.craigslist.org/', 'https://statesboro.craigslist.org/', 'https://staugustine.craigslist.org/', 'https://stcloud.craigslist.org/', 'https://stgeorge.craigslist.org/', 'https://stillwater.craigslist.org/', 'https://stjoseph.craigslist.org/', 'https://stlouis.craigslist.org/', 'https://stockton.craigslist.org/', 'https://susanville.craigslist.org/', 'https://syracuse.craigslist.org/', 'https://tallahassee.craigslist.org/', 'https://tampa.craigslist.org/', 'https://terrehaute.craigslist.org/', 'https://texarkana.craigslist.org/', 'https://texoma.craigslist.org/', 'https://thumb.craigslist.org/', 'https://toledo.craigslist.org/', 'https://topeka.craigslist.org/', 'https://treasure.craigslist.org/', 'https://tricities.craigslist.org/', 'https://tucson.craigslist.org/', 'https://tulsa.craigslist.org/', 'https://tuscaloosa.craigslist.org/', 'https://tuscarawas.craigslist.org/', 'https://twinfalls.craigslist.org/', 'https://twintiers.craigslist.org/', 'https://easttexas.craigslist.org/', 'https://up.craigslist.org/', 'https://utica.craigslist.org/', 'https://valdosta.craigslist.org/', 'https://ventura.craigslist.org/', 'https://vermont.craigslist.org/', 'https://victoriatx.craigslist.org/', 'https://visalia.craigslist.org/', 'https://waco.craigslist.org/', 'https://washingtondc.craigslist.org/', 'https://waterloo.craigslist.org/', 'https://watertown.craigslist.org/', 'https://wausau.craigslist.org/', 'https://wenatchee.craigslist.org/', 'https://quincy.craigslist.org/', 'https://westky.craigslist.org/', 'https://westmd.craigslist.org/', 'https://westernmass.craigslist.org/', 'https://westslope.craigslist.org/', 'https://wv.craigslist.org/', 'https://wichitafalls.craigslist.org/', 'https://wichita.craigslist.org/', 'https://williamsport.craigslist.org/', 'https://wilmington.craigslist.org/', 'https://winchester.craigslist.org/', 'https://winstonsalem.craigslist.org/', 'https://worcester.craigslist.org/', 'https://wyoming.craigslist.org/', 'https://yakima.craigslist.org/', 'https://york.craigslist.org/', 'https://youngstown.craigslist.org/', 'https://yubasutter.craigslist.org/', 'https://yuma.craigslist.org/', 'https://zanesville.craigslist.org/']
+2025-03-03 15:16:32,525 - INFO - Going for https://abilene.craigslist.org/
+2025-03-03 15:16:50,100 - INFO - ======== 1
+2025-03-03 15:16:50,200 - INFO - ======== 2
+2025-03-03 15:16:50,248 - INFO - ======== 3
+2025-03-03 15:16:50,294 - INFO - ======== 4
+2025-03-03 15:16:50,338 - INFO - ======== 5
+2025-03-03 15:16:50,425 - INFO - ======== 6
+2025-03-03 15:16:50,540 - INFO - ======== 7
+2025-03-03 15:16:50,639 - INFO - ======== 8
+2025-03-03 15:16:50,738 - INFO - ======== 9
+2025-03-03 15:16:50,830 - INFO - ======== 10
+2025-03-03 15:16:50,931 - INFO - ======== 11
+2025-03-03 15:16:51,024 - INFO - ======== 12
+2025-03-03 15:16:51,150 - INFO - ======== 13
+2025-03-03 15:16:51,303 - INFO - ======== 14
+2025-03-03 15:16:51,409 - INFO - ======== 15
+2025-03-03 15:16:51,509 - INFO - ======== 16
+2025-03-03 15:16:51,605 - INFO - ======== 17
+2025-03-03 15:16:51,703 - INFO - ======== 18
+2025-03-03 15:16:51,786 - INFO - ======== 19
+2025-03-03 15:16:51,882 - INFO - ======== 20
+2025-03-03 15:16:51,968 - INFO - ======== 21
+2025-03-03 15:16:52,076 - INFO - ======== 22
+2025-03-03 15:16:52,152 - INFO - ======== 23
+2025-03-03 15:16:52,221 - INFO - ======== 24
+2025-03-03 15:16:52,301 - INFO - ======== 25
+2025-03-03 15:16:52,386 - INFO - ======== 26
+2025-03-03 15:16:52,472 - INFO - ======== 27
+2025-03-03 15:16:52,573 - INFO - ======== 28
+2025-03-03 15:16:52,666 - INFO - ======== 29
+2025-03-03 15:16:52,765 - INFO - ======== 30
+2025-03-03 15:16:52,860 - INFO - ======== 31
+2025-03-03 15:16:52,934 - INFO - ======== 32
+2025-03-03 15:16:53,020 - INFO - ======== 33
+2025-03-03 15:16:53,096 - INFO - ======== 34
+2025-03-03 15:16:53,186 - INFO - ======== 35
+2025-03-03 15:16:53,267 - INFO - ======== 36
+2025-03-03 15:16:53,355 - INFO - ======== 37
+2025-03-03 15:16:53,441 - INFO - ======== 38
+2025-03-03 15:16:53,521 - INFO - ======== 39
+2025-03-03 15:16:53,622 - INFO - ======== 40
+2025-03-03 15:16:53,707 - INFO - ======== 41
+2025-03-03 15:16:53,803 - INFO - ======== 42
+2025-03-03 15:16:53,882 - INFO - ======== 43
+2025-03-03 15:16:54,000 - INFO - ======== 44
+2025-03-03 15:16:54,118 - INFO - ======== 45
+2025-03-03 15:16:54,222 - INFO - ======== 46
+2025-03-03 15:16:54,315 - INFO - ======== 47
+2025-03-03 15:16:54,400 - INFO - ======== 48
+2025-03-03 15:16:54,468 - INFO - ======== 49
+2025-03-03 15:16:54,544 - INFO - ======== 50
+2025-03-03 15:16:54,635 - INFO - ======== 51
+2025-03-03 15:16:54,739 - INFO - ======== 52
+2025-03-03 15:16:54,827 - INFO - ======== 53
+2025-03-03 15:16:54,916 - INFO - ======== 54
+2025-03-03 15:16:54,997 - INFO - ======== 55
+2025-03-03 15:16:55,118 - INFO - ======== 56
+2025-03-03 15:16:55,206 - INFO - ======== 57
+2025-03-03 15:16:55,282 - INFO - ======== 58
+2025-03-03 15:16:55,382 - INFO - ======== 59
+2025-03-03 15:16:55,486 - INFO - ======== 60
+2025-03-03 15:16:55,613 - INFO - ======== 61
+2025-03-03 15:16:55,717 - INFO - ======== 62
+2025-03-03 15:16:55,818 - INFO - ======== 63
+2025-03-03 15:16:55,867 - INFO - ======== 64
+2025-03-03 15:16:55,916 - INFO - ======== 65
+2025-03-03 15:16:55,926 - INFO - Going for https://akroncanton.craigslist.org/
+2025-03-03 15:17:10,359 - INFO - ======== 66
+2025-03-03 15:17:10,463 - INFO - ======== 67
+2025-03-03 15:17:10,554 - INFO - ======== 68
+2025-03-03 15:17:10,650 - INFO - ======== 69
+2025-03-03 15:17:10,742 - INFO - ======== 70
+2025-03-03 15:17:10,840 - INFO - ======== 71
+2025-03-03 15:17:10,949 - INFO - ======== 72
+2025-03-03 15:17:11,025 - INFO - ======== 73
+2025-03-03 15:17:11,145 - INFO - ======== 74
+2025-03-03 15:17:11,223 - INFO - ======== 75
+2025-03-03 15:17:11,313 - INFO - ======== 76
+2025-03-03 15:17:11,397 - INFO - ======== 77
+2025-03-03 15:17:11,494 - INFO - ======== 78
+2025-03-03 15:17:11,590 - INFO - ======== 79
+2025-03-03 15:17:11,684 - INFO - ======== 80
+2025-03-03 15:17:11,771 - INFO - ======== 81
+2025-03-03 15:17:11,839 - INFO - ======== 82
+2025-03-03 15:17:11,916 - INFO - ======== 83
+2025-03-03 15:17:11,997 - INFO - ======== 84
+2025-03-03 15:17:12,109 - INFO - ======== 85
+2025-03-03 15:17:12,221 - INFO - ======== 86
+2025-03-03 15:17:12,333 - INFO - ======== 87
+2025-03-03 15:17:12,440 - INFO - ======== 88
+2025-03-03 15:17:12,540 - INFO - ======== 89
+2025-03-03 15:17:12,635 - INFO - ======== 90
+2025-03-03 15:17:12,732 - INFO - ======== 91
+2025-03-03 15:17:12,827 - INFO - ======== 92
+2025-03-03 15:17:12,932 - INFO - ======== 93
+2025-03-03 15:17:13,038 - INFO - ======== 94
+2025-03-03 15:17:13,147 - INFO - ======== 95
+2025-03-03 15:17:13,263 - INFO - ======== 96
+2025-03-03 15:17:13,368 - INFO - ======== 97
+2025-03-03 15:17:13,473 - INFO - ======== 98
+2025-03-03 15:17:13,591 - INFO - ======== 99
+2025-03-03 15:17:13,670 - INFO - ======== 100
+2025-03-03 15:17:13,747 - INFO - ======== 101
+2025-03-03 15:17:13,825 - INFO - ======== 102
+2025-03-03 15:17:13,922 - INFO - ======== 103
+2025-03-03 15:17:14,015 - INFO - ======== 104
+2025-03-03 15:17:14,109 - INFO - ======== 105
+2025-03-03 15:17:14,201 - INFO - ======== 106
+2025-03-03 15:17:14,305 - INFO - ======== 107
+2025-03-03 15:17:14,406 - INFO - ======== 108
+2025-03-03 15:17:14,505 - INFO - ======== 109
+2025-03-03 15:17:14,577 - INFO - ======== 110
+2025-03-03 15:17:14,657 - INFO - ======== 111
+2025-03-03 15:17:14,729 - INFO - ======== 112
+2025-03-03 15:17:14,834 - INFO - ======== 113
+2025-03-03 15:17:14,931 - INFO - ======== 114
+2025-03-03 15:17:15,029 - INFO - ======== 115
+2025-03-03 15:17:15,115 - INFO - ======== 116
+2025-03-03 15:17:15,227 - INFO - ======== 117
+2025-03-03 15:17:15,319 - INFO - ======== 118
+2025-03-03 15:17:15,404 - INFO - ======== 119
+2025-03-03 15:17:15,493 - INFO - ======== 120
+2025-03-03 15:17:15,600 - INFO - ======== 121
+2025-03-03 15:17:15,701 - INFO - ======== 122
+2025-03-03 15:17:15,815 - INFO - ======== 123
+2025-03-03 15:17:15,952 - INFO - ======== 124
+2025-03-03 15:17:16,062 - INFO - ======== 125
+2025-03-04 12:47:57,330 - INFO - all_location_links : ['https://abilene.craigslist.org/', 'https://akroncanton.craigslist.org/', 'https://albanyga.craigslist.org/', 'https://albany.craigslist.org/', 'https://albuquerque.craigslist.org/', 'https://altoona.craigslist.org/', 'https://amarillo.craigslist.org/', 'https://ames.craigslist.org/', 'https://anchorage.craigslist.org/', 'https://annapolis.craigslist.org/', 'https://annarbor.craigslist.org/', 'https://appleton.craigslist.org/', 'https://asheville.craigslist.org/', 'https://ashtabula.craigslist.org/', 'https://athensga.craigslist.org/', 'https://athensohio.craigslist.org/', 'https://atlanta.craigslist.org/', 'https://auburn.craigslist.org/', 'https://augusta.craigslist.org/', 'https://austin.craigslist.org/', 'https://bakersfield.craigslist.org/', 'https://baltimore.craigslist.org/', 'https://batonrouge.craigslist.org/', 'https://battlecreek.craigslist.org/', 'https://beaumont.craigslist.org/', 'https://bellingham.craigslist.org/', 'https://bemidji.craigslist.org/', 'https://bend.craigslist.org/', 'https://billings.craigslist.org/', 'https://binghamton.craigslist.org/', 'https://bham.craigslist.org/', 'https://bismarck.craigslist.org/', 'https://bloomington.craigslist.org/', 'https://bn.craigslist.org/', 'https://boise.craigslist.org/', 'https://boone.craigslist.org/', 'https://boston.craigslist.org/', 'https://boulder.craigslist.org/', 'https://bgky.craigslist.org/', 'https://bozeman.craigslist.org/', 'https://brainerd.craigslist.org/', 'https://brownsville.craigslist.org/', 'https://brunswick.craigslist.org/', 'https://buffalo.craigslist.org/', 'https://butte.craigslist.org/', 'https://capecod.craigslist.org/', 'https://catskills.craigslist.org/', 'https://cedarrapids.craigslist.org/', 'https://cenla.craigslist.org/', 'https://centralmich.craigslist.org/', 'https://cnj.craigslist.org/', 'https://chambana.craigslist.org/', 'https://charleston.craigslist.org/', 'https://charlestonwv.craigslist.org/', 'https://charlotte.craigslist.org/', 'https://charlottesville.craigslist.org/', 'https://chattanooga.craigslist.org/', 'https://chautauqua.craigslist.org/', 'https://chicago.craigslist.org/', 'https://chico.craigslist.org/', 'https://chillicothe.craigslist.org/', 'https://cincinnati.craigslist.org/', 'https://clarksville.craigslist.org/', 'https://cleveland.craigslist.org/', 'https://clovis.craigslist.org/', 'https://collegestation.craigslist.org/', 'https://cosprings.craigslist.org/', 'https://columbiamo.craigslist.org/', 'https://columbia.craigslist.org/', 'https://columbusga.craigslist.org/', 'https://columbus.craigslist.org/', 'https://cookeville.craigslist.org/', 'https://corpuschristi.craigslist.org/', 'https://corvallis.craigslist.org/', 'https://chambersburg.craigslist.org/', 'https://dallas.craigslist.org/', 'https://danville.craigslist.org/', 'https://daytona.craigslist.org/', 'https://dayton.craigslist.org/', 'https://decatur.craigslist.org/', 'https://nacogdoches.craigslist.org/', 'https://delaware.craigslist.org/', 'https://delrio.craigslist.org/', 'https://denver.craigslist.org/', 'https://desmoines.craigslist.org/', 'https://detroit.craigslist.org/', 'https://dothan.craigslist.org/', 'https://dubuque.craigslist.org/', 'https://duluth.craigslist.org/', 'https://eastco.craigslist.org/', 'https://newlondon.craigslist.org/', 'https://eastky.craigslist.org/', 'https://montana.craigslist.org/', 'https://eastnc.craigslist.org/', 'https://martinsburg.craigslist.org/', 'https://easternshore.craigslist.org/', 'https://eastidaho.craigslist.org/', 'https://eastoregon.craigslist.org/', 'https://eauclaire.craigslist.org/', 'https://elko.craigslist.org/', 'https://elmira.craigslist.org/', 'https://elpaso.craigslist.org/', 'https://erie.craigslist.org/', 'https://eugene.craigslist.org/', 'https://evansville.craigslist.org/', 'https://fairbanks.craigslist.org/', 'https://fargo.craigslist.org/', 'https://farmington.craigslist.org/', 'https://fayar.craigslist.org/', 'https://fayetteville.craigslist.org/', 'https://fingerlakes.craigslist.org/', 'https://flagstaff.craigslist.org/', 'https://flint.craigslist.org/', 'https://shoals.craigslist.org/', 'https://florencesc.craigslist.org/', 'https://keys.craigslist.org/', 'https://fortcollins.craigslist.org/', 'https://fortdodge.craigslist.org/', 'https://fortsmith.craigslist.org/', 'https://fortwayne.craigslist.org/', 'https://frederick.craigslist.org/', 'https://fredericksburg.craigslist.org/', 'https://fresno.craigslist.org/', 'https://fortmyers.craigslist.org/', 'https://gadsden.craigslist.org/', 'https://gainesville.craigslist.org/', 'https://galveston.craigslist.org/', 'https://glensfalls.craigslist.org/', 'https://goldcountry.craigslist.org/', 'https://grandforks.craigslist.org/', 'https://grandisland.craigslist.org/', 'https://grandrapids.craigslist.org/', 'https://greatfalls.craigslist.org/', 'https://greenbay.craigslist.org/', 'https://greensboro.craigslist.org/', 'https://greenville.craigslist.org/', 'https://gulfport.craigslist.org/', 'https://hanford.craigslist.org/', 'https://harrisburg.craigslist.org/', 'https://harrisonburg.craigslist.org/', 'https://hartford.craigslist.org/', 'https://hattiesburg.craigslist.org/', 'https://honolulu.craigslist.org/', 'https://cfl.craigslist.org/', 'https://helena.craigslist.org/', 'https://hickory.craigslist.org/', 'https://rockies.craigslist.org/', 'https://hiltonhead.craigslist.org/', 'https://holland.craigslist.org/', 'https://houma.craigslist.org/', 'https://houston.craigslist.org/', 'https://hudsonvalley.craigslist.org/', 'https://humboldt.craigslist.org/', 'https://huntington.craigslist.org/', 'https://huntsville.craigslist.org/', 'https://imperial.craigslist.org/', 'https://indianapolis.craigslist.org/', 'https://inlandempire.craigslist.org/', 'https://iowacity.craigslist.org/', 'https://ithaca.craigslist.org/', 'https://jxn.craigslist.org/', 'https://jackson.craigslist.org/', 'https://jacksontn.craigslist.org/', 'https://jacksonville.craigslist.org/', 'https://onslow.craigslist.org/', 'https://janesville.craigslist.org/', 'https://jerseyshore.craigslist.org/', 'https://jonesboro.craigslist.org/', 'https://joplin.craigslist.org/', 'https://kalamazoo.craigslist.org/', 'https://kalispell.craigslist.org/', 'https://kansascity.craigslist.org/', 'https://kenai.craigslist.org/', 'https://kpr.craigslist.org/', 'https://racine.craigslist.org/', 'https://killeen.craigslist.org/', 'https://kirksville.craigslist.org/', 'https://klamath.craigslist.org/', 'https://knoxville.craigslist.org/', 'https://kokomo.craigslist.org/', 'https://lacrosse.craigslist.org/', 'https://lafayette.craigslist.org/', 'https://tippecanoe.craigslist.org/', 'https://lakecharles.craigslist.org/', 'https://lakeland.craigslist.org/', 'https://loz.craigslist.org/', 'https://lancaster.craigslist.org/', 'https://lansing.craigslist.org/', 'https://laredo.craigslist.org/', 'https://lasalle.craigslist.org/', 'https://lascruces.craigslist.org/', 'https://lasvegas.craigslist.org/', 'https://lawrence.craigslist.org/', 'https://lawton.craigslist.org/', 'https://allentown.craigslist.org/', 'https://lewiston.craigslist.org/', 'https://lexington.craigslist.org/', 'https://limaohio.craigslist.org/', 'https://lincoln.craigslist.org/', 'https://littlerock.craigslist.org/', 'https://logan.craigslist.org/', 'https://longisland.craigslist.org/', 'https://losangeles.craigslist.org/', 'https://louisville.craigslist.org/', 'https://lubbock.craigslist.org/', 'https://lynchburg.craigslist.org/', 'https://macon.craigslist.org/', 'https://madison.craigslist.org/', 'https://maine.craigslist.org/', 'https://ksu.craigslist.org/', 'https://mankato.craigslist.org/', 'https://mansfield.craigslist.org/', 'https://masoncity.craigslist.org/', 'https://mattoon.craigslist.org/', 'https://mcallen.craigslist.org/', 'https://meadville.craigslist.org/', 'https://medford.craigslist.org/', 'https://memphis.craigslist.org/', 'https://mendocino.craigslist.org/', 'https://merced.craigslist.org/', 'https://meridian.craigslist.org/', 'https://milwaukee.craigslist.org/', 'https://minneapolis.craigslist.org/', 'https://missoula.craigslist.org/', 'https://mobile.craigslist.org/', 'https://modesto.craigslist.org/', 'https://mohave.craigslist.org/', 'https://monroe.craigslist.org/', 'https://monroemi.craigslist.org/', 'https://monterey.craigslist.org/', 'https://montgomery.craigslist.org/', 'https://morgantown.craigslist.org/', 'https://moseslake.craigslist.org/', 'https://muncie.craigslist.org/', 'https://muskegon.craigslist.org/', 'https://myrtlebeach.craigslist.org/', 'https://nashville.craigslist.org/', 'https://nh.craigslist.org/', 'https://newhaven.craigslist.org/', 'https://neworleans.craigslist.org/', 'https://blacksburg.craigslist.org/', 'https://newyork.craigslist.org/', 'https://norfolk.craigslist.org/', 'https://lakecity.craigslist.org/', 'https://nd.craigslist.org/', 'https://nesd.craigslist.org/', 'https://nmi.craigslist.org/', 'https://wheeling.craigslist.org/', 'https://northernwi.craigslist.org/', 'https://newjersey.craigslist.org/', 'https://northmiss.craigslist.org/', 'https://northplatte.craigslist.org/', 'https://nwct.craigslist.org/', 'https://nwga.craigslist.org/', 'https://nwks.craigslist.org/', 'https://enid.craigslist.org/', 'https://ocala.craigslist.org/', 'https://odessa.craigslist.org/', 'https://ogden.craigslist.org/', 'https://okaloosa.craigslist.org/', 'https://oklahomacity.craigslist.org/', 'https://olympic.craigslist.org/', 'https://omaha.craigslist.org/', 'https://oneonta.craigslist.org/', 'https://orangecounty.craigslist.org/', 'https://oregoncoast.craigslist.org/', 'https://orlando.craigslist.org/', 'https://outerbanks.craigslist.org/', 'https://owensboro.craigslist.org/', 'https://palmsprings.craigslist.org/', 'https://panamacity.craigslist.org/', 'https://parkersburg.craigslist.org/', 'https://pensacola.craigslist.org/', 'https://peoria.craigslist.org/', 'https://philadelphia.craigslist.org/', 'https://phoenix.craigslist.org/', 'https://csd.craigslist.org/', 'https://pittsburgh.craigslist.org/', 'https://plattsburgh.craigslist.org/', 'https://poconos.craigslist.org/', 'https://porthuron.craigslist.org/', 'https://portland.craigslist.org/', 'https://potsdam.craigslist.org/', 'https://prescott.craigslist.org/', 'https://provo.craigslist.org/', 'https://pueblo.craigslist.org/', 'https://pullman.craigslist.org/', 'https://quadcities.craigslist.org/', 'https://raleigh.craigslist.org/', 'https://rapidcity.craigslist.org/', 'https://reading.craigslist.org/', 'https://redding.craigslist.org/', 'https://reno.craigslist.org/', 'https://providence.craigslist.org/', 'https://richmondin.craigslist.org/', 'https://richmond.craigslist.org/', 'https://roanoke.craigslist.org/', 'https://rmn.craigslist.org/', 'https://rochester.craigslist.org/', 'https://rockford.craigslist.org/', 'https://roseburg.craigslist.org/', 'https://roswell.craigslist.org/', 'https://sacramento.craigslist.org/', 'https://saginaw.craigslist.org/', 'https://salem.craigslist.org/', 'https://salina.craigslist.org/', 'https://saltlakecity.craigslist.org/', 'https://sanangelo.craigslist.org/', 'https://sanantonio.craigslist.org/', 'https://sandiego.craigslist.org/', 'https://sandusky.craigslist.org/', 'https://slo.craigslist.org/', 'https://sanmarcos.craigslist.org/', 'https://santabarbara.craigslist.org/', 'https://santafe.craigslist.org/', 'https://santamaria.craigslist.org/', 'https://sarasota.craigslist.org/', 'https://savannah.craigslist.org/', 'https://scottsbluff.craigslist.org/', 'https://scranton.craigslist.org/', 'https://seattle.craigslist.org/', 'https://sfbay.craigslist.org/', 'https://sheboygan.craigslist.org/', 'https://showlow.craigslist.org/', 'https://shreveport.craigslist.org/', 'https://sierravista.craigslist.org/', 'https://siouxcity.craigslist.org/', 'https://siouxfalls.craigslist.org/', 'https://siskiyou.craigslist.org/', 'https://skagit.craigslist.org/', 'https://southbend.craigslist.org/', 'https://southcoast.craigslist.org/', 'https://sd.craigslist.org/', 'https://juneau.craigslist.org/', 'https://ottumwa.craigslist.org/', 'https://seks.craigslist.org/', 'https://semo.craigslist.org/', 'https://carbondale.craigslist.org/', 'https://smd.craigslist.org/', 'https://swv.craigslist.org/', 'https://miami.craigslist.org/', 'https://southjersey.craigslist.org/', 'https://swks.craigslist.org/', 'https://swmi.craigslist.org/', 'https://marshall.craigslist.org/', 'https://natchez.craigslist.org/', 'https://bigbend.craigslist.org/', 'https://swva.craigslist.org/', 'https://spacecoast.craigslist.org/', 'https://spokane.craigslist.org/', 'https://springfieldil.craigslist.org/', 'https://springfield.craigslist.org/', 'https://pennstate.craigslist.org/', 'https://statesboro.craigslist.org/', 'https://staugustine.craigslist.org/', 'https://stcloud.craigslist.org/', 'https://stgeorge.craigslist.org/', 'https://stillwater.craigslist.org/', 'https://stjoseph.craigslist.org/', 'https://stlouis.craigslist.org/', 'https://stockton.craigslist.org/', 'https://susanville.craigslist.org/', 'https://syracuse.craigslist.org/', 'https://tallahassee.craigslist.org/', 'https://tampa.craigslist.org/', 'https://terrehaute.craigslist.org/', 'https://texarkana.craigslist.org/', 'https://texoma.craigslist.org/', 'https://thumb.craigslist.org/', 'https://toledo.craigslist.org/', 'https://topeka.craigslist.org/', 'https://treasure.craigslist.org/', 'https://tricities.craigslist.org/', 'https://tucson.craigslist.org/', 'https://tulsa.craigslist.org/', 'https://tuscaloosa.craigslist.org/', 'https://tuscarawas.craigslist.org/', 'https://twinfalls.craigslist.org/', 'https://twintiers.craigslist.org/', 'https://easttexas.craigslist.org/', 'https://up.craigslist.org/', 'https://utica.craigslist.org/', 'https://valdosta.craigslist.org/', 'https://ventura.craigslist.org/', 'https://vermont.craigslist.org/', 'https://victoriatx.craigslist.org/', 'https://visalia.craigslist.org/', 'https://waco.craigslist.org/', 'https://washingtondc.craigslist.org/', 'https://waterloo.craigslist.org/', 'https://watertown.craigslist.org/', 'https://wausau.craigslist.org/', 'https://wenatchee.craigslist.org/', 'https://quincy.craigslist.org/', 'https://westky.craigslist.org/', 'https://westmd.craigslist.org/', 'https://westernmass.craigslist.org/', 'https://westslope.craigslist.org/', 'https://wv.craigslist.org/', 'https://wichitafalls.craigslist.org/', 'https://wichita.craigslist.org/', 'https://williamsport.craigslist.org/', 'https://wilmington.craigslist.org/', 'https://winchester.craigslist.org/', 'https://winstonsalem.craigslist.org/', 'https://worcester.craigslist.org/', 'https://wyoming.craigslist.org/', 'https://yakima.craigslist.org/', 'https://york.craigslist.org/', 'https://youngstown.craigslist.org/', 'https://yubasutter.craigslist.org/', 'https://yuma.craigslist.org/', 'https://zanesville.craigslist.org/']
+2025-03-04 12:47:57,333 - INFO - Going for https://abilene.craigslist.org/
+2025-03-04 12:48:07,327 - INFO - ======== 1
+2025-03-04 12:48:07,407 - INFO - ======== 2
+2025-03-04 12:48:07,451 - INFO - ======== 3
+2025-03-04 12:48:07,496 - INFO - ======== 4
+2025-03-04 12:48:07,538 - INFO - ======== 5
+2025-03-04 12:48:07,640 - INFO - ======== 6
+2025-03-04 12:48:07,737 - INFO - ======== 7
+2025-03-04 12:48:07,819 - INFO - ======== 8
+2025-03-04 12:48:07,900 - INFO - ======== 9
+2025-03-04 12:48:07,978 - INFO - ======== 10
+2025-03-04 12:48:08,069 - INFO - ======== 11
+2025-03-04 12:48:08,152 - INFO - ======== 12
+2025-03-04 12:48:08,221 - INFO - ======== 13
+2025-03-04 12:48:08,296 - INFO - ======== 14
+2025-03-04 12:48:08,376 - INFO - ======== 15
+2025-03-04 12:48:08,459 - INFO - ======== 16
+2025-03-04 12:48:08,553 - INFO - ======== 17
+2025-03-04 12:48:08,634 - INFO - ======== 18
+2025-03-04 12:48:08,717 - INFO - ======== 19
+2025-03-04 12:48:08,793 - INFO - ======== 20
+2025-03-04 12:48:08,890 - INFO - ======== 21
+2025-03-04 12:48:08,987 - INFO - ======== 22
+2025-03-04 12:48:09,087 - INFO - ======== 23
+2025-03-04 12:48:09,168 - INFO - ======== 24
+2025-03-04 12:48:09,244 - INFO - ======== 25
+2025-03-04 12:48:09,311 - INFO - ======== 26
+2025-03-04 12:48:09,385 - INFO - ======== 27
+2025-03-04 12:48:09,461 - INFO - ======== 28
+2025-03-04 12:48:09,538 - INFO - ======== 29
+2025-03-04 12:48:09,625 - INFO - ======== 30
+2025-03-04 12:48:09,709 - INFO - ======== 31
+2025-03-04 12:48:09,785 - INFO - ======== 32
+2025-03-04 12:48:09,861 - INFO - ======== 33
+2025-03-04 12:48:09,929 - INFO - ======== 34
+2025-03-04 12:48:09,998 - INFO - ======== 35
+2025-03-04 12:48:10,079 - INFO - ======== 36
+2025-03-04 12:48:10,168 - INFO - ======== 37
+2025-03-04 12:48:10,250 - INFO - ======== 38
+2025-03-04 12:48:10,343 - INFO - ======== 39
+2025-03-04 12:48:10,446 - INFO - ======== 40
+2025-03-04 12:48:10,547 - INFO - ======== 41
+2025-03-04 12:48:10,636 - INFO - ======== 42
+2025-03-04 12:48:10,724 - INFO - ======== 43
+2025-03-04 12:48:10,801 - INFO - ======== 44
+2025-03-04 12:48:10,891 - INFO - ======== 45
+2025-03-04 12:48:10,976 - INFO - ======== 46
+2025-03-04 12:48:11,056 - INFO - ======== 47
+2025-03-04 12:48:11,148 - INFO - ======== 48
+2025-03-04 12:48:11,259 - INFO - ======== 49
+2025-03-04 12:48:11,346 - INFO - ======== 50
+2025-03-04 12:48:11,430 - INFO - ======== 51
+2025-03-04 12:48:11,506 - INFO - ======== 52
+2025-03-04 12:48:11,565 - INFO - ======== 53
+2025-03-04 12:48:11,751 - INFO - ======== 54
+2025-03-04 12:48:11,852 - INFO - ======== 55
+2025-03-04 12:48:11,957 - INFO - ======== 56
+2025-03-04 12:48:12,064 - INFO - ======== 57
+2025-03-04 12:48:12,162 - INFO - ======== 58
+2025-03-04 12:48:12,243 - INFO - ======== 59
+2025-03-04 12:48:12,336 - INFO - ======== 60
+2025-03-04 12:48:12,406 - INFO - ======== 61
+2025-03-04 12:48:12,475 - INFO - ======== 62
+2025-03-04 12:48:12,559 - INFO - ======== 63
+2025-03-04 12:48:12,658 - INFO - ======== 64
+2025-03-04 12:48:12,702 - INFO - ======== 65
+2025-03-04 12:48:12,711 - INFO - Going for https://akroncanton.craigslist.org/
+2025-03-04 12:48:22,342 - INFO - ======== 66
+2025-03-04 12:48:22,418 - INFO - ======== 67
+2025-03-04 12:48:22,493 - INFO - ======== 68
+2025-03-04 12:48:22,574 - INFO - ======== 69
+2025-03-04 12:48:22,663 - INFO - ======== 70
+2025-03-04 12:48:22,757 - INFO - ======== 71
+2025-03-04 12:48:22,922 - INFO - ======== 72
+2025-03-04 12:48:23,052 - INFO - ======== 73
+2025-03-04 12:48:23,162 - INFO - ======== 74
+2025-03-04 12:48:23,231 - INFO - ======== 75
+2025-03-04 12:48:23,306 - INFO - ======== 76
+2025-03-04 12:48:23,386 - INFO - ======== 77
+2025-03-04 12:48:23,464 - INFO - ======== 78
+2025-03-04 12:48:23,545 - INFO - ======== 79
+2025-03-04 12:48:23,610 - INFO - ======== 80
+2025-03-04 12:48:23,694 - INFO - ======== 81
+2025-03-04 12:48:23,784 - INFO - ======== 82
+2025-03-04 12:48:23,891 - INFO - ======== 83
+2025-03-04 12:48:23,957 - INFO - ======== 84
+2025-03-04 12:48:24,028 - INFO - ======== 85
+2025-03-04 12:48:24,126 - INFO - ======== 86
+2025-03-04 12:48:24,216 - INFO - ======== 87
+2025-03-04 12:48:24,297 - INFO - ======== 88
+2025-03-04 12:48:24,386 - INFO - ======== 89
+2025-03-04 12:48:24,458 - INFO - ======== 90
+2025-03-04 12:48:24,538 - INFO - ======== 91
+2025-03-04 12:48:24,620 - INFO - ======== 92
+2025-03-04 12:48:24,701 - INFO - ======== 93
+2025-03-04 12:48:24,794 - INFO - ======== 94
+2025-03-04 12:48:24,874 - INFO - ======== 95
+2025-03-04 12:48:24,959 - INFO - ======== 96
+2025-03-04 12:48:25,048 - INFO - ======== 97
+2025-03-04 12:48:25,133 - INFO - ======== 98
+2025-03-04 12:48:25,247 - INFO - ======== 99
+2025-03-04 12:48:25,318 - INFO - ======== 100
+2025-03-04 12:48:25,407 - INFO - ======== 101
+2025-03-04 12:48:25,537 - INFO - ======== 102
+2025-03-04 12:48:25,661 - INFO - ======== 103
+2025-03-04 12:48:25,789 - INFO - ======== 104
+2025-03-04 12:48:25,899 - INFO - ======== 105
+2025-03-04 12:48:26,011 - INFO - ======== 106
+2025-03-04 12:48:26,117 - INFO - ======== 107
+2025-03-04 12:48:26,215 - INFO - ======== 108
+2025-03-04 12:48:26,327 - INFO - ======== 109
+2025-03-04 12:48:26,424 - INFO - ======== 110
+2025-03-04 12:48:26,528 - INFO - ======== 111
+2025-03-04 12:48:26,634 - INFO - ======== 112
+2025-03-04 12:48:26,728 - INFO - ======== 113
+2025-03-04 12:48:26,795 - INFO - ======== 114
+2025-03-04 12:48:26,859 - INFO - ======== 115
+2025-03-04 12:48:26,926 - INFO - ======== 116
+2025-03-04 12:48:27,030 - INFO - ======== 117
+2025-03-04 12:48:27,127 - INFO - ======== 118
+2025-03-04 12:48:27,239 - INFO - ======== 119
+2025-03-04 12:48:27,327 - INFO - ======== 120
+2025-03-04 12:48:27,412 - INFO - ======== 121
+2025-03-04 12:48:27,482 - INFO - ======== 122
+2025-03-04 12:48:27,556 - INFO - ======== 123
+2025-03-04 12:48:27,652 - INFO - ======== 124
+2025-03-04 12:48:27,767 - INFO - ======== 125
+2025-03-04 13:13:59,063 - INFO - all_location_links : ['https://abilene.craigslist.org/', 'https://akroncanton.craigslist.org/', 'https://albanyga.craigslist.org/', 'https://albany.craigslist.org/', 'https://albuquerque.craigslist.org/', 'https://altoona.craigslist.org/', 'https://amarillo.craigslist.org/', 'https://ames.craigslist.org/', 'https://anchorage.craigslist.org/', 'https://annapolis.craigslist.org/', 'https://annarbor.craigslist.org/', 'https://appleton.craigslist.org/', 'https://asheville.craigslist.org/', 'https://ashtabula.craigslist.org/', 'https://athensga.craigslist.org/', 'https://athensohio.craigslist.org/', 'https://atlanta.craigslist.org/', 'https://auburn.craigslist.org/', 'https://augusta.craigslist.org/', 'https://austin.craigslist.org/', 'https://bakersfield.craigslist.org/', 'https://baltimore.craigslist.org/', 'https://batonrouge.craigslist.org/', 'https://battlecreek.craigslist.org/', 'https://beaumont.craigslist.org/', 'https://bellingham.craigslist.org/', 'https://bemidji.craigslist.org/', 'https://bend.craigslist.org/', 'https://billings.craigslist.org/', 'https://binghamton.craigslist.org/', 'https://bham.craigslist.org/', 'https://bismarck.craigslist.org/', 'https://bloomington.craigslist.org/', 'https://bn.craigslist.org/', 'https://boise.craigslist.org/', 'https://boone.craigslist.org/', 'https://boston.craigslist.org/', 'https://boulder.craigslist.org/', 'https://bgky.craigslist.org/', 'https://bozeman.craigslist.org/', 'https://brainerd.craigslist.org/', 'https://brownsville.craigslist.org/', 'https://brunswick.craigslist.org/', 'https://buffalo.craigslist.org/', 'https://butte.craigslist.org/', 'https://capecod.craigslist.org/', 'https://catskills.craigslist.org/', 'https://cedarrapids.craigslist.org/', 'https://cenla.craigslist.org/', 'https://centralmich.craigslist.org/', 'https://cnj.craigslist.org/', 'https://chambana.craigslist.org/', 'https://charleston.craigslist.org/', 'https://charlestonwv.craigslist.org/', 'https://charlotte.craigslist.org/', 'https://charlottesville.craigslist.org/', 'https://chattanooga.craigslist.org/', 'https://chautauqua.craigslist.org/', 'https://chicago.craigslist.org/', 'https://chico.craigslist.org/', 'https://chillicothe.craigslist.org/', 'https://cincinnati.craigslist.org/', 'https://clarksville.craigslist.org/', 'https://cleveland.craigslist.org/', 'https://clovis.craigslist.org/', 'https://collegestation.craigslist.org/', 'https://cosprings.craigslist.org/', 'https://columbiamo.craigslist.org/', 'https://columbia.craigslist.org/', 'https://columbusga.craigslist.org/', 'https://columbus.craigslist.org/', 'https://cookeville.craigslist.org/', 'https://corpuschristi.craigslist.org/', 'https://corvallis.craigslist.org/', 'https://chambersburg.craigslist.org/', 'https://dallas.craigslist.org/', 'https://danville.craigslist.org/', 'https://daytona.craigslist.org/', 'https://dayton.craigslist.org/', 'https://decatur.craigslist.org/', 'https://nacogdoches.craigslist.org/', 'https://delaware.craigslist.org/', 'https://delrio.craigslist.org/', 'https://denver.craigslist.org/', 'https://desmoines.craigslist.org/', 'https://detroit.craigslist.org/', 'https://dothan.craigslist.org/', 'https://dubuque.craigslist.org/', 'https://duluth.craigslist.org/', 'https://eastco.craigslist.org/', 'https://newlondon.craigslist.org/', 'https://eastky.craigslist.org/', 'https://montana.craigslist.org/', 'https://eastnc.craigslist.org/', 'https://martinsburg.craigslist.org/', 'https://easternshore.craigslist.org/', 'https://eastidaho.craigslist.org/', 'https://eastoregon.craigslist.org/', 'https://eauclaire.craigslist.org/', 'https://elko.craigslist.org/', 'https://elmira.craigslist.org/', 'https://elpaso.craigslist.org/', 'https://erie.craigslist.org/', 'https://eugene.craigslist.org/', 'https://evansville.craigslist.org/', 'https://fairbanks.craigslist.org/', 'https://fargo.craigslist.org/', 'https://farmington.craigslist.org/', 'https://fayar.craigslist.org/', 'https://fayetteville.craigslist.org/', 'https://fingerlakes.craigslist.org/', 'https://flagstaff.craigslist.org/', 'https://flint.craigslist.org/', 'https://shoals.craigslist.org/', 'https://florencesc.craigslist.org/', 'https://keys.craigslist.org/', 'https://fortcollins.craigslist.org/', 'https://fortdodge.craigslist.org/', 'https://fortsmith.craigslist.org/', 'https://fortwayne.craigslist.org/', 'https://frederick.craigslist.org/', 'https://fredericksburg.craigslist.org/', 'https://fresno.craigslist.org/', 'https://fortmyers.craigslist.org/', 'https://gadsden.craigslist.org/', 'https://gainesville.craigslist.org/', 'https://galveston.craigslist.org/', 'https://glensfalls.craigslist.org/', 'https://goldcountry.craigslist.org/', 'https://grandforks.craigslist.org/', 'https://grandisland.craigslist.org/', 'https://grandrapids.craigslist.org/', 'https://greatfalls.craigslist.org/', 'https://greenbay.craigslist.org/', 'https://greensboro.craigslist.org/', 'https://greenville.craigslist.org/', 'https://gulfport.craigslist.org/', 'https://hanford.craigslist.org/', 'https://harrisburg.craigslist.org/', 'https://harrisonburg.craigslist.org/', 'https://hartford.craigslist.org/', 'https://hattiesburg.craigslist.org/', 'https://honolulu.craigslist.org/', 'https://cfl.craigslist.org/', 'https://helena.craigslist.org/', 'https://hickory.craigslist.org/', 'https://rockies.craigslist.org/', 'https://hiltonhead.craigslist.org/', 'https://holland.craigslist.org/', 'https://houma.craigslist.org/', 'https://houston.craigslist.org/', 'https://hudsonvalley.craigslist.org/', 'https://humboldt.craigslist.org/', 'https://huntington.craigslist.org/', 'https://huntsville.craigslist.org/', 'https://imperial.craigslist.org/', 'https://indianapolis.craigslist.org/', 'https://inlandempire.craigslist.org/', 'https://iowacity.craigslist.org/', 'https://ithaca.craigslist.org/', 'https://jxn.craigslist.org/', 'https://jackson.craigslist.org/', 'https://jacksontn.craigslist.org/', 'https://jacksonville.craigslist.org/', 'https://onslow.craigslist.org/', 'https://janesville.craigslist.org/', 'https://jerseyshore.craigslist.org/', 'https://jonesboro.craigslist.org/', 'https://joplin.craigslist.org/', 'https://kalamazoo.craigslist.org/', 'https://kalispell.craigslist.org/', 'https://kansascity.craigslist.org/', 'https://kenai.craigslist.org/', 'https://kpr.craigslist.org/', 'https://racine.craigslist.org/', 'https://killeen.craigslist.org/', 'https://kirksville.craigslist.org/', 'https://klamath.craigslist.org/', 'https://knoxville.craigslist.org/', 'https://kokomo.craigslist.org/', 'https://lacrosse.craigslist.org/', 'https://lafayette.craigslist.org/', 'https://tippecanoe.craigslist.org/', 'https://lakecharles.craigslist.org/', 'https://lakeland.craigslist.org/', 'https://loz.craigslist.org/', 'https://lancaster.craigslist.org/', 'https://lansing.craigslist.org/', 'https://laredo.craigslist.org/', 'https://lasalle.craigslist.org/', 'https://lascruces.craigslist.org/', 'https://lasvegas.craigslist.org/', 'https://lawrence.craigslist.org/', 'https://lawton.craigslist.org/', 'https://allentown.craigslist.org/', 'https://lewiston.craigslist.org/', 'https://lexington.craigslist.org/', 'https://limaohio.craigslist.org/', 'https://lincoln.craigslist.org/', 'https://littlerock.craigslist.org/', 'https://logan.craigslist.org/', 'https://longisland.craigslist.org/', 'https://losangeles.craigslist.org/', 'https://louisville.craigslist.org/', 'https://lubbock.craigslist.org/', 'https://lynchburg.craigslist.org/', 'https://macon.craigslist.org/', 'https://madison.craigslist.org/', 'https://maine.craigslist.org/', 'https://ksu.craigslist.org/', 'https://mankato.craigslist.org/', 'https://mansfield.craigslist.org/', 'https://masoncity.craigslist.org/', 'https://mattoon.craigslist.org/', 'https://mcallen.craigslist.org/', 'https://meadville.craigslist.org/', 'https://medford.craigslist.org/', 'https://memphis.craigslist.org/', 'https://mendocino.craigslist.org/', 'https://merced.craigslist.org/', 'https://meridian.craigslist.org/', 'https://milwaukee.craigslist.org/', 'https://minneapolis.craigslist.org/', 'https://missoula.craigslist.org/', 'https://mobile.craigslist.org/', 'https://modesto.craigslist.org/', 'https://mohave.craigslist.org/', 'https://monroe.craigslist.org/', 'https://monroemi.craigslist.org/', 'https://monterey.craigslist.org/', 'https://montgomery.craigslist.org/', 'https://morgantown.craigslist.org/', 'https://moseslake.craigslist.org/', 'https://muncie.craigslist.org/', 'https://muskegon.craigslist.org/', 'https://myrtlebeach.craigslist.org/', 'https://nashville.craigslist.org/', 'https://nh.craigslist.org/', 'https://newhaven.craigslist.org/', 'https://neworleans.craigslist.org/', 'https://blacksburg.craigslist.org/', 'https://newyork.craigslist.org/', 'https://norfolk.craigslist.org/', 'https://lakecity.craigslist.org/', 'https://nd.craigslist.org/', 'https://nesd.craigslist.org/', 'https://nmi.craigslist.org/', 'https://wheeling.craigslist.org/', 'https://northernwi.craigslist.org/', 'https://newjersey.craigslist.org/', 'https://northmiss.craigslist.org/', 'https://northplatte.craigslist.org/', 'https://nwct.craigslist.org/', 'https://nwga.craigslist.org/', 'https://nwks.craigslist.org/', 'https://enid.craigslist.org/', 'https://ocala.craigslist.org/', 'https://odessa.craigslist.org/', 'https://ogden.craigslist.org/', 'https://okaloosa.craigslist.org/', 'https://oklahomacity.craigslist.org/', 'https://olympic.craigslist.org/', 'https://omaha.craigslist.org/', 'https://oneonta.craigslist.org/', 'https://orangecounty.craigslist.org/', 'https://oregoncoast.craigslist.org/', 'https://orlando.craigslist.org/', 'https://outerbanks.craigslist.org/', 'https://owensboro.craigslist.org/', 'https://palmsprings.craigslist.org/', 'https://panamacity.craigslist.org/', 'https://parkersburg.craigslist.org/', 'https://pensacola.craigslist.org/', 'https://peoria.craigslist.org/', 'https://philadelphia.craigslist.org/', 'https://phoenix.craigslist.org/', 'https://csd.craigslist.org/', 'https://pittsburgh.craigslist.org/', 'https://plattsburgh.craigslist.org/', 'https://poconos.craigslist.org/', 'https://porthuron.craigslist.org/', 'https://portland.craigslist.org/', 'https://potsdam.craigslist.org/', 'https://prescott.craigslist.org/', 'https://provo.craigslist.org/', 'https://pueblo.craigslist.org/', 'https://pullman.craigslist.org/', 'https://quadcities.craigslist.org/', 'https://raleigh.craigslist.org/', 'https://rapidcity.craigslist.org/', 'https://reading.craigslist.org/', 'https://redding.craigslist.org/', 'https://reno.craigslist.org/', 'https://providence.craigslist.org/', 'https://richmondin.craigslist.org/', 'https://richmond.craigslist.org/', 'https://roanoke.craigslist.org/', 'https://rmn.craigslist.org/', 'https://rochester.craigslist.org/', 'https://rockford.craigslist.org/', 'https://roseburg.craigslist.org/', 'https://roswell.craigslist.org/', 'https://sacramento.craigslist.org/', 'https://saginaw.craigslist.org/', 'https://salem.craigslist.org/', 'https://salina.craigslist.org/', 'https://saltlakecity.craigslist.org/', 'https://sanangelo.craigslist.org/', 'https://sanantonio.craigslist.org/', 'https://sandiego.craigslist.org/', 'https://sandusky.craigslist.org/', 'https://slo.craigslist.org/', 'https://sanmarcos.craigslist.org/', 'https://santabarbara.craigslist.org/', 'https://santafe.craigslist.org/', 'https://santamaria.craigslist.org/', 'https://sarasota.craigslist.org/', 'https://savannah.craigslist.org/', 'https://scottsbluff.craigslist.org/', 'https://scranton.craigslist.org/', 'https://seattle.craigslist.org/', 'https://sfbay.craigslist.org/', 'https://sheboygan.craigslist.org/', 'https://showlow.craigslist.org/', 'https://shreveport.craigslist.org/', 'https://sierravista.craigslist.org/', 'https://siouxcity.craigslist.org/', 'https://siouxfalls.craigslist.org/', 'https://siskiyou.craigslist.org/', 'https://skagit.craigslist.org/', 'https://southbend.craigslist.org/', 'https://southcoast.craigslist.org/', 'https://sd.craigslist.org/', 'https://juneau.craigslist.org/', 'https://ottumwa.craigslist.org/', 'https://seks.craigslist.org/', 'https://semo.craigslist.org/', 'https://carbondale.craigslist.org/', 'https://smd.craigslist.org/', 'https://swv.craigslist.org/', 'https://miami.craigslist.org/', 'https://southjersey.craigslist.org/', 'https://swks.craigslist.org/', 'https://swmi.craigslist.org/', 'https://marshall.craigslist.org/', 'https://natchez.craigslist.org/', 'https://bigbend.craigslist.org/', 'https://swva.craigslist.org/', 'https://spacecoast.craigslist.org/', 'https://spokane.craigslist.org/', 'https://springfieldil.craigslist.org/', 'https://springfield.craigslist.org/', 'https://pennstate.craigslist.org/', 'https://statesboro.craigslist.org/', 'https://staugustine.craigslist.org/', 'https://stcloud.craigslist.org/', 'https://stgeorge.craigslist.org/', 'https://stillwater.craigslist.org/', 'https://stjoseph.craigslist.org/', 'https://stlouis.craigslist.org/', 'https://stockton.craigslist.org/', 'https://susanville.craigslist.org/', 'https://syracuse.craigslist.org/', 'https://tallahassee.craigslist.org/', 'https://tampa.craigslist.org/', 'https://terrehaute.craigslist.org/', 'https://texarkana.craigslist.org/', 'https://texoma.craigslist.org/', 'https://thumb.craigslist.org/', 'https://toledo.craigslist.org/', 'https://topeka.craigslist.org/', 'https://treasure.craigslist.org/', 'https://tricities.craigslist.org/', 'https://tucson.craigslist.org/', 'https://tulsa.craigslist.org/', 'https://tuscaloosa.craigslist.org/', 'https://tuscarawas.craigslist.org/', 'https://twinfalls.craigslist.org/', 'https://twintiers.craigslist.org/', 'https://easttexas.craigslist.org/', 'https://up.craigslist.org/', 'https://utica.craigslist.org/', 'https://valdosta.craigslist.org/', 'https://ventura.craigslist.org/', 'https://vermont.craigslist.org/', 'https://victoriatx.craigslist.org/', 'https://visalia.craigslist.org/', 'https://waco.craigslist.org/', 'https://washingtondc.craigslist.org/', 'https://waterloo.craigslist.org/', 'https://watertown.craigslist.org/', 'https://wausau.craigslist.org/', 'https://wenatchee.craigslist.org/', 'https://quincy.craigslist.org/', 'https://westky.craigslist.org/', 'https://westmd.craigslist.org/', 'https://westernmass.craigslist.org/', 'https://westslope.craigslist.org/', 'https://wv.craigslist.org/', 'https://wichitafalls.craigslist.org/', 'https://wichita.craigslist.org/', 'https://williamsport.craigslist.org/', 'https://wilmington.craigslist.org/', 'https://winchester.craigslist.org/', 'https://winstonsalem.craigslist.org/', 'https://worcester.craigslist.org/', 'https://wyoming.craigslist.org/', 'https://yakima.craigslist.org/', 'https://york.craigslist.org/', 'https://youngstown.craigslist.org/', 'https://yubasutter.craigslist.org/', 'https://yuma.craigslist.org/', 'https://zanesville.craigslist.org/']
+2025-03-04 13:13:59,065 - INFO - Going for https://abilene.craigslist.org/
+2025-03-04 13:14:10,881 - INFO - ======== 1
+2025-03-04 13:14:11,140 - INFO - ======== 2
+2025-03-04 13:14:11,430 - INFO - ======== 3
+2025-03-04 13:14:11,716 - INFO - ======== 4
+2025-03-04 13:14:12,062 - INFO - ======== 5
+2025-03-04 13:14:12,389 - INFO - ======== 6
+2025-03-04 13:14:12,755 - INFO - ======== 7
+2025-03-04 13:14:12,928 - INFO - ======== 8
+2025-03-04 13:14:13,078 - INFO - ======== 9
+2025-03-04 13:14:13,216 - INFO - ======== 10
+2025-03-04 13:14:13,357 - INFO - ======== 11
+2025-03-04 13:14:13,493 - INFO - ======== 12
+2025-03-04 13:14:13,632 - INFO - ======== 13
+2025-03-04 13:14:13,787 - INFO - ======== 14
+2025-03-04 13:14:13,972 - INFO - ======== 15
+2025-03-04 13:14:14,109 - INFO - ======== 16
+2025-03-04 13:14:14,231 - INFO - ======== 17
+2025-03-04 13:14:14,360 - INFO - ======== 18
+2025-03-04 13:14:14,473 - INFO - ======== 19
+2025-03-04 13:14:14,572 - INFO - ======== 20
+2025-03-04 13:14:14,676 - INFO - ======== 21
+2025-03-04 13:14:14,767 - INFO - ======== 22
+2025-03-04 13:14:14,865 - INFO - ======== 23
+2025-03-04 13:14:14,945 - INFO - ======== 24
+2025-03-04 13:14:15,029 - INFO - ======== 25
+2025-03-04 13:14:15,115 - INFO - ======== 26
+2025-03-04 13:14:15,236 - INFO - ======== 27
+2025-03-04 13:14:15,338 - INFO - ======== 28
+2025-03-04 13:14:15,444 - INFO - ======== 29
+2025-03-04 13:14:15,548 - INFO - ======== 30
+2025-03-04 13:14:15,644 - INFO - ======== 31
+2025-03-04 13:14:15,736 - INFO - ======== 32
+2025-03-04 13:14:15,815 - INFO - ======== 33
+2025-03-04 13:14:15,909 - INFO - ======== 34
+2025-03-04 13:14:16,000 - INFO - ======== 35
+2025-03-04 13:14:16,154 - INFO - ======== 36
+2025-03-04 13:14:16,278 - INFO - ======== 37
+2025-03-04 13:14:16,411 - INFO - ======== 38
+2025-03-04 13:14:16,554 - INFO - ======== 39
+2025-03-04 13:14:16,714 - INFO - ======== 40
+2025-03-04 13:14:16,830 - INFO - ======== 41
+2025-03-04 13:14:16,941 - INFO - ======== 42
+2025-03-04 13:14:17,052 - INFO - ======== 43
+2025-03-04 13:14:17,196 - INFO - ======== 44
+2025-03-04 13:14:17,350 - INFO - ======== 45
+2025-03-04 13:14:17,484 - INFO - ======== 46
+2025-03-04 13:14:17,616 - INFO - ======== 47
+2025-03-04 13:14:17,768 - INFO - ======== 48
+2025-03-04 13:14:17,903 - INFO - ======== 49
+2025-03-04 13:14:18,119 - INFO - ======== 50
+2025-03-04 13:14:18,289 - INFO - ======== 51
+2025-03-04 13:14:18,384 - INFO - ======== 52
+2025-03-04 13:14:18,461 - INFO - ======== 53
+2025-03-04 13:14:18,643 - INFO - ======== 54
+2025-03-04 13:14:18,770 - INFO - ======== 55
+2025-03-04 13:14:18,909 - INFO - ======== 56
+2025-03-04 13:14:19,045 - INFO - ======== 57
+2025-03-04 13:14:19,157 - INFO - ======== 58
+2025-03-04 13:14:19,286 - INFO - ======== 59
+2025-03-04 13:14:19,408 - INFO - ======== 60
+2025-03-04 13:14:19,488 - INFO - ======== 61
+2025-03-04 13:14:19,567 - INFO - ======== 62
+2025-03-04 13:14:19,710 - INFO - ======== 63
+2025-03-04 13:14:19,824 - INFO - ======== 64
+2025-03-04 13:14:19,879 - INFO - ======== 65
+2025-03-04 13:14:19,889 - INFO - Going for https://akroncanton.craigslist.org/
+2025-03-04 13:14:27,334 - INFO - ======== 66
+2025-03-04 13:14:27,437 - INFO - ======== 67
+2025-03-04 13:14:27,546 - INFO - ======== 68
+2025-03-04 13:14:27,662 - INFO - ======== 69
+2025-03-04 13:14:27,807 - INFO - ======== 70
+2025-03-04 13:14:28,035 - INFO - ======== 71
+2025-03-04 13:14:28,299 - INFO - ======== 72
+2025-03-04 13:14:28,404 - INFO - ======== 73
+2025-03-04 13:14:28,527 - INFO - ======== 74
+2025-03-04 13:14:28,585 - INFO - ======== 75
+2025-03-04 13:14:28,698 - INFO - ======== 76
+2025-03-04 13:14:28,819 - INFO - ======== 77
+2025-03-04 13:14:28,936 - INFO - ======== 78
+2025-03-04 13:14:29,057 - INFO - ======== 79
+2025-03-04 13:14:29,168 - INFO - ======== 80
+2025-03-04 13:14:29,311 - INFO - ======== 81
+2025-03-04 13:14:29,415 - INFO - ======== 82
+2025-03-04 13:14:29,519 - INFO - ======== 83
+2025-03-04 13:14:29,620 - INFO - ======== 84
+2025-03-04 13:14:29,719 - INFO - ======== 85
+2025-03-04 13:14:29,802 - INFO - ======== 86
+2025-03-04 13:14:29,899 - INFO - ======== 87
+2025-03-04 13:14:30,003 - INFO - ======== 88
+2025-03-04 13:14:30,097 - INFO - ======== 89
+2025-03-04 13:14:30,184 - INFO - ======== 90
+2025-03-04 13:14:30,285 - INFO - ======== 91
+2025-03-04 13:14:30,386 - INFO - ======== 92
+2025-03-04 13:14:30,494 - INFO - ======== 93
+2025-03-04 13:14:30,609 - INFO - ======== 94
+2025-03-04 13:14:30,712 - INFO - ======== 95
+2025-03-04 13:14:30,806 - INFO - ======== 96
+2025-03-04 13:14:30,907 - INFO - ======== 97
+2025-03-04 13:14:31,006 - INFO - ======== 98
+2025-03-04 13:14:31,099 - INFO - ======== 99
+2025-03-04 13:14:31,179 - INFO - ======== 100
+2025-03-04 13:14:31,255 - INFO - ======== 101
+2025-03-04 13:14:31,331 - INFO - ======== 102
+2025-03-04 13:14:31,437 - INFO - ======== 103
+2025-03-04 13:14:31,541 - INFO - ======== 104
+2025-03-04 13:14:31,653 - INFO - ======== 105
+2025-03-04 13:14:31,754 - INFO - ======== 106
+2025-03-04 13:14:31,853 - INFO - ======== 107
+2025-03-04 13:14:31,963 - INFO - ======== 108
+2025-03-04 13:14:32,071 - INFO - ======== 109
+2025-03-04 13:14:32,199 - INFO - ======== 110
+2025-03-04 13:14:32,387 - INFO - ======== 111
+2025-03-04 13:14:32,515 - INFO - ======== 112
+2025-03-04 13:14:32,648 - INFO - ======== 113
+2025-03-04 13:14:32,733 - INFO - ======== 114
+2025-03-04 13:14:32,846 - INFO - ======== 115
+2025-03-04 13:14:32,962 - INFO - ======== 116
+2025-03-04 13:14:33,068 - INFO - ======== 117
+2025-03-04 13:14:33,179 - INFO - ======== 118
+2025-03-04 13:14:33,296 - INFO - ======== 119
+2025-03-04 13:14:33,382 - INFO - ======== 120
+2025-03-04 13:14:33,474 - INFO - ======== 121
+2025-03-04 13:14:33,558 - INFO - ======== 122
+2025-03-04 13:14:33,654 - INFO - ======== 123
+2025-03-04 13:14:33,823 - INFO - ======== 124
+2025-03-04 13:14:33,936 - INFO - ======== 125
+2025-03-04 13:14:34,039 - INFO - ======== 126
+2025-03-04 13:14:34,091 - INFO - ======== 127
+2025-03-04 13:14:34,146 - INFO - ======== 128
+2025-03-04 13:14:34,219 - INFO - ======== 129
+2025-03-04 13:14:34,317 - INFO - ======== 130
