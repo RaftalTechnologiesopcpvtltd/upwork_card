@@ -1,0 +1,4 @@
+2025/03/03-11:09:45.051 70d8 Reusing MANIFEST d:\FAIZ\office work\dev project\profile\john\Default\IndexedDB\https_signin.ebay.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/03/03-11:09:45.052 70d8 Recovering log #4
+2025/03/03-11:09:45.053 70d8 Reusing old log d:\FAIZ\office work\dev project\profile\john\Default\IndexedDB\https_signin.ebay.com_0.indexeddb.leveldb/000004.log 
+2025/03/03-11:09:45.062 5fd4 Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)

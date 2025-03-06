@@ -3,6 +3,40 @@
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<style>
+    .auction-box,
+    .fixed-price-box {
+        /* padding: 15px;
+        margin: 10px; */
+        border-radius: 10px;
+        /* font-size: 16px; */
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        display: inline-block;
+        /* width: 200px; */
+    }
+
+    /* Auction Style - Neon Red */
+    .auction-box {
+        /* Bright neon red */
+        border: 2px solid #ff2200;
+        color: #ff2200;
+        /* White text for contrast */
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+    /* Fixed Price Style - Neon Blue */
+    .fixed-price-box {
+        /* Bright neon blue */
+        border: 2px solid #008000;
+        color: #008000;
+        /* White text for contrast */
+        padding: 5px;
+        border-radius: 8px;
+    }
+</style>
 <div class="d-flex align-items-center justify-content-end nav_section_block">
     <!-- <div class="container banner-text-container" style="color: #dee7e9;">
         <div style="font-size: 36px">
@@ -49,9 +83,13 @@
                             </div>
                         </div>
                     </td>
+                    {% if 'Auction' in item.selling_type %}
+                    <td class="text-center">${{ item.current_bid_price }}-{{ item.current_bid_count }}</td>
+                    {% else %}
                     <td class="text-center">${{ item.price }}</td>
+                    {% endif %}
                     <td class="text-center">
-                        <div class="in_stock">{{ item.selling_type }}</div>
+                        <div class="in_stock {% if 'Auction' in item.selling_type %} auction-box {% else %} fixed-price-box {% endif %}">{{ item.selling_type }}</div>
                     </td>
                     <td class="text-center">
                         <div class="d-flex align-items-center">

@@ -1,0 +1,29 @@
+2025/03/06-16:24:45.426 2be0 Reusing MANIFEST D:\FAIZ\office work\dev project\profile\john\Default\Local Storage\leveldb/MANIFEST-000001
+2025/03/06-16:24:45.438 2be0 Recovering log #57
+2025/03/06-16:24:45.440 2be0 Level-0 table #61: started
+2025/03/06-16:24:45.456 2be0 Level-0 table #61: 12478 bytes OK
+2025/03/06-16:24:45.472 2be0 Delete type=0 #57
+2025/03/06-16:28:49.036 7e84 Level-0 table #64: started
+2025/03/06-16:28:49.044 7e84 Level-0 table #64: 100524 bytes OK
+2025/03/06-16:28:49.046 7e84 Delete type=0 #62
+2025/03/06-16:31:49.038 7e84 Level-0 table #66: started
+2025/03/06-16:31:49.046 7e84 Level-0 table #66: 7657 bytes OK
+2025/03/06-16:31:49.047 7e84 Delete type=0 #63
+2025/03/06-16:33:49.048 7e84 Level-0 table #68: started
+2025/03/06-16:33:49.060 7e84 Level-0 table #68: 21862 bytes OK
+2025/03/06-16:33:49.063 7e84 Delete type=0 #65
+2025/03/06-16:33:49.064 7e84 Compacting 4@0 + 1@1 files
+2025/03/06-16:33:49.081 7e84 Generated table #69@0: 1893 keys, 66300 bytes
+2025/03/06-16:33:49.081 7e84 Compacted 4@0 + 1@1 files => 66300 bytes
+2025/03/06-16:33:49.082 7e84 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/03/06-16:33:49.084 7e84 Delete type=2 #59
+2025/03/06-16:33:49.084 7e84 Delete type=2 #61
+2025/03/06-16:33:49.084 7e84 Delete type=2 #64
+2025/03/06-16:33:49.085 7e84 Delete type=2 #66
+2025/03/06-16:33:49.085 7e84 Delete type=2 #68
+2025/03/06-16:35:49.037 7e84 Level-0 table #71: started
+2025/03/06-16:35:49.044 7e84 Level-0 table #71: 111324 bytes OK
+2025/03/06-16:35:49.046 7e84 Delete type=0 #67
+2025/03/06-16:38:49.043 7e84 Level-0 table #73: started
+2025/03/06-16:38:49.050 7e84 Level-0 table #73: 8295 bytes OK
+2025/03/06-16:38:49.052 7e84 Delete type=0 #70
