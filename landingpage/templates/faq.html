@@ -40,9 +40,14 @@
         transition: transform 0.3s ease;
     }
 
+    .card-header .btn-link i {
+        transform: rotate(0deg);
+    }
+
     .card-header .btn-link:not(.collapsed) i {
         transform: rotate(180deg);
     }
+
 
     .page-title {
         color: white;
@@ -201,15 +206,16 @@
     <div id="generalFAQ" class="accordion">
         {% for faq in faqs %}
         <div class="card">
-            <div class="card-header" id="headingOne">
+            <div class="card-header" id="heading{{ forloop.counter }}">
                 <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-                        aria-controls="collapseOne">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}"
+                        aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
                         {{ faq.question }} <i class="fas fa-chevron-down float-right"></i>
                     </button>
                 </h5>
             </div>
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#generalFAQ">
+            <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}"
+                data-parent="#generalFAQ">
                 <div class="card-body">
                     {{ faq.answer }}
                 </div>
@@ -217,6 +223,7 @@
         </div>
         {% endfor %}
     </div>
+
 
     <!-- Pricing & Plans -->
     <!-- <h3 class="category-title">Pricing & Plans</h3>
