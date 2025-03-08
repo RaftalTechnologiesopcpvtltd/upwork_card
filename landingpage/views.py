@@ -288,6 +288,10 @@ def product_search(request):
 
 @login_required
 def fav_view(request):
+    try:
+        subscription = UserSubscription.objects.get(user=request.user)
+    except:
+        subscription = None
     fav_products = Favourites.objects.filter(user=request.user)
     fav_results = []
     for fav_prod in fav_products:
@@ -312,7 +316,7 @@ def fav_view(request):
             "image": product_images_list[0] if product_images_list else "",  # Handle missing images
             "decscription" : fav_prod.product.description,
         })
-    return render(request, 'favourites.html',{"fav_products":fav_results})
+    return render(request, 'favourites.html',{"fav_products":fav_results,"User_Subscription" : subscription})
 
 def get_product_details(request, product_id):
     product = get_object_or_404(Product, id=product_id)

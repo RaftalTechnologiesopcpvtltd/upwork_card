@@ -25,6 +25,8 @@ import undetected_chromedriver as uc
 from selenium_stealth import stealth
 from fake_useragent import UserAgent
 
+
+
 # Add the project root directory to sys.path
 sys.path.append("d:/FAIZ/office work/dev project/MarketPlace")
 
@@ -374,8 +376,14 @@ def offerUp_scrapper(driver):
         create_product(product_data)
         save_to_csv(product_data, filename=r"landingpage/data/OfferUp_data.csv")
 
+# ========================== Facebook Scraper ==========================
 def facebook_scrapper(driver):
     #all fb code will be added
+    try:
+        fb_login(driver)
+    except:
+        pass
+    
     prod_links = get_face_prod_links(driver)
     for links in prod_links:
         driver.get(links)
@@ -436,7 +444,9 @@ def run_fb_scraper(scraper_func, instance_id):
         driver_path = shutil.copy(CHROMEDRIVER_PATH, driver_folder)
 
         # Use the local Chrome profile directory in your PWD
-        profile_path = os.path.join(os.getcwd(), "Scrappers", "profile", "john")
+        # Get the script's directory
+        SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+        profile_path = os.path.join(SCRIPT_DIR, "profile", "john")
 
 
         # Set up Chrome options
@@ -447,7 +457,7 @@ def run_fb_scraper(scraper_func, instance_id):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-blink-features=AutomationControlled")
-        # options.add_argument("--headless=new")  # New headless mode
+        options.add_argument("--headless=new")  # New headless mode
         options.add_argument("--window-size=1920,1080")
         options.add_argument("--start-maximized")
 
@@ -493,7 +503,7 @@ def run_scraper(scraper_func, instance_id):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-blink-features=AutomationControlled")
-        # options.add_argument("--headless=new")  # New headless mode
+        options.add_argument("--headless=new")  # New headless mode
         options.add_argument("--window-size=1920,1080")
         options.add_argument("--start-maximized")
 
@@ -538,8 +548,8 @@ def run_scraper(scraper_func, instance_id):
 def run_multiple_scrapers():
     """Runs all scrapers in parallel."""
     # scrapers = [fanatics_scraper, mercari_scraper, craglist_scraper]
-    # scrapers = [five_miles_scrapper,fanatics_scraper,craglist_scraper,offerUp_scrapper,facebook_scrapper]
-    scrapers = [facebook_scrapper]
+    scrapers = [five_miles_scrapper,fanatics_scraper,craglist_scraper,offerUp_scrapper,facebook_scrapper]
+    # scrapers = [facebook_scrapper]
     processes = []
 
     for i, scraper in enumerate(scrapers):

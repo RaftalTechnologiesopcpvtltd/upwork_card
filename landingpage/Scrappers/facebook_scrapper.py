@@ -26,6 +26,12 @@ import undetected_chromedriver as uc
 from selenium_stealth import stealth
 from fake_useragent import UserAgent
 
+
+from logger import *
+
+facebook_scrapper_logger = setup_logger("facebook_scrapper_logger")
+
+
 # def initializeProfile_driver():
 #     # Define the ChromeDriver path (update this with your actual path)
 #     CHROMEDRIVER_PATH = "chromedriver.exe"  # Change this accordingly
@@ -70,6 +76,24 @@ from fake_useragent import UserAgent
 #         fix_hairline=True
 #     )
 #     return driver
+def fb_login(driver):
+    try:
+        driver.get("https://www.facebook.com/marketplace")
+        time.sleep(3)
+        close_btn = driver.find_element(By.CSS_SELECTOR,'div[aria-label="Close"]')
+        close_btn.click()
+        time.sleep(3)
+        email_input = driver.find_element(By.CSS_SELECTOR,'input[name="email"]')
+        email_input.send_keys("johnhendersonsmith989@gmail.com")
+        time.sleep(3)
+        pasword_input = driver.find_element(By.CSS_SELECTOR,'input[name="pass"]')
+        pasword_input.send_keys("Test@1234")
+        time.sleep(3)
+        login_btn = driver.find_element(By.CSS_SELECTOR,'div[aria-label="Log in"]').find_elements(By.TAG_NAME,'span')
+        login_btn[-1].click()
+        time.sleep(3)
+    except:
+        facebook_scrapper_logger.info("Already Login")
 
 def get_face_prod_links(driver):
     driver.get("https://www.facebook.com/marketplace")
@@ -78,14 +102,14 @@ def get_face_prod_links(driver):
     prod_links = []
     for i in range(0,10):
         try:
-            print(i)
+            facebook_scrapper_logger.info(i)
             # Find the element (change XPath accordingly)
             element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div[2]/div/div')))
             prod_cards = element.find_elements(By.CSS_SELECTOR,'a[class="x1i10hfl xjbqb8w x1ejq31n xd10rxx x1sy0etr x17r0tee x972fbf xcfux6l x1qhh985 xm0m39n x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz x1heor9g xkrqix3 x1sur9pj x1s688f x1lku1pv"]')
             # Scroll the element into view
             for href in prod_cards:
                 try:
-                    print("in")
+                    facebook_scrapper_logger.info("in")
                     prod_links.append(href.get_attribute('href'))
                 except:
                     pass
@@ -94,7 +118,7 @@ def get_face_prod_links(driver):
             driver.implicitly_wait(1)
 
         except (NoSuchElementException, TimeoutException):
-            print("No more elements found or scrolling stopped.")
+            facebook_scrapper_logger.info("No more elements found or scrolling stopped.")
             break  # Exit loop when no more elements are found
     return prod_links
 
@@ -125,7 +149,7 @@ def save_to_csv(data, filename=r"facebook_data.csv"):
 
         writer.writerow(data)
 
-    print(f"Data saved to {filename}")
+    facebook_scrapper_logger.info(f"Data saved to {filename}")
 
 def get_face_prod(driver,prod_links):
     for links in prod_links:
@@ -156,7 +180,7 @@ def get_face_prod(driver,prod_links):
         except:
             Status = "-"
         images = filtered_images
-        # Print the filtered image URLs
+        # facebook_scrapper_logger.info the filtered image URLs
         prod_data = normalize_data({
             "Website Name": "Facebook",
             "Website URL": "https://www.facebook.com/marketplace",

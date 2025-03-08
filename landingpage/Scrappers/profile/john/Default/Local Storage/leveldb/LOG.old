@@ -1,3 +1,9 @@
-2025/03/06-16:22:01.278 55f0 Reusing MANIFEST D:\FAIZ\office work\dev project\profile\john\Default\Local Storage\leveldb/MANIFEST-000001
-2025/03/06-16:22:01.291 55f0 Recovering log #57
-2025/03/06-16:22:01.299 55f0 Reusing old log D:\FAIZ\office work\dev project\profile\john\Default\Local Storage\leveldb/000057.log 
+2025/03/07-10:04:14.968 3dec Reusing MANIFEST d:\FAIZ\office work\dev project\MarketPlace\landingpage\Scrappers\profile\john\Default\Local Storage\leveldb/MANIFEST-000001
+2025/03/07-10:04:14.983 3dec Recovering log #3
+2025/03/07-10:04:14.994 3dec Reusing old log d:\FAIZ\office work\dev project\MarketPlace\landingpage\Scrappers\profile\john\Default\Local Storage\leveldb/000003.log 
+2025/03/07-10:06:16.497 25ac Level-0 table #5: started
+2025/03/07-10:06:16.510 25ac Level-0 table #5: 15958 bytes OK
+2025/03/07-10:06:16.513 25ac Delete type=0 #3
+2025/03/07-10:09:16.496 25ac Level-0 table #7: started
+2025/03/07-10:09:16.509 25ac Level-0 table #7: 7803 bytes OK
+2025/03/07-10:09:16.512 25ac Delete type=0 #4
