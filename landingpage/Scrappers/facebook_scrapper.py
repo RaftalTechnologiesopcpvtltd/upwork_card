@@ -97,7 +97,7 @@ def fb_login(driver):
 
 def get_face_prod_links(driver):
     driver.get("https://www.facebook.com/marketplace")
-    search_url = driver.current_url+"/search/?query=sports%20cards"
+    search_url = driver.current_url+"/search/?query=treck%20bike"
     driver.get(search_url)
     prod_links = []
     for i in range(0,10):

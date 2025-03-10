@@ -1,23 +1,6 @@
-2025/03/07-10:46:22.130 4d70 Reusing MANIFEST d:\FAIZ\office work\dev project\MarketPlace\landingpage\Scrappers\profile\john\Default\Local Storage\leveldb/MANIFEST-000001
-2025/03/07-10:46:22.155 4d70 Recovering log #6
-2025/03/07-10:46:22.158 4d70 Level-0 table #9: started
-2025/03/07-10:46:22.185 4d70 Level-0 table #9: 9552 bytes OK
-2025/03/07-10:46:22.213 4d70 Delete type=0 #6
-2025/03/07-10:52:29.370 5bc4 Level-0 table #12: started
-2025/03/07-10:52:29.379 5bc4 Level-0 table #12: 7628 bytes OK
-2025/03/07-10:52:29.383 5bc4 Delete type=0 #10
-2025/03/07-10:58:29.377 5bc4 Level-0 table #14: started
-2025/03/07-10:58:29.385 5bc4 Level-0 table #14: 8840 bytes OK
-2025/03/07-10:58:29.388 5bc4 Delete type=0 #11
-2025/03/07-11:02:29.379 5bc4 Level-0 table #16: started
-2025/03/07-11:02:29.386 5bc4 Level-0 table #16: 14534 bytes OK
-2025/03/07-11:02:29.388 5bc4 Delete type=0 #13
-2025/03/07-11:02:29.389 5bc4 Compacting 4@0 + 1@1 files
-2025/03/07-11:02:29.397 5bc4 Generated table #17@0: 2171 keys, 34720 bytes
-2025/03/07-11:02:29.398 5bc4 Compacted 4@0 + 1@1 files => 34720 bytes
-2025/03/07-11:02:29.398 5bc4 compacted to: files[ 0 1 1 0 0 0 0 ]
-2025/03/07-11:02:29.399 5bc4 Delete type=2 #7
-2025/03/07-11:02:29.400 5bc4 Delete type=2 #9
-2025/03/07-11:02:29.400 5bc4 Delete type=2 #12
-2025/03/07-11:02:29.400 5bc4 Delete type=2 #14
-2025/03/07-11:02:29.400 5bc4 Delete type=2 #16
+2025/03/09-02:04:20.315 6d40 Reusing MANIFEST d:\FAIZ\office work\dev project\MarketPlace\landingpage\Scrappers\profile\john\Default\Local Storage\leveldb/MANIFEST-000001
+2025/03/09-02:04:20.348 6d40 Recovering log #15
+2025/03/09-02:04:20.371 6d40 Reusing old log d:\FAIZ\office work\dev project\MarketPlace\landingpage\Scrappers\profile\john\Default\Local Storage\leveldb/000015.log 
+2025/03/09-02:06:24.422 6d40 Level-0 table #20: started
+2025/03/09-02:06:24.435 6d40 Level-0 table #20: 8976 bytes OK
+2025/03/09-02:06:24.439 6d40 Delete type=0 #15
