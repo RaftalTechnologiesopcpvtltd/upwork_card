@@ -548,8 +548,8 @@ def run_scraper(scraper_func, instance_id):
 def run_multiple_scrapers():
     """Runs all scrapers in parallel."""
     # scrapers = [fanatics_scraper, mercari_scraper, craglist_scraper]
-    scrapers = [five_miles_scrapper,fanatics_scraper,craglist_scraper,offerUp_scrapper,facebook_scrapper]
-    # scrapers = [facebook_scrapper]
+    # scrapers = [five_miles_scrapper,fanatics_scraper,craglist_scraper,offerUp_scrapper,facebook_scrapper]
+    scrapers = [facebook_scrapper]
     processes = []
 
     for i, scraper in enumerate(scrapers):
