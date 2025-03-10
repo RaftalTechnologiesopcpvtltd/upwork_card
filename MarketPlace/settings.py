@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+import stripe
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +26,10 @@ SECRET_KEY = 'django-insecure-r94vjuxyy*@!kx^pk_djkxy0mt$9)t$q=q6u&mk=td2zaptknh
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ["buyredge.com","www.buyredge.com"]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 AUTH_USER_MODEL = 'landingpage.CustomUser'
 
@@ -124,6 +127,9 @@ USE_I18N = True
 USE_TZ = True
 
 
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -150,3 +156,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 RAZORPAY_KEY_ID = "rzp_test_JMGoGO18bn9BfG"
 RAZORPAY_KEY_SECRET = "P39iyeaMhrpPWzzaIoOjkkSQ"
+
+
+# Stripe Ids
+STRIPE_PUBLIC_KEY = "pk_test_51QnDNFKyDQNgXXcfuWGjVkv8K8NHd96dOzmt3pvV3KEI1IE8XEL3innfTo4ylkqQ6yyTKGWBQhmDODaUPg9gSMuo00tgqhYzCN"
+STRIPE_SECRET_KEY = "sk_test_51QnDNFKyDQNgXXcfRG3TL2YAERvkqwisMZxdq2w6GIvznfjhA79S5wvuFMbJgCjcpn4D4HFcDpSfnF9l7JcBLGe100HRV7emeI"
+# settings.py
+STRIPE_WEBHOOK_SECRET = "whsec_401bcbd384e584b739f9433b032cbcb746eb7087256b05ac80c082c22282b16b"
+
+stripe.api_key = STRIPE_SECRET_KEY

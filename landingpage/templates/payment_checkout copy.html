@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    #navbarTwo {
+        display: none !important;
+    }
+
+    .navbar-btn {
+        margin-left: auto;
+    }
+
+    :root {
+        --primary-purple: #001531;
+        --success-green: #00c389;
+        --continue-purple: #001531;
+        --light-purple: #f8f7ff;
+        --text-gray: #666;
+        --strike-gray: #949494;
+    }
+
+    body {
+        background-color: var(--light-purple);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    .main-title {
+        color: var(--primary-purple);
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+    .card {
+        border-radius: 16px;
+        border: 1px solid #eee;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .product-title {
+        color: var(--primary-purple);
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .period-label {
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.75rem;
+        border: 1px solid #e0e0e0;
+    }
+
+    .save-button {
+        background-color: var(--success-green);
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        color: white;
+        font-weight: 500;
+    }
+
+    .price-display {
+        color: var(--primary-purple);
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .price-original {
+        color: var(--strike-gray);
+        text-decoration: line-through;
+        font-size: 0.9rem;
+    }
+
+    .info-banner {
+        background-color: #e8f8f5;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .subtotal-card {
+        background: white;
+        padding: 1.5rem;
+    }
+
+    .subtotal-text {
+        color: var(--primary-purple);
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .subtotal-price {
+        color: var(--primary-purple);
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .discount-text {
+        color: var(--primary-purple);
+        font-size: 1rem;
+    }
+
+    .discount-amount {
+        color: var(--success-green);
+        font-weight: 600;
+    }
+
+    .coupon-link {
+        color: var(--continue-purple);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .razorpay-payment-button {
+        background-color: var(--continue-purple);
+        border: none;
+        border-radius: 8px;
+        padding: 1rem;
+        color: white;
+        font-weight: 500;
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .razorpay-payment-button:hover {
+        background-color: #fafafa;
+        color: #001531;
+        border: 1px solid #001531;
+    }
+
+    .guarantee-text {
+        color: var(--primary-purple);
+        font-size: 0.9rem;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .renewal-text {
+        color: var(--text-gray);
+        font-size: 16px;
+        margin-top: 0.5rem;
+    }
+</style>
+<div class="d-flex align-items-center justify-content-end" style="height: 8vh; background: #001531;">
+    <!-- <div class="container banner-text-container" style="color: #dee7e9;">
+        <div style="font-size: 36px">
+            <b>Payment checkout</b>
+        </div>
+        <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>Payment checkout</b></span></p>
+    </div> -->
+</div>
+<section style="height: 80vh; display: flex; justify-content: center; align-items: center;">
+    <div class="container py-5">
+        <h1 class="main-title">Your cart</h1>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card p-4">
+                    <h2 class="product-title">Subscription Plan : {{ plan }}</h2>
+                    <div class="renewal-text">
+                        {{ plan.price_feature1 }} <br>
+                        {{ plan.price_feature2 }} <br>
+                        {{ plan.price_feature3 }} <br>
+                        {{ plan.price_feature4 }} <br>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between mt-4">
+                        <button class="save-button">₹{{ amount|floatformat:0 }}</button>
+                        <div class="text-right">
+                            <div class="price-display">₹{{ amount|floatformat:0 }}/month</div>
+                        </div>
+                    </div>
+
+                    <div class="info-banner">
+                        <div class="d-flex align-items-center">
+                            <span>Your Subscription's duration is {{ plan.duration_in_days }} days</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-info-circle ml-2" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                <path
+                                    d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+
+                    <div class="subtotal-card">
+                        <form method="POST" action="{% url 'paymenthandler' %}">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="subtotal-text">Subtotal</span>
+                                <div class="text-right">
+                                    <!-- <div class="price-original mb-1">₹31,152.00</div> -->
+                                    <div class="subtotal-price">₹{{ amount|floatformat:0 }}</div>
+                                </div>
+                            </div>
+                            <small class="text-muted">Subtotal does not include applicable taxes</small>
+                            <hr>
+                            <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="{{ razorpay_key_id }}"
+                                data-amount="{{ amount|floatformat:0 }}00" data-currency="INR"
+                                data-order_id="{{ razorpay_order_id }}" data-buttontext="Pay Now"
+                                data-name="MarketScout" data-description="Subscription Plan"
+                                data-prefill.name="{{ request.user.username }}"
+                                data-prefill.email="{{ request.user.email }}">
+                                </script>
+
+
+
+                            <!-- <a href="#" class="coupon-link">Have a coupon code?</a> -->
+                        </form>
+                    </div>
+                </div>
+
+                <div class="guarantee-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-shield-check mr-2" viewBox="0 0 16 16">
+                        <path
+                            d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z" />
+                        <path
+                            d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                    </svg>
+                    30-day money-back guarantee
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -7,10 +7,10 @@
         --primary-color: #001531;
         --accent-color: #001531;
     }
-
+/* 
     #navbarTwo {
         display: none !important;
-    }
+    } */
 
     .navbar-btn {
         margin-left: auto;
@@ -147,7 +147,7 @@
         font-weight: 600;
     }
 </style>
-<div class="d-flex align-items-center justify-content-end" style="height: 80px; background: #001531;">
+<div class="d-flex align-items-center justify-content-end nav_section_block">
     <!-- <div class="container banner-text-container" style="color: #dee7e9;">
         <div style="font-size: 36px">
             <b>Payment checkout</b>
@@ -160,6 +160,7 @@
         <div class="row">
             <div class="col-lg-12 mb-5">
                 <div class="single-blog-item">
+                    <!-- <video style="width: 100%; max-width: 400px; height: auto;" src="{{ post.video.url }}" controls></video> -->
                     {% if post.image %}
                     <img src="{{ post.image.url }}" alt="" class="img-fluid rounded">
                     {% endif %}
@@ -193,17 +194,17 @@
                             tenetur incidunt quisquam libero dolores laudantium. Nesciunt quis itaque quidem,
                             voluptatem autem eos animi laborum iusto expedita sapiente.</p> -->
 
-                        <div class="tags-section d-flex justify-content-between align-items-center">
-                            <div>
+                        <div class="tags-section d-flex justify-content-between align-items-center row">
+                            <div class="col-lg-4 mb-2">
                                 <span class="tag-label">Tags: </span>
                                 {% for tag in post.tags.all %}
                                 <a class="tag" href="{% url 'blog_listings' %}?tag={{ tag.name }}">{{ tag.name }}</a>
                                 {% endfor %}
                             </div>
-                            <div>
+                            <div class="col-lg-4 mb-2">
                                 <span class="tag-label">Author : {{ post.author.first_name }} {{ post.author.last_name }}</span>
                             </div>
-                            <div class="share-buttons">
+                            <div class="col-lg-4 mb-2 share-buttons">
                                 <span class="tag-label">Share: </span>
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>
                                 <a href="#"><i class="fab fa-twitter"></i></a>
@@ -216,7 +217,7 @@
             </div>
 
 
-            <div class="col-lg-12 mb-5">
+            <!-- <div class="col-lg-12 mb-5">
                 <div class="posts-nav bg-white p-5 d-lg-flex d-md-flex justify-content-between ">
                     <a class="prev-post post-prev align-items-center" href="#">
                         <div class="nav-label posts-prev-item mb-4 mb-lg-0">
@@ -237,7 +238,7 @@
                         </div>
                     </a>
                 </div>
-            </div>
+            </div> -->
 
             <div class="col-lg-12 mb-5">
                 <div class="bg-white comments-section border-0 p-5">

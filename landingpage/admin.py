@@ -9,28 +9,28 @@ from .models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('email', 'username', 'first_name', 'last_name','gender','address','city','country','zip_code')
+        fields = ('email', 'username', 'first_name', 'last_name','gender','phone_number', 'country_code','address','city','country','zip_code')
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'first_name', 'last_name','gender','address','city','country','zip_code')
+        fields = ('email', 'username', 'first_name', 'last_name','gender','phone_number', 'country_code','address','city','country','zip_code')
 
 class CustomUserAdmin(BaseUserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ['email', 'username', 'first_name', 'last_name','gender','is_staff','address','city','country','zip_code']
+    list_display = ['email', 'username', 'first_name', 'last_name','gender','phone_number', 'country_code','is_staff','address','city','country','zip_code']
     fieldsets = (
         (None, {'fields': ('email', 'username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'gender','address','city','country','zip_code')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'gender','phone_number', 'country_code','address','city','country','zip_code')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'last_name', 'category', 'gender','password1', 'password2', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions','address','city','country','zip_code'),
+            'fields': ('email', 'username', 'first_name', 'last_name', 'category', 'gender','phone_number', 'country_code','password1', 'password2', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions','address','city','country','zip_code'),
         }),
     )
     search_fields = ('email', 'username', 'first_name', 'last_name', 'category')
@@ -64,3 +64,26 @@ class BlogPostAdmin(admin.ModelAdmin):
 
 admin.site.register(BlogPost, BlogPostAdmin)
 
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ('question', 'created_at')
+    search_fields = ('question', 'answer')
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['website_name', 'product_title','selling_type', 'product_price', 'brand', 'category', 'updated']
+    search_fields = ['selling_type','website_name', 'product_title', 'brand', 'category']
+    list_filter = ['is_closed', 'certified_seller', 'status']
+    ordering = ['updated']
+
+admin.site.register(Product, ProductAdmin)
+class MyListingAdmin(admin.ModelAdmin):
+    list_display = ['user','product_title']
+    search_fields = ['product_title']
+
+admin.site.register(MyListing, MyListingAdmin)
+
+
+class FavouritesAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at')
+
+admin.site.register(Favourites, FavouritesAdmin)

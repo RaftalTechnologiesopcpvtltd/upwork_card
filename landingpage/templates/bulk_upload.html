@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-end nav_section_block">
+    <!-- <div class="container banner-text-container" style="color: #dee7e9;">
+        <div style="font-size: 36px">
+            <b>My Subscription</b>
+        </div>
+        <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
+    </div> -->
+</div>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-10">
+            <div class="section-title text-center pb-25">
+                <h3 class="title">Upload !!</h3>
+                <p class="text">Upload your product title CSV file, which should contain only one column: <b>'Product
+                        Title'</b> !!</p>
+            </div> <!-- section title -->
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center" style="background-color: #001531; ">
+                    <h4 style="color: #fff;">Upload Products Titles</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'download_csv_template' %}" class="my-3 btn-dark-custom w-100 btn">
+                        Download CSV Template
+                    </a>
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="csvFile" class="form-label">Upload CSV File</label>
+                            <input type="file" class="form-control" id="csvFile" name="csv_file" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark-custom w-100">Upload</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Display Messages -->
+            {% if messages %}
+            <div class="mt-3">
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}"
+                    role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

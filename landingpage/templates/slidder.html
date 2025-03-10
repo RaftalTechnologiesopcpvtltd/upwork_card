@@ -9,7 +9,7 @@
 
         <div class="carousel-inner">
             {% for slidder in slidders %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}"
+            <div class="carousel-item maincarousel-item {% if forloop.first %}active{% endif %}"
                 style="background-image: url('{{ slidder.image.url }}'); background-size: cover; height: 100vh; background-repeat: no-repeat;">
                 <div class="container w-100">
                     <div class="row">

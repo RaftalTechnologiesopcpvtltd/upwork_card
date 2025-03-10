@@ -14,15 +14,19 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name', 'gender','password1', 'password2', 'username')
+        fields = ('email', 'first_name', 'last_name', 'gender','phone_number', 'country_code','password1', 'password2', 'username')
         widgets = {
              'gender': forms.Select(attrs={'class': 'form-control','placeholder':'Select your Gender'}),
+             'country_code': forms.Select(attrs={'class': 'form-control','placeholder':'Select your Country'}),
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
          # Add a placeholder option to gender field
         self.fields['gender'].choices = [('', 'Select your Gender')] + list(self.fields['gender'].choices)
+
+        # Add a placeholder option to country_code field
+        self.fields['country_code'].choices = [('', '+00')] + list(self.fields['country_code'].choices)
         
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
@@ -102,3 +106,6 @@ class BlogPostForm(forms.ModelForm):
         help_texts = {
             'tags': 'Example: technology, coding, web development'
         }
+
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField()

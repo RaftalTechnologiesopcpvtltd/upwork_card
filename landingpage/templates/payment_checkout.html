@@ -3,9 +3,6 @@
 
 {% block content %}
 <style>
-    #navbarTwo {
-        display: none !important;
-    }
 
     .navbar-btn {
         margin-left: auto;
@@ -149,7 +146,7 @@
         margin-top: 0.5rem;
     }
 </style>
-<div class="d-flex align-items-center justify-content-end" style="height: 8vh; background: #001531;">
+<div class="d-flex align-items-center justify-content-end nav_section_block">
     <!-- <div class="container banner-text-container" style="color: #dee7e9;">
         <div style="font-size: 36px">
             <b>Payment checkout</b>
@@ -157,12 +154,12 @@
         <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>Payment checkout</b></span></p>
     </div> -->
 </div>
-<section style="height: 80vh; display: flex; justify-content: center; align-items: center;">
-    <div class="container py-5">
+<section class="my-4" style="height: 80vh; display: flex; justify-content: center; align-items: center;">
+    <div class="container py-5 my-2">
         <h1 class="main-title">Your cart</h1>
 
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-8 mb-3">
                 <div class="card p-4">
                     <h2 class="product-title">Subscription Plan : {{ plan }}</h2>
                     <div class="renewal-text">
@@ -193,11 +190,11 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-4 mb-3">
                 <div class="card">
 
                     <div class="subtotal-card">
-                        <form method="POST" action="{% url 'paymenthandler' %}">
+                        <form method="POST">
                             {% csrf_token %}
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="subtotal-text">Subtotal</span>
@@ -208,17 +205,19 @@
                             </div>
                             <small class="text-muted">Subtotal does not include applicable taxes</small>
                             <hr>
-                            <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="{{ razorpay_key_id }}"
+                            <!-- <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="{{ razorpay_key_id }}"
                                 data-amount="{{ amount|floatformat:0 }}00" data-currency="INR"
                                 data-order_id="{{ razorpay_order_id }}" data-buttontext="Pay Now"
                                 data-name="MarketScout" data-description="Subscription Plan"
                                 data-prefill.name="{{ request.user.username }}"
                                 data-prefill.email="{{ request.user.email }}">
-                                </script>
+                                </script> -->
 
 
 
                             <!-- <a href="#" class="coupon-link">Have a coupon code?</a> -->
+                            <input type="hidden" name="price_id" value="{{ plan }}">
+                            <button class="w-100 btn btn-dark-custom" type="submit">PAY</button>
                         </form>
                     </div>
                 </div>
