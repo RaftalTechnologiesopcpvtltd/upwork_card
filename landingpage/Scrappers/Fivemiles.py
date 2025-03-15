@@ -43,40 +43,40 @@ def save_to_csv(data, filename=r"data/5miles_data.csv"):
 
     fivemiles_logger.info(f"Data saved to {filename}")
 
-# def initialize_driver():
-#     """Each browser instance runs its own unique scraping task."""
-#     temp_dir = tempfile.mkdtemp(prefix=f"chrome_instance_{2}_")
+def initialize_driver():
+    """Each browser instance runs its own unique scraping task."""
+    temp_dir = tempfile.mkdtemp(prefix=f"chrome_instance_{2}_")
 
-#     driver_folder = os.path.join(temp_dir, "chromedriver")
-#     os.makedirs(driver_folder, exist_ok=True)
-#     driver_path = shutil.copy(CHROMEDRIVER_PATH, driver_folder)
+    driver_folder = os.path.join(temp_dir, "chromedriver")
+    os.makedirs(driver_folder, exist_ok=True)
+    driver_path = shutil.copy(CHROMEDRIVER_PATH, driver_folder)
 
-#     options = uc.ChromeOptions()
-#     options.add_argument(f"--user-data-dir={temp_dir}")  # Unique profile
-#     options.add_argument("--no-sandbox")
-#     options.add_argument("--disable-dev-shm-usage")
-#     options.add_argument("--disable-blink-features=AutomationControlled")
-#     options.add_argument("--headless=new")  # New headless mode
-#     options.add_argument("--window-size=1920,1080")
-#     options.add_argument("--start-maximized")
+    options = uc.ChromeOptions()
+    options.add_argument(f"--user-data-dir={temp_dir}")  # Unique profile
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--headless=new")  # New headless mode
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--start-maximized")
 
-#     # Generate a random user-agent
-#     ua = UserAgent()
-#     options.add_argument(f"user-agent={ua.random}")
-#     # Initialize undetected_chromedriver with the copied binary
+    # Generate a random user-agent
+    ua = UserAgent()
+    options.add_argument(f"user-agent={ua.random}")
+    # Initialize undetected_chromedriver with the copied binary
 
-#     driver = uc.Chrome(driver_executable_path=driver_path, options=options)
+    driver = uc.Chrome(driver_executable_path=driver_path, options=options)
 
-#     # Apply selenium stealth to avoid detection
-#     stealth(driver,
-#         languages=["en-US", "en"],
-#         vendor="Google Inc.",
-#         platform="Win32",
-#         webgl_vendor="Intel Inc.",
-#         renderer="Intel Iris OpenGL Engine",
-#         fix_hairline=True
-#     )
-#     return driver
+    # Apply selenium stealth to avoid detection
+    stealth(driver,
+        languages=["en-US", "en"],
+        vendor="Google Inc.",
+        platform="Win32",
+        webgl_vendor="Intel Inc.",
+        renderer="Intel Iris OpenGL Engine",
+        fix_hairline=True
+    )
+    return driver
 
 def get_all_city_links(driver):
     driver.get("https://www.5miles.com/all-cities")
@@ -138,7 +138,7 @@ def get_data(driver,All_cities_links):
             fivemiles_logger.info(f"Error in : {link} and Error is : {e}")
             # fivemiles_logger.info("===============================================")
 
-# if __name__ == "__main__":
-#     driver = initialize_driver()
-#     All_cities_links = get_all_city_links(driver)
-#     get_data(driver,All_cities_links)
+if __name__ == "__main__":
+    driver = initialize_driver()
+    All_cities_links = get_all_city_links(driver)
+    get_data(driver,All_cities_links)
