@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>AWS Automation</title>
+</head>
+
+<body>
+    <h1>AWS Server Automation</h1>
+
+    <button id="run-btn">Run AWS Scripts</button>
+
+    <pre id="output"></pre>
+
+    <script>
+        document.getElementById('run-btn').addEventListener('click', () => {
+            fetch('/run-scripts/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+
+</html>

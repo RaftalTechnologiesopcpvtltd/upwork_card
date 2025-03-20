@@ -1054,3 +1054,85 @@ def my_products(request):
             })
 
     return render(request, "myproducts.html", {"User_Subscription": subscription, "product_results": product_results})
+import boto3
+import paramiko
+import time
+import os
+from django.http import JsonResponse
+from django.shortcuts import render
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def server_page(request):
+    return render(request, 'server_page.html')
+
+def run_scripts_on_aws(request):
+    if request.method == 'POST':
+        aws_access_key = os.getenv('AWS_ACCESS_KEY')
+        aws_secret_key = os.getenv('AWS_SECRET_KEY')
+        region = os.getenv('AWS_REGION')
+        ami_id = os.getenv('AMI_ID')
+        instance_type = os.getenv('INSTANCE_TYPE')
+        key_name = os.getenv('KEY_NAME')
+        security_group = os.getenv('SECURITY_GROUP')
+        private_key_path = os.getenv('PRIVATE_KEY_PATH')
+
+        try:
+            ec2 = boto3.client(
+                'ec2',
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region
+            )
+
+            # Start EC2 instance
+            response = ec2.run_instances(
+                ImageId=ami_id,
+                InstanceType=instance_type,
+                MinCount=1,
+                MaxCount=1,
+                KeyName=key_name,
+                SecurityGroups=[security_group]
+            )
+
+            instance_id = response['Instances'][0]['InstanceId']
+
+            ec2_resource = boto3.resource(
+                'ec2',
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region
+            )
+
+            instance = ec2_resource.Instance(instance_id)
+            instance.wait_until_running()
+            instance.load()
+
+            public_ip = instance.public_ip_address
+
+            # SSH connection to the instance
+            key = paramiko.RSAKey.from_private_key_file(private_key_path)
+            client = paramiko.SSHClient()
+            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            client.connect(hostname=public_ip, username='ec2-user', pkey=key)
+
+            # Run command on the instance
+            stdin, stdout, stderr = client.exec_command('echo "Hello from AWS EC2!"')
+            output = stdout.read().decode('utf-8')
+
+            client.close()
+
+            # Stop the instance after use
+            ec2.stop_instances(InstanceIds=[instance_id])
+
+            return JsonResponse({
+                'status': 'Success',
+                'instance_id': instance_id,
+                'output': output
+            })
+
+        except Exception as e:
+            return JsonResponse({'status': 'Failed', 'error': str(e)}, status=500)
+
+    return JsonResponse({'status': 'Invalid request'}, status=400)
