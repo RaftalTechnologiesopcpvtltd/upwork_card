@@ -61,7 +61,8 @@ common_keys = [
 "Buying Options",
 "Minimum Price to Bid",
 "Minimum Price Currency",
-"Unique Bidder Count"
+"Unique Bidder Count",
+"Owner Location"
 ]
 
 # Ensure all dictionaries have the same structure with None for missing keys

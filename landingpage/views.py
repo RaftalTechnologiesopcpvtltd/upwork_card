@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import *
 import razorpay
+import uuid
+
 import logging
 from django.conf import settings
 from django.http import HttpResponseBadRequest
@@ -236,52 +238,129 @@ def payment_success(request):
 def payment_failed(request):
     return render(request, "paymentfail.html")
 
+import requests
+import json
 
+def prod_API(query, scrapers):
+    req_url = "http://localhost:8000/api/scrape/"
+    
+    headers = {
+        "Accept": "*/*",
+        "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+        "Content-Type": "application/json"
+    }
 
+    payload = json.dumps({
+        "query": query,
+        "scrapers": scrapers
+    })
 
+    try:
+        response = requests.post(req_url, headers=headers, data=payload)
+        response.raise_for_status()  # Raise an error for HTTP errors (4xx, 5xx)
+        return response.json()  # Return JSON if successful
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return None  # Return None if there's an error
 
 def product_search(request):
+    
     query = request.GET.get("query", "").strip()
-    selling_type = request.GET.get("selling_type", "").strip()
+    # selling_type = request.GET.get("selling_type", "").strip()
     marketplace = request.GET.get("marketplace", "").strip()
-    today = now().date()
-
-    # Start with all products
-    products = Product.objects.all()
-
-    # Apply filters
-    if query:
-        products = products.filter(product_title__icontains=query)
-    if selling_type:
-        products = products.filter(selling_type__icontains=selling_type)
-    if marketplace:
-        products = products.filter(website_name=marketplace)
-
+    scrapers = [marketplace]
+    print(query)
+    resp = prod_API(query, scrapers)
     results = []
-    for p in products:
-        product_images_str = p.product_images
+    today = datetime.now().date()
+    if 'all' in marketplace:
+        ebay = resp['data']['ebay']
+        fivemiles = resp['data']['fivemiles']
+        fanatic = resp['data']['fanatic']        
+        all_prod_data = ebay + fivemiles + fanatic
+    elif 'fivemiles' in marketplace:
+        fivemiles = resp['data']['fivemiles']
+        all_prod_data = fivemiles
+    elif 'fanatic' in marketplace:
+        fivemiles = resp['data']['fanatic']
+        all_prod_data = fivemiles
+    elif 'ebay' in marketplace:
+        fivemiles = resp['data']['ebay']
+        all_prod_data = fivemiles
 
-        if product_images_str:
-            try:
-                product_images_list = ast.literal_eval(product_images_str)  # Convert string to list
-            except (SyntaxError, ValueError):
-                product_images_list = []
-        else:
-            product_images_list = []
+    for p in all_prod_data:
+        product_images_list = p.get("Product Images")
+        # print(product_images_list)
 
         results.append({
-            "id": p.id,
-            "title": p.product_title,
-            "link": p.product_link,
-            "selling_type": p.selling_type,
-            "website_name": p.website_name,
-            "price": p.product_price,
-            "current_bid_price": str(p.current_bid_price) if p.current_bid_price else "N/A",
-            "current_bid_currency": p.current_bid_currency,
-            "current_bid_count": p.current_bid_count,
-            "image": product_images_list[0] if product_images_list else "",  # Handle missing images
-            "date": today,
+            "id": str(uuid.uuid4()),  # Manually generated unique ID
+            "website_name": p.get("Website Name"),
+            "website_url": p.get("Website URL"),
+            "product_link": p.get("Product Link"),
+            "product_images": product_images_list if product_images_list else [],  # Handle missing images
+            "selling_type": p.get("Selling Type"),
+            "product_title": p.get("Product Title"),
+            "product_price_currency": p.get("Product Price Currency"),
+            "product_price": p.get("Product Price"),
+            "current_bid_price": str(p.get("Current Bid Price")) if p.get("Current Bid Price") else "N/A",
+            "current_bid_currency": p.get("Current Bid Currency"),
+            "current_bid_count": p.get("Current Bid Count"),
+            "description": p.get("Description"),
+            "condition": p.get("Condition"),
+            "condition_id": p.get("Condition Id"),
+            "condition_descriptors": p.get("Condition Descriptors"),
+            "condition_values": p.get("Condition Values"),
+            "condition_additional_info": p.get("Condition Additional Info"),
+            "product_availability_status": p.get("Product Availibility status"),
+            "product_availability_quantity": p.get("Product Availibility Quantity"),
+            "product_sold_quantity": p.get("Product Sold Quantity"),
+            "product_remaining_quantity": p.get("Product Remaining Quantity"),
+            "shipping_cost": p.get("Shipping Cost"),
+            "shipping_currency": p.get("Shipping Currency"),
+            "shipping_service_code": p.get("Shipping Service Code"),
+            "shipping_carrier_code": p.get("Shipping Carrier Code"),
+            "shipping_type": p.get("Shipping Type"),
+            "additional_shipping_cost_per_unit": p.get("Additional Shipping Cost Per Unit"),
+            "additional_shipping_cost_currency": p.get("Additional Shipping Cost Currency"),
+            "shipping_cost_type": p.get("Shipping Cost Type"),
+            "estimated_arrival": p.get("Estimated Arrival"),
+            "brand": p.get("Brand"),
+            "category": p.get("Category"),
+            "updated": p.get("Updated"),
+            "auction_id": p.get("Auction Id"),
+            "bid_count": p.get("Bid Count"),
+            "certified_seller": p.get("Certified Seller"),
+            "favorited_count": p.get("Favorited Count"),
+            "highest_bidder": p.get("Highest Bidder"),
+            "listing_id": p.get("Listing Id"),
+            "integer_id": p.get("Integer Id"),
+            "is_owner": p.get("Is Owner"),
+            "listing_type": p.get("Listing Type"),
+            "lot_string": p.get("Lot String"),
+            "slug": p.get("Slug"),
+            "starting_price": p.get("Starting Price"),
+            "starting_price_currency": p.get("Starting Price Currency"),
+            "is_closed": p.get("Is Closed"),
+            "user_bid_status": p.get("User Bid Status"),
+            "user_max_bid": p.get("User Max Bid"),
+            "status": p.get("Status"),
+            "return_terms_returns_accepted": p.get("ReturnTerms returns Accepted"),
+            "return_terms_refund_method": p.get("ReturnTerms refund Method"),
+            "return_terms_return_shipping_cost_payer": p.get("ReturnTerms return Shipping Cost Payer"),
+            "return_terms_return_period_value": p.get("ReturnTerms return Period Value"),
+            "return_terms_return_period_unit": p.get("ReturnTerms return Period Unit"),
+            "payment_methods": p.get("Payment Methods"),
+            "quantity_used_for_estimate": p.get("Quantity Used For Estimate"),
+            "min_estimated_delivery_date": p.get("Min Estimated Delivery Date"),
+            "max_estimated_delivery_date": p.get("Max Estimated Delivery Date"),
+            "buying_options": p.get("Buying Options"),
+            "minimum_price_to_bid": p.get("Minimum Price to Bid"),
+            "minimum_price_currency": p.get("Minimum Price Currency"),
+            "unique_bidder_count": p.get("Unique Bidder Count"),
+            "owner_location": p.get("Owner Location"),
+            "date": today
         })
+
         
 
     return JsonResponse({"products": results})
