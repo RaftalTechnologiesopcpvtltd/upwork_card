@@ -32,50 +32,50 @@ from logger import *
 facebook_scrapper_logger = setup_logger("facebook_scrapper_logger")
 
 
-# def initializeProfile_driver():
-#     # Define the ChromeDriver path (update this with your actual path)
-#     CHROMEDRIVER_PATH = "chromedriver.exe"  # Change this accordingly
+def initializeProfile_driver():
+    # Define the ChromeDriver path (update this with your actual path)
+    CHROMEDRIVER_PATH = r"landingpage\Scrappers\chromedriver.exe"  # Change this accordingly
 
-#     # Create a temporary directory for ChromeDriver
-#     temp_dir = tempfile.mkdtemp(prefix="chrome_instance_")
-#     driver_folder = os.path.join(temp_dir, "chromedriver")
-#     os.makedirs(driver_folder, exist_ok=True)
+    # Create a temporary directory for ChromeDriver
+    temp_dir = tempfile.mkdtemp(prefix="chrome_instance_")
+    driver_folder = os.path.join(temp_dir, "chromedriver")
+    os.makedirs(driver_folder, exist_ok=True)
 
-#     # Copy ChromeDriver to the temp directory
-#     driver_path = shutil.copy(CHROMEDRIVER_PATH, driver_folder)
+    # Copy ChromeDriver to the temp directory
+    driver_path = shutil.copy(CHROMEDRIVER_PATH, driver_folder)
 
-#     # Use the local Chrome profile directory in your PWD
-#     profile_path = os.path.join(os.getcwd(), "profile", "john")
+    # Use the local Chrome profile directory in your PWD
+    profile_path = os.path.join(os.getcwd(), "profile", "john")
 
-#     # Set up Chrome options
-#     options = uc.ChromeOptions()
+    # Set up Chrome options
+    options = uc.ChromeOptions()
 
-#     options.add_argument(f"--user-data-dir={profile_path}")  # Set the user data directory  # Use local profile
-#     # options.add_argument(f"--profile-directory={PROFILE_NAME}")  # Ensure the correct profile is used
-#     options.add_argument("--no-sandbox")
-#     options.add_argument("--disable-dev-shm-usage")
-#     options.add_argument("--disable-blink-features=AutomationControlled")
-#     options.add_argument("--headless=new")  # New headless mode
-#     options.add_argument("--window-size=1920,1080")
-#     options.add_argument("--start-maximized")
+    options.add_argument(f"--user-data-dir={profile_path}")  # Set the user data directory  # Use local profile
+    # options.add_argument(f"--profile-directory={PROFILE_NAME}")  # Ensure the correct profile is used
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    # options.add_argument("--headless=new")  # New headless mode
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--start-maximized")
 
-#     # Generate a random user-agent
-#     ua = UserAgent()
-#     options.add_argument(f"user-agent={ua.random}")
+    # Generate a random user-agent
+    ua = UserAgent()
+    options.add_argument(f"user-agent={ua.random}")
 
-#     # Initialize undetected_chromedriver with copied ChromeDriver
-#     driver = uc.Chrome(driver_executable_path=driver_path, options=options)
+    # Initialize undetected_chromedriver with copied ChromeDriver
+    driver = uc.Chrome(driver_executable_path=driver_path, options=options)
 
-#     # Apply Selenium Stealth
-#     stealth(driver,
-#         languages=["en-US", "en"],
-#         vendor="Google Inc.",
-#         platform="Win32",
-#         webgl_vendor="Intel Inc.",
-#         renderer="Intel Iris OpenGL Engine",
-#         fix_hairline=True
-#     )
-#     return driver
+    # Apply Selenium Stealth
+    stealth(driver,
+        languages=["en-US", "en"],
+        vendor="Google Inc.",
+        platform="Win32",
+        webgl_vendor="Intel Inc.",
+        renderer="Intel Iris OpenGL Engine",
+        fix_hairline=True
+    )
+    return driver
 def fb_login(driver):
     try:
         driver.get("https://www.facebook.com/marketplace")
@@ -152,12 +152,13 @@ def save_to_csv(data, filename=r"facebook_data.csv"):
     facebook_scrapper_logger.info(f"Data saved to {filename}")
 
 def get_face_prod(driver,prod_links):
-    for links in prod_links:
+    for links in prod_links[:1]:
         driver.get(links)
         soup = BeautifulSoup(driver.page_source, "html.parser")
-        title = soup.find("h1").text.strip()
+        title = soup.find_all("h1")
+        title = title[1].text.strip()
+        
         link = links
-
 
         # Find all images where 'alt' contains the product title
         filtered_images = [
@@ -196,7 +197,12 @@ def get_face_prod(driver,prod_links):
         })
         save_to_csv(prod_data, filename=r"facebook_data.csv")
 
-# if __name__ == "__main__":
-#     driver = initializeProfile_driver()
-#     prod_links = get_face_prod_links(driver)
-#     get_face_prod(driver,prod_links)
+if __name__ == "__main__":
+    
+    driver = initializeProfile_driver()
+    try:
+        fb_login(driver)
+    except:
+        pass
+    prod_links = get_face_prod_links(driver)
+    get_face_prod(driver,prod_links)

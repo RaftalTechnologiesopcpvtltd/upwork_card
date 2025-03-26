@@ -273,20 +273,38 @@ def product_search(request):
     resp = prod_API(query, scrapers)
     results = []
     today = datetime.now().date()
-    if 'all' in marketplace:
-        ebay = resp['data']['ebay']
-        fivemiles = resp['data']['fivemiles']
-        fanatic = resp['data']['fanatic']        
-        all_prod_data = ebay + fivemiles + fanatic
-    elif 'fivemiles' in marketplace:
-        fivemiles = resp['data']['fivemiles']
-        all_prod_data = fivemiles
-    elif 'fanatic' in marketplace:
-        fivemiles = resp['data']['fanatic']
-        all_prod_data = fivemiles
-    elif 'ebay' in marketplace:
-        fivemiles = resp['data']['ebay']
-        all_prod_data = fivemiles
+    all_prod_data = []
+
+# Debugging: Check the type of resp['data']
+    data = resp.get('data', {})
+
+    if not isinstance(data, dict):
+        print(f"Error: Expected a dictionary for 'data', but got {type(data)} instead.")
+        print("Full response:", resp)  # Print full response for debugging
+        data = {}  # Ensure 'data' is always a dictionary
+
+    try:
+        if 'all' in marketplace:
+            ebay = data.get('ebay', [])  # Default to empty list if missing
+            fivemiles = data.get('fivemiles', [])
+            fanatic = data.get('fanatic', [])
+            facebook = data.get('facebook', [])
+            craigslist = data.get('craigslist', [])
+            all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist
+        elif 'fivemiles' in marketplace:
+            all_prod_data = data.get('fivemiles', [])
+        elif 'fanatic' in marketplace:
+            all_prod_data = data.get('fanatic', [])
+        elif 'ebay' in marketplace:
+            all_prod_data = data.get('ebay', [])
+        elif 'facebook' in marketplace:
+            all_prod_data = data.get('facebook', [])
+        elif 'craigslist' in marketplace:
+            all_prod_data = data.get('craigslist', [])
+    except Exception as e:
+        print(f"Unexpected error accessing marketplace data: {e}")
+        all_prod_data = []
+
 
     for p in all_prod_data:
         product_images_list = p.get("Product Images")

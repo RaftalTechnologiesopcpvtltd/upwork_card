@@ -28,12 +28,43 @@ import logging
 from bs4 import BeautifulSoup
 from dictionary_normanlizer import *
 from logger import *
-
+import undetected_chromedriver as uc
+from selenium_stealth import stealth
+from fake_useragent import UserAgent
 
 craglist_logger = setup_logger("Craglist_scraper")
 
+def initialize_driver():
+    """Each browser instance runs its own unique scraping task."""
+    
 
-def save_to_csv(data, filename=r"data/craglist.csv"):
+    options = uc.ChromeOptions()
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    # options.add_argument("--headless=new")  # New headless mode
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--start-maximized")
+
+    # Generate a random user-agent
+    ua = UserAgent()
+    options.add_argument(f"user-agent={ua.random}")
+    # Initialize undetected_chromedriver with the copied binary
+
+    driver = uc.Chrome(options=options)
+
+    # Apply selenium stealth to avoid detection
+    stealth(driver,
+        languages=["en-US", "en"],
+        vendor="Google Inc.",
+        platform="Win32",
+        webgl_vendor="Intel Inc.",
+        renderer="Intel Iris OpenGL Engine",
+        fix_hairline=True
+    )
+    return driver
+
+def save_to_csv(data, filename=r"landingpage\data\craglist.csv"):
     """Save product data to a CSV file."""
     file_exists = os.path.exists(filename)
 
@@ -108,8 +139,8 @@ def get_prod(driver, all_location_links):
 
                     craglist_logger.info(f"======== {i}")
                     # print(product)
-                    create_product(product)
-                    save_to_csv(product, filename=r"data/craglist.csv")
+                    # create_product(product)
+                    save_to_csv(product, filename=r"landingpage\data\craglist.csv")
                     print("===============================================")
                     i += 1
                 except Exception as e:
@@ -118,10 +149,10 @@ def get_prod(driver, all_location_links):
         except Exception as e:
             craglist_logger.info(f"Error searching products: {e}")
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 #     craglist_logger.info("==============Start==================")
 
-#     driver = initialize_driver()
-#     all_location_links = get_all_location(driver)
-#     get_prod(driver,all_location_links)
-#     craglist_logger.info("==============Finished==================")
+    driver = initialize_driver()
+    all_location_links = get_all_location(driver)
+    get_prod(driver,all_location_links)
+    craglist_logger.info("==============Finished==================")
