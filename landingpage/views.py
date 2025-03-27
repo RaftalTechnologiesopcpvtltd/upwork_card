@@ -241,7 +241,7 @@ def payment_failed(request):
 import requests
 import json
 
-def prod_API(query, scrapers):
+def prod_API(query, scrapers, location=None):
     req_url = "http://localhost:8000/api/scrape/"
     
     headers = {
@@ -250,10 +250,17 @@ def prod_API(query, scrapers):
         "Content-Type": "application/json"
     }
 
-    payload = json.dumps({
+    if location:
+        payload = json.dumps({
+            "query": query,
+            "location":location,
+            "scrapers": scrapers
+        })
+    else:
+        payload = json.dumps({
         "query": query,
-        "scrapers": scrapers
-    })
+        "scrapers": scrapers,
+        })
 
     try:
         response = requests.post(req_url, headers=headers, data=payload)
@@ -266,11 +273,14 @@ def prod_API(query, scrapers):
 def product_search(request):
     
     query = request.GET.get("query", "").strip()
-    # selling_type = request.GET.get("selling_type", "").strip()
+    location = request.GET.get("location", "").strip()
     marketplace = request.GET.get("marketplace", "").strip()
     scrapers = [marketplace]
     print(query)
-    resp = prod_API(query, scrapers)
+    print(location)
+    print(marketplace)
+    print(scrapers)
+    resp = prod_API(query, scrapers, location)
     results = []
     today = datetime.now().date()
     all_prod_data = []

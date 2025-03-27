@@ -368,13 +368,12 @@
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="soldFilter" class="form-label">Selling Status</label>
-                                <select id="soldFilter" class="form-control">
-                                    <option value="">Select Status</option>
-                                    <option value="Auction">Auction</option>
-                                    <option value="Fixed">Fixed</option>
+                                <label for="locationFilter" class="form-label">Location</label>
+                                <select id="locationFilter" class="form-control">
+                                    <option value="">Select Location</option>
                                 </select>
                             </div>
+                            
                             <div class="col-md-6 mb-3">
                                 <label for="marketplaceFilter" class="form-label">Marketplace</label>
                                 <select id="marketplaceFilter" class="form-control">
@@ -531,27 +530,157 @@
 <script>
     $(document).ready(function () {
     let productData = {}; // Store all product data globally
+    let LocationHTML = `<option value="Abilene">Abilene</option>
+                        <option value="Akron-Canton">Akron-Canton</option>
+                        <option value="Albany, GA">Albany, GA</option>
+                        <option value="Albany, NY">Albany, NY</option>
+                        <option value="Albuquerque">Albuquerque</option>
+                        <option value="Altoona">Altoona</option>
+                        <option value="Amarillo">Amarillo</option>
+                        <option value="Ames">Ames</option>
+                        <option value="Anchorage">Anchorage</option>
+                        <option value="Annapolis">Annapolis</option>
+                        <option value="Ann Arbor">Ann Arbor</option>
+                        <option value="Appleton">Appleton</option>
+                        <option value="Asheville">Asheville</option>
+                        <option value="Ashtabula">Ashtabula</option>
+                        <option value="Athens, GA">Athens, GA</option>
+                        <option value="Athens, OH">Athens, OH</option>
+                        <option value="Atlanta">Atlanta</option>
+                        <option value="Auburn">Auburn</option>
+                        <option value="Augusta">Augusta</option>
+                        <option value="Austin">Austin</option>
+                        <option value="Bakersfield">Bakersfield</option>
+                        <option value="Baltimore">Baltimore</option>
+                        <option value="Baton Rouge">Baton Rouge</option>
+                        <option value="Battle Creek">Battle Creek</option>
+                        <option value="Beaumont">Beaumont</option>
+                        <option value="Bellingham">Bellingham</option>
+                        <option value="Bemidji">Bemidji</option>
+                        <option value="Bend">Bend</option>
+                        <option value="Billings">Billings</option>
+                        <option value="Binghamton">Binghamton</option>
+                        <option value="Birmingham">Birmingham</option>
+                        <option value="Bismarck">Bismarck</option>
+                        <option value="Bloomington">Bloomington</option>
+                        <option value="Bloomington-Normal">Bloomington-Normal</option>
+                        <option value="Boise">Boise</option>
+                        <option value="Boone">Boone</option>
+                        <option value="Boston">Boston</option>
+                        <option value="Boulder">Boulder</option>
+                        <option value="Bowling Green, KY">Bowling Green, KY</option>
+                        <option value="Bozeman">Bozeman</option>
+                        <option value="Brainerd">Brainerd</option>
+                        <option value="Brownsville">Brownsville</option>
+                        <option value="Brunswick">Brunswick</option>
+                        <option value="Buffalo">Buffalo</option>
+                        <option value="Butte">Butte</option>
+                        <option value="Cape Cod">Cape Cod</option>
+                        <option value="Catskills">Catskills</option>
+                        <option value="Cedar Rapids">Cedar Rapids</option>
+                        <option value="Central Louisiana">Central Louisiana</option>
+                        <option value="Central Michigan">Central Michigan</option>
+                        <option value="Central NJ">Central NJ</option>
+                        <option value="Champaign-Urbana">Champaign-Urbana</option>
+                        <option value="Charleston, SC">Charleston, SC</option>
+                        <option value="Charleston, WV">Charleston, WV</option>
+                        <option value="Charlotte">Charlotte</option>
+                        <option value="Charlottesville">Charlottesville</option>
+                        <option value="Chattanooga">Chattanooga</option>
+                        <option value="Chautauqua">Chautauqua</option>
+                        <option value="Chicago">Chicago</option>
+                        <option value="Chico">Chico</option>
+                        <option value="Chillicothe">Chillicothe</option>
+                        <option value="Cincinnati">Cincinnati</option>
+                        <option value="Clarksville">Clarksville</option>
+                        <option value="Cleveland">Cleveland</option>
+                        <option value="Clovis">Clovis</option>
+                        <option value="College Station">College Station</option>
+                        <option value="Colorado Springs">Colorado Springs</option>
+                        <option value="Columbia, MO">Columbia, MO</option>
+                        <option value="Columbia, SC">Columbia, SC</option>
+                        <option value="Columbus, GA">Columbus, GA</option>
+                        <option value="Columbus, OH">Columbus, OH</option>
+                        <option value="Cookeville">Cookeville</option>
+                        <option value="Corpus Christi">Corpus Christi</option>
+                        <option value="Corvallis">Corvallis</option>
+                        <option value="Dallas">Dallas</option>
+                        <option value="Danville">Danville</option>
+                        <option value="Dayton">Dayton</option>
+                        <option value="Daytona Beach">Daytona Beach</option>
+                        <option value="Decatur">Decatur</option>
+                        <option value="Delaware">Delaware</option>
+                        <option value="Del Rio">Del Rio</option>
+                        <option value="Denver">Denver</option>
+                        <option value="Des Moines">Des Moines</option>
+                        <option value="Detroit">Detroit</option>
+                        <option value="Dothan">Dothan</option>
+                        <option value="Dubuque">Dubuque</option>
+                        <option value="Duluth">Duluth</option>
+                        <option value="Eastern Kentucky">Eastern Kentucky</option>
+                        <option value="Eastern NC">Eastern NC</option>
+                        <option value="Eau Claire">Eau Claire</option>
+                        <option value="El Paso">El Paso</option>
+                        <option value="Erie">Erie</option>
+                        <option value="Eugene">Eugene</option>
+                        <option value="Evansville">Evansville</option>
+                        <option value="Fairbanks">Fairbanks</option>
+                        <option value="Fargo">Fargo</option>
+                        <option value="Fayetteville, NC">Fayetteville, NC</option>
+                        <option value="Flagstaff">Flagstaff</option>
+                        <option value="Flint">Flint</option>
+                        <option value="Fort Collins">Fort Collins</option>
+                        <option value="Fort Myers">Fort Myers</option>
+                        <option value="Fort Wayne">Fort Wayne</option>
+                        <option value="Fresno">Fresno</option>
+                        <option value="Gainesville">Gainesville</option>
+                        <option value="Galveston">Galveston</option>
+                        <option value="Grand Rapids">Grand Rapids</option>
+                        <option value="Great Falls">Great Falls</option>
+                        <option value="Greensboro">Greensboro</option>
+                        <option value="Greenville">Greenville</option>
+                        <option value="Honolulu">Honolulu</option>
+                        <option value="Houston">Houston</option>
+                        <option value="Indianapolis">Indianapolis</option>
+                        <option value="Kansas City">Kansas City</option>
+                        <option value="Las Vegas">Las Vegas</option>
+                        <option value="Los Angeles">Los Angeles</option>
+                        <option value="Miami">Miami</option>
+                        <option value="New York City">New York City</option>
+                        <option value="San Francisco">San Francisco</option>`;
+
+    $("#marketplaceFilter").on("change", function () {
+        let marketplace = $(this).val();
+        let resultsContainer = $("#locationFilter");
+
+        if (marketplace === 'craigslist') {
+            resultsContainer.html(LocationHTML);
+        } else {
+            resultsContainer.html(`<option value="">Select Location</option>`);
+        }
+    });
 
     $("#searchBtn").on("click", function () {
         let query = $("#searchInput").val().trim();
-        let sellingType = $("#soldFilter").val();
         let marketplace = $("#marketplaceFilter").val();
+        let location = $("#locationFilter").val();
 
+        
         console.log("Query:", query);
         console.log("Marketplace:", marketplace);
-        console.log("Selling Type:", sellingType);
+        console.log("Location:", location);
 
         $.ajax({
             url: "/search/",
             type: "GET",
-            data: { query, selling_type: sellingType, marketplace },
+            data: { query, marketplace, location },
             beforeSend: function () {
                 $(".category-container").html(`<div class="prod_loader-container">
-        <div class="prod_pulse"></div>
-        <div class="prod_loader"></div>
-        <div class="prod_loading-text">Fetching your products...</div>
-    </div>`);
-            },
+                                            <div class="prod_pulse"></div>
+                                            <div class="prod_loader"></div>
+                                            <div class="prod_loading-text">Fetching your products...</div>
+                                        </div>`);
+                                    },
             success: function (response) {
                 let resultsContainer = $(".category-container");
                 resultsContainer.empty();
@@ -608,6 +737,7 @@
     $("#clearBtn").on("click", function () {
         $("#searchInput").val("");
         $("#soldFilter").val("");
+        $("#locationFilter").val("");
         $("#marketplaceFilter").val("");
         $(".category-container").empty();
     });
@@ -786,285 +916,7 @@
         $("#productModal").modal("show");
     })
     .catch(error => console.error("Error fetching product details:", error));
-
-    
-
 });
-
-
-    // $(document).ready(function () {
-    //     $("#searchInput, #soldFilter, #marketplaceFilter").on("keyup change", function () {
-    //         let query = $("#searchInput").val().trim();
-    //         let sellingType = $("#soldFilter").val();
-    //         let marketplace = $("#marketplaceFilter").val();
-
-    //         console.log("query", query);
-    //         console.log("marketplace", marketplace);
-
-
-    //         if (query.length > 1 || sellingType || marketplace) {  // Only search when at least 2 characters
-    //             $.ajax({
-    //                 url: "/search/",
-    //                 type: "GET",
-    //                 data: {
-    //                     query: query,
-    //                     selling_type: sellingType,
-    //                     marketplace: marketplace
-    //                 },
-    //                 success: function (response) {
-    //                     let resultsContainer = $(".category-container");
-    //                     resultsContainer.empty();
-
-    //                     if (response.products.length > 0) {
-    //                         response.products.forEach(product => {
-    //                             let productHTML = `
-    //                                     <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" 
-    //                                         data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
-                                            
-    //                                         <div class="ribbon">${product.website_name || "Unknown"}</div> <!-- Ribbon added here -->
-                                            
-    //                                         <div style="width: auto; border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
-    //                                             <div style="display: flex; justify-content: center; height: 230.5px !important; 
-    //                                                 width: 230.5px !important; overflow: hidden; padding: 8%; margin-left: 12%;">
-    //                                                 <img src="${product.image}" class="img-fluid" alt="${product.title}">
-    //                                             </div>
-    //                                         </div>
-    //                                         <div class="p-3">
-    //                                             <h5 class="mt-4 card-title" style="font-size: 18px !important; font-weight: 700 !important;">
-    //                                                 ${product.title}
-    //                                             </h5>
-
-    //                                             <h6 class="mt-4 card-title ${product.selling_type && product.selling_type.includes('Auction') ? 'auction-box' : 'fixed-price-box'}">${product.selling_type || "Unknown"}
-    //                                             </h6>                                       
-
-    //                                             ${product.selling_type && product.selling_type.includes('Auction') ? `
-    //                                                 <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price: $${product.current_bid_price || "N/A"}</p>
-    //                                                 <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count: ${product.current_bid_count || "N/A"}</p>
-    //                                             ` : `
-    //                                                 <p class="selling_price mb-1">Selling Price: $${product.price || "N/A"}</p>
-    //                                             `}
-
-    //                                             <p class="date mb-3"><i class="far fa-calendar-alt me-2"></i> ${product.date || "N/A"}</p>
-
-    //                                         </div>
-    //                                     </div>
-    //                                 `;
-
-    //                             resultsContainer.append(productHTML);
-    //                         });
-    //                     } else {
-    //                         resultsContainer.html("<p>No products found.</p>");
-    //                     }
-
-    //                 },
-    //                 error: function () {
-    //                     $(".category-container").html("<p>Error fetching results.</p>");
-    //                 }
-    //             });
-    //         } else {
-    //             $(".category-container").empty();
-    //         }
-    //     });
-
-
-    //     // Fix: Use event delegation for dynamically loaded elements
-    //     $(document).on("click", ".openProductModal", function () {
-    //         let productId = $(this).data("product-id");
-
-    //         fetch(`/get-product/${productId}/`) // Django API URL
-    //             .then(response => response.json())
-    //             .then(data => {
-    //                 if (!data) return;
-
-    //                 let carouselInner = $("#productCarousel .carousel-inner");
-    //                 let indicators = $("#carouselIndicators");
-
-    //                 carouselInner.empty(); // Clear previous images
-    //                 indicators.empty(); // Clear previous indicators (dots)
-
-    //                 let images = data.product_images;
-
-    //                 if (images.length === 0) {
-    //                     carouselInner.append(`
-    //                 <div class="carousel-item active" style="height: 500px; background: white;">
-    //                     <img src=""  class="d-block w-100" alt="No Image Available">
-    //                 </div>`);
-    //                 } else {
-    //                     images.forEach((imgSrc, index) => {
-    //                         let activeClass = index === 0 ? "active" : "";
-
-    //                         // Add Image Slide
-    //                         carouselInner.append(`
-    //                     <div class="carousel-item ${activeClass}" style="height: 500px; background: white;">
-    //                         <img src="${imgSrc.trim()}" class="d-block product-image" alt="Product Image" 
-    //                              style="height: 100%; object-fit: contain;">
-    //                     </div>`);
-
-    //                         // Add Indicator (Dot)
-    //                         indicators.append(`
-    //                     <button type="button" data-bs-target="#productCarousel" 
-    //                             data-bs-slide-to="${index}" class="${activeClass}" aria-label="Slide ${index + 1}"></button>`);
-    //                     });
-    //                 }
-
-    //                 // Remove and re-add navigation buttons if multiple images exist
-    //                 $(".carousel-control-prev, .carousel-control-next").remove();
-    //                 if (images.length > 1) {
-    //                     $("#productCarousel").append(`
-    //                 <button class="carousel-control-prev changing_btn" type="button" 
-    //                         data-bs-target="#productCarousel" data-bs-slide="prev">
-    //                     <i class="lni lni-arrow-left"></i>
-    //                 </button>
-    //                 <button class="carousel-control-next changing_btn" type="button" 
-    //                         data-bs-target="#productCarousel" data-bs-slide="next">
-    //                     <i class="lni lni-arrow-right"></i>
-    //                 </button>`);
-    //                 }
-
-    //                 // Enable Touch Swipe for Mobile Users
-    //                 let carouselElement = document.querySelector("#productCarousel");
-    //                 let touchStartX = 0;
-    //                 let touchEndX = 0;
-
-    //                 carouselElement.addEventListener("touchstart", (e) => {
-    //                     touchStartX = e.changedTouches[0].screenX;
-    //                 });
-
-    //                 carouselElement.addEventListener("touchend", (e) => {
-    //                     touchEndX = e.changedTouches[0].screenX;
-    //                     handleSwipe();
-    //                 });
-
-    //                 function handleSwipe() {
-    //                     if (touchEndX < touchStartX) {
-    //                         new bootstrap.Carousel(carouselElement).next();
-    //                     }
-    //                     if (touchEndX > touchStartX) {
-    //                         new bootstrap.Carousel(carouselElement).prev();
-    //                     }
-    //                 }
-    //                 let prod_btns = $("#prod_btns");
-
-    //                 // Check if the button already exists
-    //                 if (prod_btns.find(`.add-to-fav`).length === 0) {
-    //                     let add_to_fav_btn = `<a href="#" data-product-id="${data.id}" class="mb-2 ml-2 btn btn-danger add-to-fav">
-    //                         <i class="fa fa-heart" aria-hidden="true"></i>
-    //                       </a>`;
-    //                     prod_btns.append(add_to_fav_btn);
-    //                 }
-
-
-    //                 // Populate Product Details
-    //                 $("#productTitle").text(data.product_title || "No Title Available");
-    //                 $("#sellingtype").text(data.selling_type);
-    //                 if (data.selling_type.includes('Auction')) {
-    //                     $("#biddinginfo").removeClass("d-none")
-    //                     $("#sellingtype").removeClass("fixed-price-box");
-    //                     $("#sellingtype").addClass("auction-box");
-    //                 }
-    //                 else {
-    //                     $("#biddinginfo").addClass("d-none")
-    //                     $("#sellingtype").removeClass("auction-box");
-    //                     $("#sellingtype").addClass("fixed-price-box");
-    //                 }
-    //                 $("#productTitlebtm").text(data.product_title || "No Title Available");
-    //                 if (data.selling_type.includes('Auction')) {
-    //                     $("#productPrice").text(data.current_bid_price ? `$${data.current_bid_price}` : "N/A");
-    //                     $("#productPrice").removeClass("selling_price")
-    //                     $("#productPrice").addClass("bid")
-    //                 }
-    //                 else {
-    //                     $("#productPrice").text(data.product_price ? `$${data.product_price}` : "Price Not Available");
-    //                     $("#productPrice").addClass("selling_price")
-    //                     $("#productPrice").removeClass("bid")
-    //                 }
-    //                 $("#productAvailability").text(data.product_availability_status || "Unknown");
-    //                 $("#productStock").text(data.product_availability_quantity || "Not Specified");
-    //                 $("#productSold").text(data.product_sold_quantity || "Not Specified");
-    //                 $("#productDescription").text(data.description || "No description available.");
-
-    //                 // Auction Info
-    //                 $("#auctionId").text(data.auction_id || "N/A");
-    //                 $("#currentBid").text(data.current_bid_price ? `$${data.current_bid_price}` : "N/A");
-    //                 $("#highestBidder").text(data.highest_bidder || "No Bids");
-    //                 $("#bidCount").text(data.current_bid_count || "0");
-
-    //                 // Condition Info
-    //                 $("#condition").text(data.condition || "N/A");
-    //                 let conditionText = `${data.condition || ''} ${data.condition_descriptors_list || ''} ${data.condition_values || ''} ${data.condition_additional_info || ''}`.trim();
-
-    //                 $("#conditionInfo").text(conditionText || "No details available");
-
-
-    //                 // Shipping Info
-    //                 $("#shippingInfo").text(data.shipping_cost || "Not Available");
-    //                 $("#estArrival").text(data.estimated_arrival || "Unknown");
-
-    //                 // Return Policy
-    //                 $("#returnAccepted").text(data.return_terms_returns_accepted || "N/A");
-    //                 $("#refundMethod").text(data.return_terms_refund_method || "N/A");
-    //                 $("#returnPeriod").text(data.return_terms_return_period_value ?
-    //                     `${data.return_terms_return_period_value} ${data.return_terms_return_period_unit}` : "N/A");
-
-    //                 // Additional Info
-    //                 $("#productBrand").text(data.brand || "N/A");
-    //                 $("#productCategory").text(data.category || "N/A");
-
-    //                 // Website & Product Links
-    //                 if (data.website_url) {
-    //                     $("#websiteUrl").attr("href", data.website_url).text(data.website_name || "Website").parent().show();
-    //                 } else {
-    //                     $("#websiteUrl").parent().hide();
-    //                 }
-
-    //                 if (data.product_link) {
-    //                     $("#productLink").attr("href", data.product_link).text("View Product").parent().show();
-    //                 } else {
-    //                     $("#productLink").parent().hide();
-    //                 }
-
-    //                 // Show the modal
-    //                 $("#productModal").modal("show");
-    //             })
-    //             .catch(error => console.error("Error fetching product details:", error));
-    //     });
-
-    //     $(document).ready(function () {
-    //         $(document).on("click", ".add-to-fav", function (event) {
-    //             event.preventDefault();
-
-    //             var productId = $(this).data("product-id"); // Get product ID from button
-    //             console.log("Product ID:", productId);
-
-    //             var url = "{% url 'add_to_favourites' %}"; // Django URL
-
-    //             var requestData = {
-    //                 product_id: productId,
-    //                 csrfmiddlewaretoken: "{{ csrf_token }}"
-    //             };
-
-    //             // AJAX Request using jQuery
-    //             $.ajax({
-    //                 type: "POST",
-    //                 url: url,
-    //                 data: requestData,
-    //                 dataType: "json",
-    //                 success: function (response) {
-    //                     if (response.status === "success") {
-    //                         toastr.success("Added to favorites!", "Success"); // Change to toastr if needed
-    //                     } else {
-    //                         toastr.error(response.message, "Error");
-    //                     }
-    //                 },
-    //                 error: function () {
-    //                     toastr.error("Something went wrong!", "Error");
-    //                 }
-    //             });
-    //         });
-    //     });
-
-
-    // });
 </script>
 
 {% endblock %}
