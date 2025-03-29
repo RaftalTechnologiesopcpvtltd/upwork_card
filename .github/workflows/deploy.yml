@@ -1,0 +1,35 @@
+name: Deploy Django App
+
+on:
+  push:
+    branches:
+      - main  # Change this if your main branch has a different name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.CLIENT_DEPLOY_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 3.147.77.165 >> ~/.ssh/known_hosts
+
+    - name: Deploy to server
+      run: |
+        ssh -i ~/.ssh/id_rsa ubuntu@3.147.77.165 << 'EOF'
+          cd /home/ubuntu/upwork_card  # Replace with actual project pat
+          git pull origin main  # Change branch if needed
+          source /home/ubuntu/env/bin/activate  # Replace with actual virtualenv path
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          python manage.py migrate
+          python manage.py collectstatic --noinput
+          sudo systemctl restart gunicorn
+          sudo systemctl restart nginx
+        EOF
