@@ -242,7 +242,7 @@ import requests
 import json
 
 def prod_API(query, scrapers, location=None):
-    req_url = "http://localhost:8000/api/scrape/"
+    req_url = "http://3.141.5.147:8000/api/scrape/"
     
     headers = {
         "Accept": "*/*",
@@ -300,7 +300,10 @@ def product_search(request):
             fanatic = data.get('fanatic', [])
             facebook = data.get('facebook', [])
             craigslist = data.get('craigslist', [])
-            all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist
+            mercari = data.get('mercari', [])
+            # offerup = data.get('offerup', [])
+            all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari 
+            # all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari + offerup
         elif 'fivemiles' in marketplace:
             all_prod_data = data.get('fivemiles', [])
         elif 'fanatic' in marketplace:
@@ -309,8 +312,12 @@ def product_search(request):
             all_prod_data = data.get('ebay', [])
         elif 'facebook' in marketplace:
             all_prod_data = data.get('facebook', [])
+        elif 'mercari' in marketplace:
+            all_prod_data = data.get('mercari', [])
         elif 'craigslist' in marketplace:
             all_prod_data = data.get('craigslist', [])
+        elif 'offerup' in marketplace:
+            all_prod_data = data.get('offerup', [])
     except Exception as e:
         print(f"Unexpected error accessing marketplace data: {e}")
         all_prod_data = []

@@ -13,9 +13,10 @@
     } */
 
     .prod_loader-container {
-            text-align: center;
-            position: relative;
-        }
+        text-align: center;
+        position: relative;
+    }
+
     .prod_loader {
         width: 70px;
         height: 70px;
@@ -25,10 +26,17 @@
         border-bottom: 6px solid #001531;
         animation: spin 1s ease-in-out infinite;
     }
+
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
     }
+
     .prod_pulse {
         position: absolute;
         width: 90px;
@@ -40,16 +48,19 @@
         transform: translate(-50%, -50%);
         animation: pulseEffect 1.5s infinite;
     }
+
     @keyframes pulseEffect {
         0% {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
         }
+
         100% {
             transform: translate(-50%, -50%) scale(1.5);
             opacity: 0;
         }
     }
+
     .prod_loading-text {
         margin-top: 20px;
         font-size: 1.2rem;
@@ -373,7 +384,7 @@
                                     <option value="">Select Location</option>
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="marketplaceFilter" class="form-label">Marketplace</label>
                                 <select id="marketplaceFilter" class="form-control">
@@ -384,6 +395,8 @@
                                     <option value="fanatic">Fanatics Collect</option>
                                     <option value="ebay">Ebay</option>
                                     <option value="facebook">Facebook Marketplace</option>
+                                    <option value="mercari">Mercari</option>
+                                    <option value="offerup">Offerup</option>
                                 </select>
                             </div>
                         </div>
@@ -529,8 +542,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <script>
     $(document).ready(function () {
-    let productData = {}; // Store all product data globally
-    let LocationHTML = `<option value="Abilene">Abilene</option>
+        let productData = {}; // Store all product data globally
+        let LocationHTML = `<option value="Abilene">Abilene</option>
                         <option value="Akron-Canton">Akron-Canton</option>
                         <option value="Albany, GA">Albany, GA</option>
                         <option value="Albany, NY">Albany, NY</option>
@@ -649,47 +662,47 @@
                         <option value="New York City">New York City</option>
                         <option value="San Francisco">San Francisco</option>`;
 
-    $("#marketplaceFilter").on("change", function () {
-        let marketplace = $(this).val();
-        let resultsContainer = $("#locationFilter");
+        $("#marketplaceFilter").on("change", function () {
+            let marketplace = $(this).val();
+            let resultsContainer = $("#locationFilter");
 
-        if (marketplace === 'craigslist') {
-            resultsContainer.html(LocationHTML);
-        } else {
-            resultsContainer.html(`<option value="">Select Location</option>`);
-        }
-    });
+            if (marketplace === 'craigslist' || marketplace === 'all') {
+                resultsContainer.html(LocationHTML);
+            } else {
+                resultsContainer.html(`<option value="">Select Location</option>`);
+            }
+        });
 
-    $("#searchBtn").on("click", function () {
-        let query = $("#searchInput").val().trim();
-        let marketplace = $("#marketplaceFilter").val();
-        let location = $("#locationFilter").val();
+        $("#searchBtn").on("click", function () {
+            let query = $("#searchInput").val().trim();
+            let marketplace = $("#marketplaceFilter").val();
+            let location = $("#locationFilter").val();
 
-        
-        console.log("Query:", query);
-        console.log("Marketplace:", marketplace);
-        console.log("Location:", location);
 
-        $.ajax({
-            url: "/search/",
-            type: "GET",
-            data: { query, marketplace, location },
-            beforeSend: function () {
-                $(".category-container").html(`<div class="prod_loader-container">
+            console.log("Query:", query);
+            console.log("Marketplace:", marketplace);
+            console.log("Location:", location);
+
+            $.ajax({
+                url: "/search/",
+                type: "GET",
+                data: { query, marketplace, location },
+                beforeSend: function () {
+                    $(".category-container").html(`<div class="prod_loader-container">
                                             <div class="prod_pulse"></div>
                                             <div class="prod_loader"></div>
                                             <div class="prod_loading-text">Fetching your products...</div>
                                         </div>`);
-                                    },
-            success: function (response) {
-                let resultsContainer = $(".category-container");
-                resultsContainer.empty();
+                },
+                success: function (response) {
+                    let resultsContainer = $(".category-container");
+                    resultsContainer.empty();
 
-                if (response.products.length > 0) {
-                    response.products.forEach(product => {
-                        productData[product.id] = product;
+                    if (response.products.length > 0) {
+                        response.products.forEach(product => {
+                            productData[product.id] = product;
 
-                        let productHTML = `
+                            let productHTML = `
                             <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" 
                                 data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
                                 
@@ -720,72 +733,72 @@
                                 </div>
                             </div>
                         `;
-                        resultsContainer.append(productHTML);
-                    });
-                } else {
-                    resultsContainer.html("<p>No products found.</p>");
+                            resultsContainer.append(productHTML);
+                        });
+                    } else {
+                        resultsContainer.html("<p>No products found.</p>");
+                    }
+                },
+                error: function () {
+                    $(".category-container").html("<p>Error fetching results.</p>");
                 }
-            },
-            error: function () {
-                $(".category-container").html("<p>Error fetching results.</p>");
-            }
+            });
         });
-    });
 
-    
-    // Clear Filters Button
-    $("#clearBtn").on("click", function () {
-        $("#searchInput").val("");
-        $("#soldFilter").val("");
-        $("#locationFilter").val("");
-        $("#marketplaceFilter").val("");
-        $(".category-container").empty();
-    });
-    // Handle modal opening
-    $(document).on("click", ".openProductModal", function () {
-        let productId = $(this).data("product-id");
-        let data = productData[productId];
 
-        if (!data) {
-            console.error("Product data not found for ID:", productId);
-            return;
-        }
-        else{
-            console.log("Product data found for ID:", productId)
-            console.log("Product : ",data);
-        }
+        // Clear Filters Button
+        $("#clearBtn").on("click", function () {
+            $("#searchInput").val("");
+            $("#soldFilter").val("");
+            $("#locationFilter").val("");
+            $("#marketplaceFilter").val("");
+            $(".category-container").empty();
+        });
+        // Handle modal opening
+        $(document).on("click", ".openProductModal", function () {
+            let productId = $(this).data("product-id");
+            let data = productData[productId];
 
-        let carouselInner = $("#productCarousel .carousel-inner");
-        let indicators = $("#carouselIndicators");
+            if (!data) {
+                console.error("Product data not found for ID:", productId);
+                return;
+            }
+            else {
+                console.log("Product data found for ID:", productId)
+                console.log("Product : ", data);
+            }
 
-        carouselInner.empty();
-        indicators.empty();
+            let carouselInner = $("#productCarousel .carousel-inner");
+            let indicators = $("#carouselIndicators");
 
-        let images = Array.isArray(data.product_images) ? data.product_images : (data.product_images ? data.product_images.split(',') : []);
+            carouselInner.empty();
+            indicators.empty();
 
-        if (images.length === 0) {
-            carouselInner.append(`
+            let images = Array.isArray(data.product_images) ? data.product_images : (data.product_images ? data.product_images.split(',') : []);
+
+            if (images.length === 0) {
+                carouselInner.append(`
                 <div class="carousel-item active" style="height: 500px; background: white;">
                     <img src="" class="d-block w-100" alt="No Image Available">
                 </div>`);
-        } else {
-            images.forEach((imgSrc, index) => {
-                let activeClass = index === 0 ? "active" : "";
+            } else {
+                images.forEach((imgSrc, index) => {
+                    let activeClass = index === 0 ? "active" : "";
 
-                carouselInner.append(`
+                    carouselInner.append(`
                     <div class="carousel-item ${activeClass}" style="height: 500px; background: white;">
                         <img src="${imgSrc.trim()}" class="d-block product-image" alt="Product Image" style="height: 100%; object-fit: contain;">
                     </div>`);
 
-                indicators.append(`
+                    indicators.append(`
                     <button type="button" data-bs-target="#productCarousel" 
                             data-bs-slide-to="${index}" class="${activeClass}" aria-label="Slide ${index + 1}"></button>`);
-            });
+                });
 
-            // Add navigation buttons only if multiple images exist
-            $(".carousel-control-prev, .carousel-control-next").remove();
-            if (images.length > 1) {
-                $("#productCarousel").append(`
+                // Add navigation buttons only if multiple images exist
+                $(".carousel-control-prev, .carousel-control-next").remove();
+                if (images.length > 1) {
+                    $("#productCarousel").append(`
                     <button class="carousel-control-prev changing_btn" type="button" 
                             data-bs-target="#productCarousel" data-bs-slide="prev">
                         <i class="lni lni-arrow-left"></i>
@@ -794,13 +807,13 @@
                             data-bs-target="#productCarousel" data-bs-slide="next">
                         <i class="lni lni-arrow-right"></i>
                     </button>`);
+                }
             }
-        }
 
-        // Remove and re-add navigation buttons if multiple images exist
-        $(".carousel-control-prev, .carousel-control-next").remove();
-        if (images.length > 1) {
-            $("#productCarousel").append(`
+            // Remove and re-add navigation buttons if multiple images exist
+            $(".carousel-control-prev, .carousel-control-next").remove();
+            if (images.length > 1) {
+                $("#productCarousel").append(`
         <button class="carousel-control-prev changing_btn" type="button" 
                 data-bs-target="#productCarousel" data-bs-slide="prev">
             <i class="lni lni-arrow-left"></i>
@@ -809,114 +822,114 @@
                 data-bs-target="#productCarousel" data-bs-slide="next">
             <i class="lni lni-arrow-right"></i>
         </button>`);
-        }
-
-        // Enable Touch Swipe for Mobile Users
-        let carouselElement = document.querySelector("#productCarousel");
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        carouselElement.addEventListener("touchstart", (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-
-        carouselElement.addEventListener("touchend", (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
-
-        function handleSwipe() {
-            if (touchEndX < touchStartX) {
-                new bootstrap.Carousel(carouselElement).next();
             }
-            if (touchEndX > touchStartX) {
-                new bootstrap.Carousel(carouselElement).prev();
-            }
-        }
-        let prod_btns = $("#prod_btns");
 
-        // Check if the button already exists
-        if (prod_btns.find(`.add-to-fav`).length === 0) {
-            let add_to_fav_btn = `<a href="#" data-product-id="${data.id}" class="mb-2 ml-2 btn btn-danger add-to-fav">
+            // Enable Touch Swipe for Mobile Users
+            let carouselElement = document.querySelector("#productCarousel");
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            carouselElement.addEventListener("touchstart", (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            carouselElement.addEventListener("touchend", (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                if (touchEndX < touchStartX) {
+                    new bootstrap.Carousel(carouselElement).next();
+                }
+                if (touchEndX > touchStartX) {
+                    new bootstrap.Carousel(carouselElement).prev();
+                }
+            }
+            let prod_btns = $("#prod_btns");
+
+            // Check if the button already exists
+            if (prod_btns.find(`.add-to-fav`).length === 0) {
+                let add_to_fav_btn = `<a href="#" data-product-id="${data.id}" class="mb-2 ml-2 btn btn-danger add-to-fav">
                 <i class="fa fa-heart" aria-hidden="true"></i>
                 </a>`;
-            prod_btns.append(add_to_fav_btn);
-        }
+                prod_btns.append(add_to_fav_btn);
+            }
 
-        // Populate Product Details
-        $("#productTitle").text(data.product_title || "No Title Available");
-        $("#sellingtype").text(data.selling_type);
-        if (data.selling_type.includes('Auction')) {
-            $("#biddinginfo").removeClass("d-none")
-            $("#sellingtype").removeClass("fixed-price-box");
-            $("#sellingtype").addClass("auction-box");
-        }
-        else {
-            $("#biddinginfo").addClass("d-none")
-            $("#sellingtype").removeClass("auction-box");
-            $("#sellingtype").addClass("fixed-price-box");
-        }
-        $("#productTitlebtm").text(data.product_title || "No Title Available");
-        if (data.selling_type.includes('Auction')) {
-            $("#productPrice").text(data.current_bid_price ? `$${data.current_bid_price}` : "N/A");
-            $("#productPrice").removeClass("selling_price")
-            $("#productPrice").addClass("bid")
-        }
-        else {
-            $("#productPrice").text(data.product_price ? `$${data.product_price}` : "Price Not Available");
-            $("#productPrice").addClass("selling_price")
-            $("#productPrice").removeClass("bid")
-        }
-        $("#productAvailability").text(data.product_availability_status || "Unknown");
-        $("#productStock").text(data.product_availability_quantity || "Not Specified");
-        $("#productSold").text(data.product_sold_quantity || "Not Specified");
-        $("#productDescription").text(data.description || "No description available.");
+            // Populate Product Details
+            $("#productTitle").text(data.product_title || "No Title Available");
+            $("#sellingtype").text(data.selling_type);
+            if (data.selling_type.includes('Auction')) {
+                $("#biddinginfo").removeClass("d-none")
+                $("#sellingtype").removeClass("fixed-price-box");
+                $("#sellingtype").addClass("auction-box");
+            }
+            else {
+                $("#biddinginfo").addClass("d-none")
+                $("#sellingtype").removeClass("auction-box");
+                $("#sellingtype").addClass("fixed-price-box");
+            }
+            $("#productTitlebtm").text(data.product_title || "No Title Available");
+            if (data.selling_type.includes('Auction')) {
+                $("#productPrice").text(data.current_bid_price ? `$${data.current_bid_price}` : "N/A");
+                $("#productPrice").removeClass("selling_price")
+                $("#productPrice").addClass("bid")
+            }
+            else {
+                $("#productPrice").text(data.product_price ? `$${data.product_price}` : "Price Not Available");
+                $("#productPrice").addClass("selling_price")
+                $("#productPrice").removeClass("bid")
+            }
+            $("#productAvailability").text(data.product_availability_status || "Unknown");
+            $("#productStock").text(data.product_availability_quantity || "Not Specified");
+            $("#productSold").text(data.product_sold_quantity || "Not Specified");
+            $("#productDescription").text(data.description || "No description available.");
 
-        // Auction Info
-        $("#auctionId").text(data.auction_id || "N/A");
-        $("#currentBid").text(data.current_bid_price ? `$${data.current_bid_price}` : "N/A");
-        $("#highestBidder").text(data.highest_bidder || "No Bids");
-        $("#bidCount").text(data.current_bid_count || "0");
+            // Auction Info
+            $("#auctionId").text(data.auction_id || "N/A");
+            $("#currentBid").text(data.current_bid_price ? `$${data.current_bid_price}` : "N/A");
+            $("#highestBidder").text(data.highest_bidder || "No Bids");
+            $("#bidCount").text(data.current_bid_count || "0");
 
-        // Condition Info
-        $("#condition").text(data.condition || "N/A");
-        let conditionText = `${data.condition || ''} ${data.condition_descriptors_list || ''} ${data.condition_values || ''} ${data.condition_additional_info || ''}`.trim();
+            // Condition Info
+            $("#condition").text(data.condition || "N/A");
+            let conditionText = `${data.condition || ''} ${data.condition_descriptors_list || ''} ${data.condition_values || ''} ${data.condition_additional_info || ''}`.trim();
 
-        $("#conditionInfo").text(conditionText || "No details available");
+            $("#conditionInfo").text(conditionText || "No details available");
 
 
-        // Shipping Info
-        $("#shippingInfo").text(data.shipping_cost || "Not Available");
-        $("#estArrival").text(data.estimated_arrival || "Unknown");
+            // Shipping Info
+            $("#shippingInfo").text(data.shipping_cost || "Not Available");
+            $("#estArrival").text(data.estimated_arrival || "Unknown");
 
-        // Return Policy
-        $("#returnAccepted").text(data.return_terms_returns_accepted || "N/A");
-        $("#refundMethod").text(data.return_terms_refund_method || "N/A");
-        $("#returnPeriod").text(data.return_terms_return_period_value ?
-            `${data.return_terms_return_period_value} ${data.return_terms_return_period_unit}` : "N/A");
+            // Return Policy
+            $("#returnAccepted").text(data.return_terms_returns_accepted || "N/A");
+            $("#refundMethod").text(data.return_terms_refund_method || "N/A");
+            $("#returnPeriod").text(data.return_terms_return_period_value ?
+                `${data.return_terms_return_period_value} ${data.return_terms_return_period_unit}` : "N/A");
 
-        // Additional Info
-        $("#productBrand").text(data.brand || "N/A");
-        $("#productCategory").text(data.category || "N/A");
+            // Additional Info
+            $("#productBrand").text(data.brand || "N/A");
+            $("#productCategory").text(data.category || "N/A");
 
-        // Website & Product Links
-        if (data.website_url) {
-            $("#websiteUrl").attr("href", data.website_url).text(data.website_name || "Website").parent().show();
-        } else {
-            $("#websiteUrl").parent().hide();
-        }
+            // Website & Product Links
+            if (data.website_url) {
+                $("#websiteUrl").attr("href", data.website_url).text(data.website_name || "Website").parent().show();
+            } else {
+                $("#websiteUrl").parent().hide();
+            }
 
-        if (data.product_link) {
-            $("#productLink").attr("href", data.product_link).text("View Product").parent().show();
-        } else {
-            $("#productLink").parent().hide();
-        }
+            if (data.product_link) {
+                $("#productLink").attr("href", data.product_link).text("View Product").parent().show();
+            } else {
+                $("#productLink").parent().hide();
+            }
 
-        // Show the modal
-        $("#productModal").modal("show");
-    })
-    .catch(error => console.error("Error fetching product details:", error));
-});
+            // Show the modal
+            $("#productModal").modal("show");
+        })
+            .catch(error => console.error("Error fetching product details:", error));
+    });
 </script>
 
 {% endblock %}
