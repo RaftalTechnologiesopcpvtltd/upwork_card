@@ -399,6 +399,15 @@
                                     <option value="offerup">Offerup</option>
                                 </select>
                             </div>
+                            <div id="sortContainer" style="display: none;" class="col-md-6 mb-3">
+                                <label for="sortSelect" class="form-label">Sort By</label>
+                                <select id="sortSelect" class="form-control">
+                                    <option value="default">Default</option>
+                                    <option value="low_to_high">Price: Low to High</option>
+                                    <option value="high_to_low">Price: High to Low</option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -541,7 +550,83 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <script>
+
+
     $(document).ready(function () {
+        let currentProducts = [];
+
+        function getProductPrice(product) {
+            let priceStr = product.selling_type === "Auction"
+                ? product.current_bid_price
+                : product.product_price;
+
+            if (typeof priceStr === "string") {
+                priceStr = priceStr.replace(/\$/g, "").replace(/,/g, "").trim();
+            }
+
+            const price = parseFloat(priceStr);
+            return isNaN(price) ? 0.0 : price;
+        }
+
+        function sortProducts(products, sortType) {
+            let sorted = [...products]; // clone
+
+            if (sortType === "low_to_high") {
+                sorted.sort((a, b) => getProductPrice(a) - getProductPrice(b));
+            } else if (sortType === "high_to_low") {
+                sorted.sort((a, b) => getProductPrice(b) - getProductPrice(a));
+            }
+
+            return sorted;
+        }
+
+        function renderProducts(products) {
+            let resultsContainer = $(".category-container");
+            resultsContainer.empty();
+
+            if (products.length === 0) {
+                resultsContainer.html("<p>No products found.</p>");
+                return;
+            }
+
+            products.forEach(product => {
+                productData[product.id] = product;
+
+                let productHTML = `
+            <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" 
+                data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
+                
+                <div class="ribbon">${product.website_name || "Unknown"}</div> 
+
+                <div style="border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
+                    <div style="display: flex; justify-content: center; height: 230.5px; width: 230.5px; overflow: hidden; padding: 8%; margin-left: 12%;">
+                        <img src="${product.product_images[0]}" class="img-fluid" alt="${product.product_title}">
+                    </div>
+                </div>
+                <div class="p-3">
+                    <h5 class="mt-4 card-title" style="font-size: 18px; font-weight: 700;">
+                        ${product.product_title}
+                    </h5>
+
+                    <h6 class="mt-4 card-title ${String(product.selling_type).includes('Auction') ? 'auction-box' : 'fixed-price-box'}">
+                        ${product.selling_type || "Unknown"}
+                    </h6>                                       
+
+                    ${String(product.selling_type).includes('Auction') ? `
+                        <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price: $${product.current_bid_price || "N/A"}</p>
+                        <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count: ${product.current_bid_count || "N/A"}</p>
+                    ` : `
+                        <p class="selling_price mb-1">Selling Price: $${product.product_price || "N/A"}</p>
+                    `}
+
+                    <p class="date mb-3"><i class="far fa-calendar-alt me-2"></i> ${product.date || "N/A"}</p>
+                </div>
+            </div>
+        `;
+
+                resultsContainer.append(productHTML);
+            });
+        }
         let productData = {}; // Store all product data globally
         let LocationHTML = `<option value="Abilene">Abilene</option>
                         <option value="Akron-Canton">Akron-Canton</option>
@@ -678,71 +763,41 @@
             let marketplace = $("#marketplaceFilter").val();
             let location = $("#locationFilter").val();
 
-
-            console.log("Query:", query);
-            console.log("Marketplace:", marketplace);
-            console.log("Location:", location);
-
             $.ajax({
                 url: "/search/",
                 type: "GET",
                 data: { query, marketplace, location },
                 beforeSend: function () {
                     $(".category-container").html(`<div class="prod_loader-container">
-                                            <div class="prod_pulse"></div>
-                                            <div class="prod_loader"></div>
-                                            <div class="prod_loading-text">Fetching your products...</div>
-                                        </div>`);
+                <div class="prod_pulse"></div>
+                <div class="prod_loader"></div>
+                <div class="prod_loading-text">Fetching your products...</div>
+            </div>`);
                 },
                 success: function (response) {
-                    let resultsContainer = $(".category-container");
-                    resultsContainer.empty();
+                    currentProducts = response.products;
 
-                    if (response.products.length > 0) {
-                        response.products.forEach(product => {
-                            productData[product.id] = product;
-
-                            let productHTML = `
-                            <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" 
-                                data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
-                                
-                                <div class="ribbon">${product.website_name || "Unknown"}</div> 
-
-                                <div style="border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
-                                    <div style="display: flex; justify-content: center; height: 230.5px; width: 230.5px; overflow: hidden; padding: 8%; margin-left: 12%;">
-                                        <img src="${product.product_images[0]}" class="img-fluid" alt="${product.product_title}">
-                                    </div>
-                                </div>
-                                <div class="p-3">
-                                    <h5 class="mt-4 card-title" style="font-size: 18px; font-weight: 700;">
-                                        ${product.product_title}
-                                    </h5>
-
-                                    <h6 class="mt-4 card-title ${String(product.selling_type).includes('Auction') ? 'auction-box' : 'fixed-price-box'}">
-                                        ${product.selling_type || "Unknown"}
-                                    </h6>                                       
-
-                                    ${String(product.selling_type).includes('Auction') ? `
-                                        <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price: $${product.current_bid_price || "N/A"}</p>
-                                        <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count: ${product.current_bid_count || "N/A"}</p>
-                                    ` : `
-                                        <p class="selling_price mb-1">Selling Price: $${product.product_price || "N/A"}</p>
-                                    `}
-
-                                    <p class="date mb-3"><i class="far fa-calendar-alt me-2"></i> ${product.date || "N/A"}</p>
-                                </div>
-                            </div>
-                        `;
-                            resultsContainer.append(productHTML);
-                        });
+                    if (currentProducts.length > 0) {
+                        $("#sortContainer").show();  // Show dropdown
+                        const sortType = $("#sortSelect").val();
+                        const sortedProducts = sortProducts(currentProducts, sortType);
+                        renderProducts(sortedProducts);
                     } else {
-                        resultsContainer.html("<p>No products found.</p>");
+                        $("#sortContainer").hide();  // Hide dropdown
+                        $(".category-container").html("<p>No products found.</p>");
                     }
                 },
                 error: function () {
                     $(".category-container").html("<p>Error fetching results.</p>");
                 }
             });
+        });
+
+        // 🔁 Whenever user changes dropdown, apply sort
+        $("#sortSelect").on("change", function () {
+            const sortType = $(this).val();
+            const sortedProducts = sortProducts(currentProducts, sortType);
+            renderProducts(sortedProducts);
         });
 
 

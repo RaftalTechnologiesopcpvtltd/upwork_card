@@ -270,6 +270,29 @@ def prod_API(query, scrapers, location=None):
         print(f"Error: {e}")
         return None  # Return None if there's an error
 
+def sort_products(products):
+    def get_price(product):
+        if product.get("selling_type") == "Auction":
+            price = product.get("current_bid_price")
+        else:
+            price = product.get("product_price")
+        try:
+            return float(price)
+        except (ValueError, TypeError):
+            return 0.0
+    return sorted(products, key=get_price)
+
+
+def clean_price(value):
+    if isinstance(value, str):
+        # Remove $ and commas, strip spaces
+        value = value.replace('$', '').replace(',', '').strip()
+    try:
+        return float(value)
+    except (ValueError, TypeError):
+        return 0.0
+
+
 def product_search(request):
     
     query = request.GET.get("query", "").strip()
@@ -327,6 +350,7 @@ def product_search(request):
         product_images_list = p.get("Product Images")
         # print(product_images_list)
 
+        
         results.append({
             "id": str(uuid.uuid4()),  # Manually generated unique ID
             "website_name": p.get("Website Name"),
@@ -336,8 +360,8 @@ def product_search(request):
             "selling_type": p.get("Selling Type"),
             "product_title": p.get("Product Title"),
             "product_price_currency": p.get("Product Price Currency"),
-            "product_price": p.get("Product Price"),
-            "current_bid_price": str(p.get("Current Bid Price")) if p.get("Current Bid Price") else "N/A",
+            "product_price": clean_price(p.get("Product Price")),
+            "current_bid_price": clean_price(str(p.get("Current Bid Price")) if p.get("Current Bid Price") else "N/A"),
             "current_bid_currency": p.get("Current Bid Currency"),
             "current_bid_count": p.get("Current Bid Count"),
             "description": p.get("Description"),
@@ -395,8 +419,8 @@ def product_search(request):
             "owner_location": p.get("Owner Location"),
             "date": today
         })
-
-        
+    # print(results)
+    results = sort_products(results)
 
     return JsonResponse({"products": results})
 
