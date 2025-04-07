@@ -29,7 +29,7 @@ DEBUG = True
 # DEBUG = False
 
 # ALLOWED_HOSTS = ["buyredge.com","www.buyredge.com"]
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','buyredge.com']
 
 AUTH_USER_MODEL = 'landingpage.CustomUser'
 
@@ -88,10 +88,20 @@ WSGI_APPLICATION = 'MarketPlace.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'upwork_card_db',
+        'USER': 'admin_card',
+        'PASSWORD': 'Rusingle@7866',
+        'HOST': 'localhost',  # or your DB host
+        'PORT': '5432',       # default PostgreSQL port
     }
 }
 
