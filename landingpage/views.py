@@ -242,7 +242,8 @@ import requests
 import json
 
 def prod_API(query, scrapers, location=None):
-    req_url = "http://3.141.5.147:8000/api/scrape/"
+    # req_url = "http://3.141.5.147:8000/api/scrape/"
+    req_url = "http://127.0.0.1:8000/api/scrape/"
     
     headers = {
         "Accept": "*/*",
@@ -320,7 +321,7 @@ def product_search(request):
         if 'all' in marketplace:
             ebay = data.get('ebay', [])  # Default to empty list if missing
             fivemiles = data.get('fivemiles', [])
-            fanatic = data.get('fanatic', [])
+            fanatic = data.get('fanatics', [])
             facebook = data.get('facebook', [])
             craigslist = data.get('craigslist', [])
             mercari = data.get('mercari', [])
@@ -329,8 +330,8 @@ def product_search(request):
             # all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari + offerup
         elif 'fivemiles' in marketplace:
             all_prod_data = data.get('fivemiles', [])
-        elif 'fanatic' in marketplace:
-            all_prod_data = data.get('fanatic', [])
+        elif 'fanatics' in marketplace:
+            all_prod_data = data.get('fanatics', [])
         elif 'ebay' in marketplace:
             all_prod_data = data.get('ebay', [])
         elif 'facebook' in marketplace:
@@ -1192,85 +1193,85 @@ def my_products(request):
             })
 
     return render(request, "myproducts.html", {"User_Subscription": subscription, "product_results": product_results})
-import boto3
-import paramiko
-import time
-import os
-from django.http import JsonResponse
-from django.shortcuts import render
-from dotenv import load_dotenv
+# import boto3
+# import paramiko
+# import time
+# import os
+# from django.http import JsonResponse
+# from django.shortcuts import render
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
-def server_page(request):
-    return render(request, 'server_page.html')
+# def server_page(request):
+#     return render(request, 'server_page.html')
 
-def run_scripts_on_aws(request):
-    if request.method == 'POST':
-        aws_access_key = os.getenv('AWS_ACCESS_KEY')
-        aws_secret_key = os.getenv('AWS_SECRET_KEY')
-        region = os.getenv('AWS_REGION')
-        ami_id = os.getenv('AMI_ID')
-        instance_type = os.getenv('INSTANCE_TYPE')
-        key_name = os.getenv('KEY_NAME')
-        security_group = os.getenv('SECURITY_GROUP')
-        private_key_path = os.getenv('PRIVATE_KEY_PATH')
+# def run_scripts_on_aws(request):
+#     if request.method == 'POST':
+#         aws_access_key = os.getenv('AWS_ACCESS_KEY')
+#         aws_secret_key = os.getenv('AWS_SECRET_KEY')
+#         region = os.getenv('AWS_REGION')
+#         ami_id = os.getenv('AMI_ID')
+#         instance_type = os.getenv('INSTANCE_TYPE')
+#         key_name = os.getenv('KEY_NAME')
+#         security_group = os.getenv('SECURITY_GROUP')
+#         private_key_path = os.getenv('PRIVATE_KEY_PATH')
 
-        try:
-            ec2 = boto3.client(
-                'ec2',
-                aws_access_key_id=aws_access_key,
-                aws_secret_access_key=aws_secret_key,
-                region_name=region
-            )
+#         try:
+#             ec2 = boto3.client(
+#                 'ec2',
+#                 aws_access_key_id=aws_access_key,
+#                 aws_secret_access_key=aws_secret_key,
+#                 region_name=region
+#             )
 
-            # Start EC2 instance
-            response = ec2.run_instances(
-                ImageId=ami_id,
-                InstanceType=instance_type,
-                MinCount=1,
-                MaxCount=1,
-                KeyName=key_name,
-                SecurityGroups=[security_group]
-            )
+#             # Start EC2 instance
+#             response = ec2.run_instances(
+#                 ImageId=ami_id,
+#                 InstanceType=instance_type,
+#                 MinCount=1,
+#                 MaxCount=1,
+#                 KeyName=key_name,
+#                 SecurityGroups=[security_group]
+#             )
 
-            instance_id = response['Instances'][0]['InstanceId']
+#             instance_id = response['Instances'][0]['InstanceId']
 
-            ec2_resource = boto3.resource(
-                'ec2',
-                aws_access_key_id=aws_access_key,
-                aws_secret_access_key=aws_secret_key,
-                region_name=region
-            )
+#             ec2_resource = boto3.resource(
+#                 'ec2',
+#                 aws_access_key_id=aws_access_key,
+#                 aws_secret_access_key=aws_secret_key,
+#                 region_name=region
+#             )
 
-            instance = ec2_resource.Instance(instance_id)
-            instance.wait_until_running()
-            instance.load()
+#             instance = ec2_resource.Instance(instance_id)
+#             instance.wait_until_running()
+#             instance.load()
 
-            public_ip = instance.public_ip_address
+#             public_ip = instance.public_ip_address
 
-            # SSH connection to the instance
-            key = paramiko.RSAKey.from_private_key_file(private_key_path)
-            client = paramiko.SSHClient()
-            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect(hostname=public_ip, username='ec2-user', pkey=key)
+#             # SSH connection to the instance
+#             key = paramiko.RSAKey.from_private_key_file(private_key_path)
+#             client = paramiko.SSHClient()
+#             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#             client.connect(hostname=public_ip, username='ec2-user', pkey=key)
 
-            # Run command on the instance
-            stdin, stdout, stderr = client.exec_command('echo "Hello from AWS EC2!"')
-            output = stdout.read().decode('utf-8')
+#             # Run command on the instance
+#             stdin, stdout, stderr = client.exec_command('echo "Hello from AWS EC2!"')
+#             output = stdout.read().decode('utf-8')
 
-            client.close()
+#             client.close()
 
-            # Stop the instance after use
-            ec2.stop_instances(InstanceIds=[instance_id])
+#             # Stop the instance after use
+#             ec2.stop_instances(InstanceIds=[instance_id])
 
-            return JsonResponse({
-                'status': 'Success',
-                'instance_id': instance_id,
-                'output': output
-            })
+#             return JsonResponse({
+#                 'status': 'Success',
+#                 'instance_id': instance_id,
+#                 'output': output
+#             })
 
-        except Exception as e:
-            return JsonResponse({'status': 'Failed', 'error': str(e)}, status=500)
+#         except Exception as e:
+#             return JsonResponse({'status': 'Failed', 'error': str(e)}, status=500)
 
-    return JsonResponse({'status': 'Invalid request'}, status=400)
+#     return JsonResponse({'status': 'Invalid request'}, status=400)
