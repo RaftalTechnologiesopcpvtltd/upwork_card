@@ -242,8 +242,8 @@ import requests
 import json
 
 def prod_API(query, scrapers, location=None):
-    # req_url = "http://3.141.5.147:8000/api/scrape/"
-    req_url = "http://127.0.0.1:8000/api/scrape/"
+    req_url = "http://3.141.5.147:8000/api/scrape/"
+    # req_url = "http://127.0.0.1:8000/api/scrape/"
     
     headers = {
         "Accept": "*/*",
@@ -309,7 +309,7 @@ def product_search(request):
     today = datetime.now().date()
     all_prod_data = []
 
-# Debugging: Check the type of resp['data']
+    # Debugging: Check the type of resp['data']
     data = resp.get('data', {})
 
     if not isinstance(data, dict):
@@ -322,12 +322,12 @@ def product_search(request):
             ebay = data.get('ebay', [])  # Default to empty list if missing
             fivemiles = data.get('fivemiles', [])
             fanatic = data.get('fanatics', [])
-            facebook = data.get('facebook', [])
+            # facebook = data.get('facebook', [])
             craigslist = data.get('craigslist', [])
             mercari = data.get('mercari', [])
-            # offerup = data.get('offerup', [])
-            all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari 
-            # all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari + offerup
+            offerup = data.get('offerup', [])
+            # all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari 
+            all_prod_data = ebay + fivemiles + fanatic + craigslist + mercari + offerup
         elif 'fivemiles' in marketplace:
             all_prod_data = data.get('fivemiles', [])
         elif 'fanatics' in marketplace:
