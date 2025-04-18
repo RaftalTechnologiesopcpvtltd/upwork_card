@@ -382,14 +382,14 @@
                                 <label for="marketplaceFilter" class="form-label">Marketplace</label>
                                 <select id="marketplaceFilter" class="form-control">
                                     <option value="">Select Marketplace</option>
-                                    <option value="all">All</option>
-                                    <option value="fivemiles">5 Miles</option>
-                                    <option value="craigslist">Craigslist</option>
-                                    <option value="fanatics">Fanatics Collect</option>
-                                    <option value="ebay">Ebay</option>
-                                    <!-- <option value="facebook">Facebook Marketplace</option> -->
-                                    <option value="offerup">Offerup</option>
-                                    <option value="mercari">Mercari</option>
+                                    <option value="ALL">All</option>
+                                    <option value="Fivemiles">5 Miles</option>
+                                    <option value="Craigslist">Craigslist</option>
+                                    <option value="Fanaticscollect">Fanatics Collect</option>
+                                    <option value="Ebay">Ebay</option>
+                                    <!-- <option value="Amazon">Amazon</option> -->
+                                    <option value="Offerup">Offerup</option>
+                                    <!-- <option value="mercari">Mercari</option> -->
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -1350,7 +1350,7 @@
             let marketplace = $(this).val();
             let resultsContainer = $("#locationFilter");
 
-            if (marketplace === 'craigslist' || marketplace === 'all') {
+            if (marketplace === 'Craigslist' || marketplace === 'ALL') {
                 resultsContainer.html(LocationHTML);
             } else {
                 resultsContainer.html(`<option value="">Select Location</option>`);
@@ -1387,13 +1387,16 @@
                         $("#marketplaceFilter").off("change"); // Remove initial change handler
                         $("#marketplaceFilter").on("change", function () {
                             let selectedMarketplace = $(this).val();
-                            console.log("selectedMarketplace : ", selectedMarketplace);
-                            if(selectedMarketplace === "fivemiles")
-                            {
-                                selectedMarketplace = selectedMarketplace.slice(4)
+                            console.log("selectedMarketplaceSuccess : ", selectedMarketplace);
+
+                            if (selectedMarketplace === 'Fivemiles') {
+                                selectedMarketplace = "miles";
                             }
+
+                            console.log("selectedMarketplaceSuccess : ", selectedMarketplace);
+
                             let filteredProducts;
-                            if (selectedMarketplace === 'all') {
+                            if (selectedMarketplace === 'ALL') {
                                 filteredProducts = [...allFetchedProducts];
                             } else {
                                 filteredProducts = allFetchedProducts.filter(product => product.website_name && product.website_name.toLowerCase().includes(selectedMarketplace.toLowerCase()));
@@ -1446,14 +1449,14 @@
                 console.log("selectedMarketplace : ", selectedMarketplace);
                 console.log("marketplace : ", marketplace);
 
-                if (marketplace === 'craigslist' || marketplace === 'all') {
+                if (marketplace === 'Craigslist' || marketplace === 'ALL') {
                     resultsContainer.html(LocationHTML);
                 } else {
                     resultsContainer.html('<option value="">Select Location</option>');
                 }
                 if (allFetchedProducts.length > 0) {
                     currentProducts = [...allFetchedProducts];
-                    if (marketplace !== 'all') {
+                    if (marketplace !== 'ALL') {
                         currentProducts = currentProducts.filter(product => product.website_name && product.website_name.toLowerCase().includes(selectedMarketplace.toLowerCase()));
                     }
                     const sortType = $("#sortSelect").val();

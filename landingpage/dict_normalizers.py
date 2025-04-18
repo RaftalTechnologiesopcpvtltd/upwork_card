@@ -1,0 +1,101 @@
+common_keys = [
+    "Website Name",
+    "Website URL",
+    "Product Link",
+    "Product Images",
+    "Selling Type",
+    "Product Title",
+    "Product Price Currency",
+    "Product Price",
+    "Current Bid Price",
+    "Current Bid Currency",
+    "Current Bid Count",
+    "Description",
+    "Condition",
+    "Condition Id",
+    "Condition Descriptors",
+    "Condition Values",
+    "Condition Additional Info",
+    "Product Availibility status",
+    "Product Availibility Quantity",
+    "Product Sold Quantity",
+    "Product Remaining Quantity",
+    "Shipping Cost",
+    "Shipping Currency",
+    "Shipping Service Code",
+    "Shipping Carrier Code",
+    "Shipping Type",
+    "Additional Shipping Cost Per Unit",
+    "Additional Shipping Cost Currency",
+    "Shipping Cost Type",
+    "Estimated Arrival",
+    "Brand",
+    "Category",
+    "Updated",
+    "Auction Id",
+    "Bid Count",
+    "Certified Seller",
+    "Favorited Count",
+    "Highest Bidder",
+    "Listing Id",
+    "Integer Id",
+    "Is Owner",
+    "Listing Type",
+    "Lot String",
+    "Slug",
+    "Starting Price",
+    "Starting Price Currency",
+    "Is Closed",
+    "User Bid Status",
+    "User Max Bid",
+    "Status",
+    "ReturnTerms returns Accepted", 
+    "ReturnTerms refund Method",
+    "ReturnTerms return Shipping Cost Payer",
+    "ReturnTerms return Period Value",
+    "ReturnTerms return Period Unit",
+    "Payment Methods",
+    "Quantity Used For Estimate",
+    "Min Estimated Delivery Date",
+    "Max Estimated Delivery Date",
+    "Buying Options",
+    "Minimum Price to Bid",
+    "Minimum Price Currency",
+    "Unique Bidder Count",
+    "Owner Location"
+    ]
+
+def normalize_data(data):
+    """
+    Ensure all dictionaries have the same structure with None for missing keys
+    
+    Args:
+        data (dict): Dictionary with product data
+        
+    Returns:
+        dict: Normalized dictionary with all common keys
+    """
+    return {key: data.get(key, None) for key in common_keys}
+
+def normalize_responses(results_dict):
+    """
+    Normalize response data from different scrapers
+    
+    Args:
+        results_dict (dict): Dictionary with results from each scraper
+        
+    Returns:
+        dict: Dictionary with normalized results for each scraper
+    """
+    normalized_results = {}
+    
+    for scraper_name, results in results_dict.items():
+        normalized_items = []
+        
+        for item in results:
+            normalized_item = normalize_data(item)
+            normalized_items.append(normalized_item)
+        
+        normalized_results[scraper_name] = normalized_items
+    
+    return normalized_results
