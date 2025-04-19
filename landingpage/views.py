@@ -5,7 +5,8 @@ from .forms import *
 from .models import *
 import razorpay
 import uuid
-
+import requests
+import json
 import logging
 from django.conf import settings
 from django.http import HttpResponseBadRequest
@@ -13,10 +14,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from datetime import date
 from django.db.models import Count , Q
-from django.http import JsonResponse
 import stripe
 from datetime import datetime
-import ast
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -243,8 +242,7 @@ def payment_success(request):
 def payment_failed(request):
     return render(request, "paymentfail.html")
 
-import requests
-import json
+
 
 def prod_API(query, scrapers, location=None):
     req_url = "http://3.141.5.147:8000/api/scrape/"

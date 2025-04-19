@@ -1,165 +1,713 @@
 import requests
-import undetected_chromedriver as uc
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-import time
-import csv
-import os
-import re
+import json
+from typing import List, Dict, Optional
 import logging
-import requests
-import undetected_chromedriver as uc
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
-import csv
-import os
-import re
-import logging
-from bs4 import BeautifulSoup
-from dictionary_normanlizer import *
-
-from logger import *
-
-offerUp_logger = setup_logger("offerUp_scraper")
 
 
+logger = logging.getLogger(__name__)
+def fetch_offerup(keyword: str, next_page_cursor: Optional[str] = None) -> Dict:
+    """
+    Fetches listings from OfferUp based on the provided keyword and pagination cursor.
 
-def get_all_prod_links(driver):
-    driver.get("https://offerup.com/search?q=sports+cards")
-    time.sleep(5)
-    i = 0
-    all_prod_links = []
-    while i<3:
-        offerUp_logger.info(f"{i+1} steps")
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'//*[@id="page-content"]/div[2]/div[3]/main/div[2]/div/div[1]/ul')))
+    Args:
+        keyword (str): The search keyword.
+        next_page_cursor (Optional[str]): Cursor for pagination.
 
-        prod_cards = driver.find_element(By.XPATH,'//*[@id="page-content"]/div[2]/div[3]/main/div[2]/div/div[1]/ul').find_elements(By.TAG_NAME,'li')
-        if not prod_cards:
-            offerUp_logger.info(f"{prod_cards}: No more links found. Exiting loop.")
+    Returns:
+        Dict: JSON response from the OfferUp API.
+    """
+    url = "https://offerup.com/api/graphql"
+
+    headers = {
+        "Accept-Language": "en-US,en;q=0.9,hi;q=0.8",
+        "Connection": "keep-alive",
+        "Origin": "https://offerup.com",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+        "accept": "*/*",
+        "content-type": "application/json",
+        "ou-browser-user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+    }
+
+    payload = {
+        "operationName": "GetModularFeed",
+        "variables": {
+            "debug": False,
+            "searchParams": [
+                {"key": "q", "value": keyword},
+                {"key": "platform", "value": "web"},
+                {"key": "lon", "value": "-97.822"},
+                {"key": "lat", "value": "37.751"},
+                {"key": "experiment_id", "value": "experimentmodel24"},
+                {"key": "page_cursor", "value": next_page_cursor},
+                {"key": "limit", "value": "200"},
+            ]
+        },
+        "query": """query GetModularFeed($searchParams: [SearchParam], $debug: Boolean = false) {
+        modularFeed(params: $searchParams, debug: $debug) {
+        analyticsData {
+            requestId
+            searchPerformedEventUniqueId
+            searchSessionId
+            __typename
+        }
+        categoryInfo {
+            categoryId
+            isForcedCategory
+            __typename
+        }
+        feedAdditions
+        filters {
+            ...modularFilterNumericRange
+            ...modularFilterSelectionList
+            __typename
+        }
+        legacyFeedOptions {
+            ...legacyFeedOptionListSelection
+            ...legacyFeedOptionNumericRange
+            __typename
+        }
+        looseTiles {
+            ...modularTileBanner
+            ...modularTileBingAd
+            ...modularTileGoogleDisplayAd
+            ...modularTileJob
+            ...modularTileEmptyState
+            ...modularTileListing
+            ...modularTileLocalDisplayAd
+            ...modularTileSearchAlert
+            ...modularTileSellerAd
+            ...modularModuleTileAdsPostXAd
+            __typename
+        }
+        modules {
+            ...modularGridModule
+            __typename
+        }
+        pageCursor
+        query {
+            ...modularQueryInfo
+            __typename
+        }
+        requestTimeMetadata {
+            resolverComputationTimeSeconds
+            serviceRequestTimeSeconds
+            totalResolverTimeSeconds
+            __typename
+        }
+        searchAlert {
+            alertId
+            alertStatus
+            searchAlertCount
+            __typename
+        }
+        personalizationPath
+        debugInformation @include(if: $debug) {
+            rankedListings {
+            listingId
+            attributes {
+                key
+                value
+                __typename
+            }
+            __typename
+            }
+            lastViewedItems {
+            listingId
+            attributes {
+                key
+                value
+                __typename
+            }
+            __typename
+            }
+            categoryAffinities {
+            affinity
+            count
+            decay
+            affinityOwner
+            __typename
+            }
+            rankingStats {
+            key
+            value
+            __typename
+            }
+            __typename
+        }
+        __typename
+        }
+    }
+
+    fragment modularFilterNumericRange on ModularFeedNumericRangeFilter {
+        isExpandedHighlight
+        lowerBound {
+        ...modularFilterNumericRangeBound
+        __typename
+        }
+        shortcutLabel
+        shortcutRank
+        subTitle
+        targetName
+        title
+        type
+        upperBound {
+        ...modularFilterNumericRangeBound
+        __typename
+        }
+        __typename
+    }
+
+    fragment modularFilterNumericRangeBound on ModularFeedNumericRangeFilterNumericRangeBound {
+        label
+        limit
+        placeholderText
+        targetName
+        value
+        __typename
+    }
+
+    fragment modularFilterSelectionList on ModularFeedSelectionListFilter {
+        targetName
+        title
+        subTitle
+        shortcutLabel
+        shortcutRank
+        type
+        isExpandedHighlight
+        options {
+        ...modularFilterSelectionListOption
+        __typename
+        }
+        __typename
+    }
+
+    fragment modularFilterSelectionListOption on ModularFeedSelectionListFilterOption {
+        isDefault
+        isSelected
+        label
+        subLabel
+        value
+        __typename
+    }
+
+    fragment legacyFeedOptionListSelection on FeedOptionListSelection {
+        label
+        labelShort
+        name
+        options {
+        default
+        label
+        labelShort
+        selected
+        subLabel
+        value
+        __typename
+        }
+        position
+        queryParam
+        type
+        __typename
+    }
+
+    fragment legacyFeedOptionNumericRange on FeedOptionNumericRange {
+        label
+        labelShort
+        leftQueryParam
+        lowerBound
+        name
+        options {
+        currentValue
+        label
+        textHint
+        __typename
+        }
+        position
+        rightQueryParam
+        type
+        units
+        upperBound
+        __typename
+    }
+
+    fragment modularTileBanner on ModularFeedTileBanner {
+        tileId
+        tileType
+        title
+        __typename
+    }
+
+    fragment modularTileBingAd on ModularFeedTileBingAd {
+        tileId
+        bingAd {
+        ouAdId
+        adExperimentId
+        adNetwork
+        adRequestId
+        adTileType
+        adSettings {
+            repeatClickRefractoryPeriodMillis
+            collapsible
+            __typename
+        }
+        bingClientId
+        clickFeedbackUrl
+        clickReturnUrl
+        contentUrl
+        deepLinkEnabled
+        experimentDataHash
+        image {
+            height
+            url
+            width
+            __typename
+        }
+        impressionFeedbackUrl
+        impressionUrls
+        viewableImpressionUrls
+        installmentInfo {
+            amount
+            description
+            downPayment
+            __typename
+        }
+        itemName
+        lowPrice
+        price
+        searchId
+        sellerName
+        templateFields {
+            key
+            value
+            __typename
+        }
+        __typename
+        }
+        tileType
+        __typename
+    }
+
+    fragment modularTileGoogleDisplayAd on ModularFeedTileGoogleDisplayAd {
+        tileId
+        googleDisplayAd {
+        ouAdId
+        additionalSizes
+        adExperimentId
+        adHeight
+        adNetwork
+        adPage
+        adRequestId
+        adTileType
+        adWidth
+        adaptive
+        channel
+        clickFeedbackUrl
+        clientId
+        contentUrl
+        customTargeting {
+            key
+            values
+            __typename
+        }
+        displayAdType
+        errorDrawable {
+            actionPath
+            listImage {
+            height
+            url
+            width
+            __typename
+            }
+            __typename
+        }
+        experimentDataHash
+        formatIds
+        impressionFeedbackUrl
+        personalizationProperties {
+            key
+            values
+            __typename
+        }
+        prebidConfigs {
+            key
+            values {
+            timeout
+            tamSlotUUID
+            liftoffPlacementIDs
+            nimbusPriceMapping
+            adPosition
+            __typename
+            }
+            __typename
+        }
+        renderLocation
+        searchId
+        searchQuery
+        templateId
+        __typename
+        }
+        tileType
+        __typename
+    }
+
+    fragment modularTileJob on ModularFeedTileJob {
+        tileId
+        tileType
+        job {
+        address {
+            city
+            state
+            zipcode
+            __typename
+        }
+        companyName
+        datePosted
+        image {
+            height
+            url
+            width
+            __typename
+        }
+        industry
+        jobId
+        jobListingUrl
+        jobOwnerId
+        pills {
+            text
+            type
+            __typename
+        }
+        title
+        apply {
+            method
+            value
+            __typename
+        }
+        wageDisplayValue
+        provider
+        __typename
+        }
+        __typename
+    }
+
+    fragment modularTileEmptyState on ModularFeedTileEmptyState {
+        tileId
+        tileType
+        title
+        description
+        iconType
+        __typename
+    }
+
+    fragment modularTileListing on ModularFeedTileListing {
+        tileId
+        listing {
+        ...modularListing
+        __typename
+        }
+        tileType
+        __typename
+    }
+
+    fragment modularListing on ModularFeedListing {
+        listingId
+        conditionText
+        flags
+        image {
+        height
+        url
+        width
+        __typename
+        }
+        isFirmPrice
+        locationName
+        price
+        title
+        vehicleMiles
+        __typename
+    }
+
+    fragment modularTileLocalDisplayAd on ModularFeedTileLocalDisplayAd {
+        tileId
+        localDisplayAd {
+        ouAdId
+        adExperimentId
+        adNetwork
+        adRequestId
+        adTileType
+        advertiserId
+        businessName
+        callToAction
+        callToActionType
+        clickFeedbackUrl
+        contentUrl
+        experimentDataHash
+        headline
+        image {
+            height
+            url
+            width
+            __typename
+        }
+        impressionFeedbackUrl
+        searchId
+        __typename
+        }
+        tileType
+        __typename
+    }
+
+    fragment modularTileSearchAlert on ModularFeedTileSearchAlert {
+        tileId
+        tileType
+        title
+        __typename
+    }
+
+    fragment modularTileSellerAd on ModularFeedTileSellerAd {
+        tileId
+        listing {
+        ...modularListing
+        __typename
+        }
+        sellerAd {
+        ouAdId
+        adId
+        adExperimentId
+        adNetwork
+        adRequestId
+        adTileType
+        clickFeedbackUrl
+        experimentDataHash
+        impressionFeedbackUrl
+        searchId
+        __typename
+        }
+        tileType
+        __typename
+    }
+
+    fragment modularModuleTileAdsPostXAd on ModularFeedTileAdsPostXAd {
+        ...modularTileAdsPostXAd
+        moduleId
+        moduleRank
+        moduleType
+        __typename
+    }
+
+    fragment modularTileAdsPostXAd on ModularFeedTileAdsPostXAd {
+        tileId
+        adsPostXAd {
+        ouAdId
+        adExperimentId
+        adNetwork
+        adRequestId
+        adTileType
+        clickFeedbackUrl
+        experimentDataHash
+        impressionFeedbackUrl
+        searchId
+        offer {
+            beacons {
+            noThanksClick
+            close
+            __typename
+            }
+            title
+            description
+            clickUrl
+            image
+            pixel
+            ctaYes
+            ctaNo
+            perkswallLabel
+            perkswallUrl
+            __typename
+        }
+        __typename
+        }
+        tileType
+        __typename
+    }
+
+    fragment modularGridModule on ModularFeedModuleGrid {
+        moduleId
+        collection
+        formFactor
+        grid {
+        actionPath
+        tiles {
+            ...modularModuleTileBingAd
+            ...modularModuleTileGoogleDisplayAd
+            ...modularModuleTileListing
+            ...modularModuleTileLocalDisplayAd
+            ...modularModuleTileSellerAd
+            __typename
+        }
+        __typename
+        }
+        moduleType
+        rank
+        rowIndex
+        searchId
+        subTitle
+        title
+        infoActionPath
+        feedIndex
+        __typename
+    }
+
+    fragment modularModuleTileBingAd on ModularFeedTileBingAd {
+        ...modularTileBingAd
+        moduleId
+        moduleRank
+        moduleType
+        __typename
+    }
+
+    fragment modularModuleTileGoogleDisplayAd on ModularFeedTileGoogleDisplayAd {
+        ...modularTileGoogleDisplayAd
+        moduleId
+        moduleRank
+        moduleType
+        __typename
+    }
+
+    fragment modularModuleTileListing on ModularFeedTileListing {
+        ...modularTileListing
+        moduleId
+        moduleRank
+        moduleType
+        __typename
+    }
+
+    fragment modularModuleTileLocalDisplayAd on ModularFeedTileLocalDisplayAd {
+        ...modularTileLocalDisplayAd
+        moduleId
+        moduleRank
+        moduleType
+        __typename
+    }
+
+    fragment modularModuleTileSellerAd on ModularFeedTileSellerAd {
+        ...modularTileSellerAd
+        moduleId
+        moduleRank
+        moduleType
+        __typename
+    }
+
+    fragment modularQueryInfo on ModularFeedQueryInfo {
+        appliedQuery
+        decisionType
+        originalQuery
+        suggestedQuery
+        __typename
+    }
+
+
+
+    """
+
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Request failed: {e}")
+        return {}
+
+def parse_listings(data: Dict) -> List[Dict]:
+    """
+    Parses the OfferUp API response to extract relevant listing information.
+
+    Args:
+        data (Dict): JSON response from the OfferUp API.
+
+    Returns:
+        List[Dict]: A list of dictionaries containing listing details.
+    """
+    listings = []
+    try:
+        tiles = data.get('data', {}).get('modularFeed', {}).get('looseTiles', [])
+        for tile in tiles:
+            listing = tile.get('listing')
+            if listing:
+                product = {
+                    "Website Name": "OfferUP",
+                    "Website URL": "https://offerup.com/",
+                    "Product Link": f"https://offerup.com/item/detail/{listing.get('listingId')}",
+                    "Product Images": [listing.get('image', {}).get('url')],
+                    "Selling Type": "Fixed",
+                    "Product Title": listing.get('title'),
+                    "Product Price Currency": "$",
+                    "Product Price": listing.get('price'),
+                    "Description": f"Listed in {listing.get('locationName')}",
+                    "Condition": listing.get('conditionText') or "Not Specified",
+                    "Shipping Cost": "Local Pickup Only" if 'LOCAL_PICKUP' in listing.get('flags', []) else "-",
+                    "Shipping Currency": "$" if 'LOCAL_PICKUP' in listing.get('flags', []) else "-",
+                }
+                listings.append(product)
+    except Exception as e:
+        print(f"Error parsing listings: {e}")
+    return listings
+
+def get_data(keyword,location):
+    """
+    Main function to fetch and parse listings from OfferUp.
+    """
+    all_products = []
+    next_page_cursor = None
+    for _ in range(5):
+        data = fetch_offerup(keyword, next_page_cursor)
+        if not data:
             break
+        next_page_cursor = data.get('data', {}).get('modularFeed', {}).get('pageCursor')
+        products = parse_listings(data)
+        all_products.extend(products)
+    print(f"Total products fetched: {len(all_products)}")
+    return all_products
 
-        last_href = all_prod_links[-1] if all_prod_links else None  # Get the last stored href safely
+def lambda_handler(event, context):
+    """
+    AWS Lambda handler function to scrape 5miles.com based on 'query' and 'location' from the event.
 
-        for prod_card in prod_cards:
-            href = prod_card.find_element(By.TAG_NAME,'a').get_attribute('href')
-            # offerUp_logger.info(href)
-            if href not in all_prod_links:
-                all_prod_links.append(href)
-            else:
-                offerUp_logger.info(f"{href} is already appended")
-        # if last_href and last_href == prod_cards[-1].find_element(By.TAG_NAME,'a').get_attribute("href"):
-        #     offerUp_logger.info("No new links found. Stopping scrolling.")
-        #     break
-        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", prod_cards[-1])
-        time.sleep(3)
-        i+=1
-    return all_prod_links
+    Example event:
+    {
+        "query": "laptop",
+        "location": "dallas"
+    }
+    """
+    try:
+        query = event.get('query', '')
+        location = event.get('location', '')
 
-def save_to_csv(data, filename=r"landingpage/data/OfferUp_data.csv"):
-    """Save product data to a CSV file."""
-    file_exists = os.path.exists(filename)
+        if not query:
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'error': 'Missing "query" parameter'})
+            }
 
-    with open(filename, mode="a", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=data.keys())
+        results = get_data(query,location)
 
-        if not file_exists:
-            writer.writeheader()
+        # If it's an error dict, return as error
+        if isinstance(results, dict) and "error" in results:
+            return {
+                'statusCode': 500,
+                'body': json.dumps(results)
+            }
 
-        writer.writerow(data)
-
-    offerUp_logger.info(f"Data saved to {filename}")
-
-# def get_product(driver,all_prod_links):
-#     for links in all_prod_links:
-#         ProductImagesURLS = "-"
-#         ProductTitle = "-"
-#         ProductPrice = "-"
-#         Shipping = "-"
-#         EstArrival = "-"
-#         Condition = "-"
-#         Brand = "-"
-#         Category = "-"
-#         Updated = "-"
-#         Description = "-"
-
-#         driver.get(links)
-
-#         time.sleep(3)
-
-#         details_div = driver.find_element(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[1]/div/div[3]/div[1]') if driver.find_elements(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[1]/div/div[3]/div[1]') else "-"
-
-#         info_div = details_div.find_elements(By.TAG_NAME, "p") if details_div != "-" else "-"
-
-#         ProductTitle = details_div.find_element(By.TAG_NAME, "h1").text.strip() if details_div != "-" and details_div.find_elements(By.TAG_NAME, "h1") else "-"
-
-#         Brand = driver.find_element(By.TAG_NAME, "dd").find_element(By.TAG_NAME, "p").text if driver.find_elements(By.TAG_NAME, "dd") else "-"
-
-#         try:
-#             # Try to find the first description
-#             description_element = driver.find_element(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[5]/div[2]/div[2]/div/p')
-#             Description = description_element.text.strip()
-#         except:
-#             try:
-#                 # If the first one fails, try the alternative XPath
-#                 description_element = driver.find_element(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[3]/div[2]/div[2]/div/p')
-#                 Description = description_element.text.strip()
-#             except:
-#                 # If both fail, assign "-"
-#                 Description = "-"
-#         # Description = driver.find_element(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[5]/div[2]/div[2]/div/p').text.strip() if driver.find_elements(By.XPATH, '//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[5]/div[2]/div[2]/div/p') else "-"
-
-#         images_div = driver.find_element(By.XPATH,'//*[@id="page-content"]/div[2]/main/div[1]/div/div[2]/div/div[1]/div/div[1]/div[1]/div/div').find_elements(By.TAG_NAME,"img")
-
-#         ProductImagesURLS = [img.get_attribute('src') for img in images_div] if images_div else "-"
-
-#         ProductPrice = driver.find_element(By.XPATH,'//*[@id="page-content"]/div[2]/main/div[1]/div/div[1]/div/div[3]/div[1]/div[1]/div/div/p').text.strip()
-
-#         for info in info_div:
-#             # offerUp_logger.info(info.text.strip())
-#             if "$" in info.text.strip():
-#                 if ProductPrice and "Ships" in info.text.strip():
-#                     Shipping = info.text.strip() if info.text.strip() else "-"
-#             elif "updated" in info.text.strip() or "about" in info.text.strip() or "hours" in info.text.strip() or "minutes" in info.text.strip() or "seconds" in info.text.strip():
-#                 Updated = info.text.strip() if info.text.strip() else "-"
-#             elif "Condition" in info.text.strip():
-#                 Condition = info.text.strip() if info.text.strip() else "-"
-#             else:
-#                 Category = info.text.strip() if info.text.strip() else "-"
-
-#         product_data = normalize_data({
-#             "Website Name": "OfferUP",
-#             "Website URL": "https://offerup.com/",
-#             "Product Link": links,
-#             "Product Images": ProductImagesURLS,
-#             "Selling Type" : "Fixed",
-#             "Product Title": ProductTitle,
-#             "Product Price Currency": "$",
-#             "Product Price": ProductPrice,
-#             "Description": Description,
-#             "Condition": Condition,
-#             "Shipping Cost": Shipping if Shipping else "-",
-#             "Shipping Currency": "$" if Shipping else "-",
-#             "Estimated Arrival": EstArrival,
-#             "Brand": Brand,
-#             "Category": Category,
-#             "Updated": Updated,
-#         })
-
-#         offerUp_logger.info(product_data)
-#         save_to_csv(product_data, filename="data\OfferUp_data.csv")
-
-# if __name__ == "__main__":
-#     offerUp_logger.info("==============Start==================")
-
-#     driver = initialize_driver()
-#     all_prod_links = get_all_prod_links(driver)
-#     get_product(driver,all_prod_links)
-#     offerUp_logger.info("==============Finished==================")
+        return {
+            'statusCode': 200,
+            'body': json.dumps(results)
+        }
+    except Exception as e:
+        logger.exception("Unhandled exception in lambda_handler")
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
