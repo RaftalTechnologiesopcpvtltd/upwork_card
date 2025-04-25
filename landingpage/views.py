@@ -1062,7 +1062,7 @@ def product_search(request):
         "johannesburg" : "https://johannesburg.craigslist.org/",
         "pretoria" : "https://pretoria.craigslist.org/",
         "tunisia" : "https://tunis.craigslist.org/",
-        }
+    }
     
     query = request.GET.get("query", "").strip()
     location = request.GET.get("location", "").strip()
