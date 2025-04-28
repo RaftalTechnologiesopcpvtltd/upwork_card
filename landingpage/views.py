@@ -5,7 +5,8 @@ from .forms import *
 from .models import *
 import razorpay
 import uuid
-
+import requests
+import json
 import logging
 from django.conf import settings
 from django.http import HttpResponseBadRequest
@@ -13,10 +14,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from datetime import date
 from django.db.models import Count , Q
-from django.http import JsonResponse
 import stripe
 from datetime import datetime
-import ast
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -30,6 +29,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import UserSubscription, MyListing, Product
+import json
+import boto3
+from concurrent.futures import ThreadPoolExecutor
+from landingpage.dict_normalizers import normalize_data
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -238,11 +242,11 @@ def payment_success(request):
 def payment_failed(request):
     return render(request, "paymentfail.html")
 
-import requests
-import json
+
 
 def prod_API(query, scrapers, location=None):
     req_url = "http://3.141.5.147:8000/api/scrape/"
+    # req_url = "http://127.0.0.1:8000/api/scrape/"
     
     headers = {
         "Accept": "*/*",
@@ -293,57 +297,827 @@ def clean_price(value):
         return 0.0
 
 
+def invoke_lambda(function_name, query, location):
+    client = boto3.client('lambda')
+
+    response = client.invoke(
+        FunctionName=function_name,
+        Payload=json.dumps({'query': query, 'location': location}),
+    )
+
+    response_payload = response['Payload'].read().decode('utf-8')
+    # print(f"[{function_name}] Raw Payload:", response_payload)
+
+    result = json.loads(response_payload)
+
+    if isinstance(result.get("body"), str):
+        body = json.loads(result["body"])
+    else:
+        body = result.get("body")
+
+    # print(f"[{function_name}] Final Result:", body)
+    return body
+
+
+def run_functions(selected_function, query, location, function_names=None):
+    if selected_function.upper() == "ALL":
+        if not function_names:
+            raise ValueError("Please provide a list of function names when running 'ALL'.")
+        
+        with ThreadPoolExecutor(max_workers=len(function_names)) as executor:
+            futures = [
+                executor.submit(invoke_lambda, fn, query, location)
+                for fn in function_names
+            ]
+            combined_results = []
+            for f in futures:
+                result = f.result()
+                if isinstance(result, list):
+                    # Normalize each item before extending
+                    normalized = [normalize_data(item) for item in result]
+                    combined_results.extend(normalized)
+                else:
+                    combined_results.append(normalize_data(result))
+            return combined_results
+    else:
+        result = invoke_lambda(selected_function, query, location)
+        if isinstance(result, list):
+            return [normalize_data(item) for item in result]
+        return [normalize_data(result)]
+
+
 def product_search(request):
+    LOCATION_CHOICES = {
+        "auburn" : "https://auburn.craigslist.org/",
+        "birmingham" : "https://bham.craigslist.org/",
+        "dothan" : "https://dothan.craigslist.org/",
+        "florence / muscle shoals" : "https://shoals.craigslist.org/",
+        "gadsden-anniston" : "https://gadsden.craigslist.org/",
+        "huntsville / decatur" : "https://huntsville.craigslist.org/",
+        "mobile" : "https://mobile.craigslist.org/",
+        "montgomery" : "https://montgomery.craigslist.org/",
+        "tuscaloosa" : "https://tuscaloosa.craigslist.org/",
+        "anchorage / mat-su" : "https://anchorage.craigslist.org/",
+        "fairbanks" : "https://fairbanks.craigslist.org/",
+        "kenai peninsula" : "https://kenai.craigslist.org/",
+        "southeast alaska" : "https://juneau.craigslist.org/",
+        "flagstaff / sedona" : "https://flagstaff.craigslist.org/",
+        "mohave county" : "https://mohave.craigslist.org/",
+        "phoenix" : "https://phoenix.craigslist.org/",
+        "prescott" : "https://prescott.craigslist.org/",
+        "show low" : "https://showlow.craigslist.org/",
+        "sierra vista" : "https://sierravista.craigslist.org/",
+        "tucson" : "https://tucson.craigslist.org/",
+        "yuma" : "https://yuma.craigslist.org/",
+        "fayetteville" : "https://fayar.craigslist.org/",
+        "fort smith" : "https://fortsmith.craigslist.org/",
+        "jonesboro" : "https://jonesboro.craigslist.org/",
+        "little rock" : "https://littlerock.craigslist.org/",
+        "texarkana" : "https://texarkana.craigslist.org/",
+        "bakersfield" : "https://bakersfield.craigslist.org/",
+        "chico" : "https://chico.craigslist.org/",
+        "fresno / madera" : "https://fresno.craigslist.org/",
+        "gold country" : "https://goldcountry.craigslist.org/",
+        "hanford-corcoran" : "https://hanford.craigslist.org/",
+        "humboldt county" : "https://humboldt.craigslist.org/",
+        "imperial county" : "https://imperial.craigslist.org/",
+        "inland empire" : "https://inlandempire.craigslist.org/",
+        "los angeles" : "https://losangeles.craigslist.org/",
+        "mendocino county" : "https://mendocino.craigslist.org/",
+        "merced" : "https://merced.craigslist.org/",
+        "modesto" : "https://modesto.craigslist.org/",
+        "monterey bay" : "https://monterey.craigslist.org/",
+        "orange county" : "https://orangecounty.craigslist.org/",
+        "palm springs" : "https://palmsprings.craigslist.org/",
+        "redding" : "https://redding.craigslist.org/",
+        "sacramento" : "https://sacramento.craigslist.org/",
+        "san diego" : "https://sandiego.craigslist.org/",
+        "san francisco bay area" : "https://sfbay.craigslist.org/",
+        "san luis obispo" : "https://slo.craigslist.org/",
+        "santa barbara" : "https://santabarbara.craigslist.org/",
+        "santa maria" : "https://santamaria.craigslist.org/",
+        "siskiyou county" : "https://siskiyou.craigslist.org/",
+        "stockton" : "https://stockton.craigslist.org/",
+        "susanville" : "https://susanville.craigslist.org/",
+        "ventura county" : "https://ventura.craigslist.org/",
+        "visalia-tulare" : "https://visalia.craigslist.org/",
+        "yuba-sutter" : "https://yubasutter.craigslist.org/",
+        "boulder" : "https://boulder.craigslist.org/",
+        "colorado springs" : "https://cosprings.craigslist.org/",
+        "denver" : "https://denver.craigslist.org/",
+        "eastern CO" : "https://eastco.craigslist.org/",
+        "fort collins / north CO" : "https://fortcollins.craigslist.org/",
+        "high rockies" : "https://rockies.craigslist.org/",
+        "pueblo" : "https://pueblo.craigslist.org/",
+        "western slope" : "https://westslope.craigslist.org/",
+        "eastern CT" : "https://newlondon.craigslist.org/",
+        "hartford" : "https://hartford.craigslist.org/",
+        "new haven" : "https://newhaven.craigslist.org/",
+        "northwest CT" : "https://nwct.craigslist.org/",
+        "delaware" : "https://delaware.craigslist.org/",
+        "washington" : "https://washingtondc.craigslist.org/",
+        "broward county" : "https://miami.craigslist.org/",
+        "daytona beach" : "https://daytona.craigslist.org/",
+        "florida keys" : "https://keys.craigslist.org/",
+        "fort lauderdale" : "https://miami.craigslist.org/",
+        "ft myers / SW florida" : "https://fortmyers.craigslist.org/",
+        "gainesville" : "https://gainesville.craigslist.org/",
+        "heartland florida" : "https://cfl.craigslist.org/",
+        "jacksonville" : "https://jacksonville.craigslist.org/",
+        "lakeland" : "https://lakeland.craigslist.org/",
+        "miami / dade" : "https://miami.craigslist.org/",
+        "north central FL" : "https://lakecity.craigslist.org/",
+        "ocala" : "https://ocala.craigslist.org/",
+        "okaloosa / walton" : "https://okaloosa.craigslist.org/",
+        "orlando" : "https://orlando.craigslist.org/",
+        "panama city" : "https://panamacity.craigslist.org/",
+        "pensacola" : "https://pensacola.craigslist.org/",
+        "sarasota-bradenton" : "https://sarasota.craigslist.org/",
+        "south florida" : "https://miami.craigslist.org/",
+        "space coast" : "https://spacecoast.craigslist.org/",
+        "st augustine" : "https://staugustine.craigslist.org/",
+        "tallahassee" : "https://tallahassee.craigslist.org/",
+        "tampa bay area" : "https://tampa.craigslist.org/",
+        "treasure coast" : "https://treasure.craigslist.org/",
+        "palm beach county" : "https://miami.craigslist.org/",
+        "albany" : "https://albanyga.craigslist.org/",
+        "athens" : "https://athensga.craigslist.org/",
+        "atlanta" : "https://atlanta.craigslist.org/",
+        "augusta" : "https://augusta.craigslist.org/",
+        "brunswick" : "https://brunswick.craigslist.org/",
+        "columbus" : "https://columbusga.craigslist.org/",
+        "macon / warner robins" : "https://macon.craigslist.org/",
+        "northwest GA" : "https://nwga.craigslist.org/",
+        "savannah / hinesville" : "https://savannah.craigslist.org/",
+        "statesboro" : "https://statesboro.craigslist.org/",
+        "valdosta" : "https://valdosta.craigslist.org/",
+        "hawaii" : "https://honolulu.craigslist.org/",
+        "boise" : "https://boise.craigslist.org/",
+        "east idaho" : "https://eastidaho.craigslist.org/",
+        "lewiston / clarkston" : "https://lewiston.craigslist.org/",
+        "twin falls" : "https://twinfalls.craigslist.org/",
+        "bloomington-normal" : "https://bn.craigslist.org/",
+        "champaign urbana" : "https://chambana.craigslist.org/",
+        "chicago" : "https://chicago.craigslist.org/",
+        "decatur" : "https://decatur.craigslist.org/",
+        "la salle co" : "https://lasalle.craigslist.org/",
+        "mattoon-charleston" : "https://mattoon.craigslist.org/",
+        "peoria" : "https://peoria.craigslist.org/",
+        "rockford" : "https://rockford.craigslist.org/",
+        "southern illinois" : "https://carbondale.craigslist.org/",
+        "springfield" : "https://springfieldil.craigslist.org/",
+        "western IL" : "https://quincy.craigslist.org/",
+        "bloomington" : "https://bloomington.craigslist.org/",
+        "evansville" : "https://evansville.craigslist.org/",
+        "fort wayne" : "https://fortwayne.craigslist.org/",
+        "indianapolis" : "https://indianapolis.craigslist.org/",
+        "kokomo" : "https://kokomo.craigslist.org/",
+        "lafayette / west lafayette" : "https://tippecanoe.craigslist.org/",
+        "muncie / anderson" : "https://muncie.craigslist.org/",
+        "richmond" : "https://richmondin.craigslist.org/",
+        "south bend / michiana" : "https://southbend.craigslist.org/",
+        "terre haute" : "https://terrehaute.craigslist.org/",
+        "ames" : "https://ames.craigslist.org/",
+        "cedar rapids" : "https://cedarrapids.craigslist.org/",
+        "des moines" : "https://desmoines.craigslist.org/",
+        "dubuque" : "https://dubuque.craigslist.org/",
+        "fort dodge" : "https://fortdodge.craigslist.org/",
+        "iowa city" : "https://iowacity.craigslist.org/",
+        "mason city" : "https://masoncity.craigslist.org/",
+        "quad cities" : "https://quadcities.craigslist.org/",
+        "sioux city" : "https://siouxcity.craigslist.org/",
+        "southeast IA" : "https://ottumwa.craigslist.org/",
+        "waterloo / cedar falls" : "https://waterloo.craigslist.org/",
+        "lawrence" : "https://lawrence.craigslist.org/",
+        "manhattan" : "https://ksu.craigslist.org/",
+        "northwest KS" : "https://nwks.craigslist.org/",
+        "salina" : "https://salina.craigslist.org/",
+        "southeast KS" : "https://seks.craigslist.org/",
+        "southwest KS" : "https://swks.craigslist.org/",
+        "topeka" : "https://topeka.craigslist.org/",
+        "wichita" : "https://wichita.craigslist.org/",
+        "bowling green" : "https://bgky.craigslist.org/",
+        "eastern kentucky" : "https://eastky.craigslist.org/",
+        "lexington" : "https://lexington.craigslist.org/",
+        "louisville" : "https://louisville.craigslist.org/",
+        "owensboro" : "https://owensboro.craigslist.org/",
+        "western KY" : "https://westky.craigslist.org/",
+        "baton rouge" : "https://batonrouge.craigslist.org/",
+        "central louisiana" : "https://cenla.craigslist.org/",
+        "houma" : "https://houma.craigslist.org/",
+        "lafayette" : "https://lafayette.craigslist.org/",
+        "lake charles" : "https://lakecharles.craigslist.org/",
+        "monroe" : "https://monroe.craigslist.org/",
+        "new orleans" : "https://neworleans.craigslist.org/",
+        "shreveport" : "https://shreveport.craigslist.org/",
+        "maine" : "https://maine.craigslist.org/",
+        "annapolis" : "https://annapolis.craigslist.org/",
+        "baltimore" : "https://baltimore.craigslist.org/",
+        "eastern shore" : "https://easternshore.craigslist.org/",
+        "frederick" : "https://frederick.craigslist.org/",
+        "southern maryland" : "https://smd.craigslist.org/",
+        "western maryland" : "https://westmd.craigslist.org/",
+        "boston" : "https://boston.craigslist.org/",
+        "cape cod / islands" : "https://capecod.craigslist.org/",
+        "south coast" : "https://southcoast.craigslist.org/",
+        "western massachusetts" : "https://westernmass.craigslist.org/",
+        "worcester / central MA" : "https://worcester.craigslist.org/",
+        "ann arbor" : "https://annarbor.craigslist.org/",
+        "battle creek" : "https://battlecreek.craigslist.org/",
+        "central michigan" : "https://centralmich.craigslist.org/",
+        "detroit metro" : "https://detroit.craigslist.org/",
+        "flint" : "https://flint.craigslist.org/",
+        "grand rapids" : "https://grandrapids.craigslist.org/",
+        "holland" : "https://holland.craigslist.org/",
+        "jackson" : "https://jxn.craigslist.org/",
+        "kalamazoo" : "https://kalamazoo.craigslist.org/",
+        "lansing" : "https://lansing.craigslist.org/",
+        "monroe" : "https://monroemi.craigslist.org/",
+        "muskegon" : "https://muskegon.craigslist.org/",
+        "northern michigan" : "https://nmi.craigslist.org/",
+        "port huron" : "https://porthuron.craigslist.org/",
+        "saginaw-midland-baycity" : "https://saginaw.craigslist.org/",
+        "southwest michigan" : "https://swmi.craigslist.org/",
+        "the thumb" : "https://thumb.craigslist.org/",
+        "upper peninsula" : "https://up.craigslist.org/",
+        "bemidji" : "https://bemidji.craigslist.org/",
+        "brainerd" : "https://brainerd.craigslist.org/",
+        "duluth / superior" : "https://duluth.craigslist.org/",
+        "mankato" : "https://mankato.craigslist.org/",
+        "minneapolis / st paul" : "https://minneapolis.craigslist.org/",
+        "rochester" : "https://rmn.craigslist.org/",
+        "southwest MN" : "https://marshall.craigslist.org/",
+        "st cloud" : "https://stcloud.craigslist.org/",
+        "gulfport / biloxi" : "https://gulfport.craigslist.org/",
+        "hattiesburg" : "https://hattiesburg.craigslist.org/",
+        "jackson" : "https://jackson.craigslist.org/",
+        "meridian" : "https://meridian.craigslist.org/",
+        "north mississippi" : "https://northmiss.craigslist.org/",
+        "southwest MS" : "https://natchez.craigslist.org/",
+        "columbia / jeff city" : "https://columbiamo.craigslist.org/",
+        "joplin" : "https://joplin.craigslist.org/",
+        "kansas city" : "https://kansascity.craigslist.org/",
+        "kirksville" : "https://kirksville.craigslist.org/",
+        "lake of the ozarks" : "https://loz.craigslist.org/",
+        "southeast missouri" : "https://semo.craigslist.org/",
+        "springfield" : "https://springfield.craigslist.org/",
+        "st joseph" : "https://stjoseph.craigslist.org/",
+        "st louis" : "https://stlouis.craigslist.org/",
+        "billings" : "https://billings.craigslist.org/",
+        "bozeman" : "https://bozeman.craigslist.org/",
+        "butte" : "https://butte.craigslist.org/",
+        "great falls" : "https://greatfalls.craigslist.org/",
+        "helena" : "https://helena.craigslist.org/",
+        "kalispell" : "https://kalispell.craigslist.org/",
+        "missoula" : "https://missoula.craigslist.org/",
+        "eastern montana" : "https://montana.craigslist.org/",
+        "grand island" : "https://grandisland.craigslist.org/",
+        "lincoln" : "https://lincoln.craigslist.org/",
+        "north platte" : "https://northplatte.craigslist.org/",
+        "omaha / council bluffs" : "https://omaha.craigslist.org/",
+        "scottsbluff / panhandle" : "https://scottsbluff.craigslist.org/",
+        "elko" : "https://elko.craigslist.org/",
+        "las vegas" : "https://lasvegas.craigslist.org/",
+        "reno / tahoe" : "https://reno.craigslist.org/",
+        "new hampshire" : "https://nh.craigslist.org/",
+        "central NJ" : "https://cnj.craigslist.org/",
+        "jersey shore" : "https://jerseyshore.craigslist.org/",
+        "north jersey" : "https://newjersey.craigslist.org/",
+        "south jersey" : "https://southjersey.craigslist.org/",
+        "albuquerque" : "https://albuquerque.craigslist.org/",
+        "clovis / portales" : "https://clovis.craigslist.org/",
+        "farmington" : "https://farmington.craigslist.org/",
+        "las cruces" : "https://lascruces.craigslist.org/",
+        "roswell / carlsbad" : "https://roswell.craigslist.org/",
+        "santa fe / taos" : "https://santafe.craigslist.org/",
+        "albany" : "https://albany.craigslist.org/",
+        "binghamton" : "https://binghamton.craigslist.org/",
+        "buffalo" : "https://buffalo.craigslist.org/",
+        "catskills" : "https://catskills.craigslist.org/",
+        "chautauqua" : "https://chautauqua.craigslist.org/",
+        "elmira-corning" : "https://elmira.craigslist.org/",
+        "finger lakes" : "https://fingerlakes.craigslist.org/",
+        "glens falls" : "https://glensfalls.craigslist.org/",
+        "hudson valley" : "https://hudsonvalley.craigslist.org/",
+        "ithaca" : "https://ithaca.craigslist.org/",
+        "long island" : "https://longisland.craigslist.org/",
+        "new york city" : "https://newyork.craigslist.org/",
+        "oneonta" : "https://oneonta.craigslist.org/",
+        "plattsburgh-adirondacks" : "https://plattsburgh.craigslist.org/",
+        "potsdam-canton-massena" : "https://potsdam.craigslist.org/",
+        "rochester" : "https://rochester.craigslist.org/",
+        "syracuse" : "https://syracuse.craigslist.org/",
+        "twin tiers NY/PA" : "https://twintiers.craigslist.org/",
+        "utica-rome-oneida" : "https://utica.craigslist.org/",
+        "watertown" : "https://watertown.craigslist.org/",
+        "asheville" : "https://asheville.craigslist.org/",
+        "boone" : "https://boone.craigslist.org/",
+        "charlotte" : "https://charlotte.craigslist.org/",
+        "eastern NC" : "https://eastnc.craigslist.org/",
+        "fayetteville" : "https://fayetteville.craigslist.org/",
+        "greensboro" : "https://greensboro.craigslist.org/",
+        "hickory / lenoir" : "https://hickory.craigslist.org/",
+        "jacksonville" : "https://onslow.craigslist.org/",
+        "outer banks" : "https://outerbanks.craigslist.org/",
+        "raleigh / durham / CH" : "https://raleigh.craigslist.org/",
+        "wilmington" : "https://wilmington.craigslist.org/",
+        "winston-salem" : "https://winstonsalem.craigslist.org/",
+        "bismarck" : "https://bismarck.craigslist.org/",
+        "fargo / moorhead" : "https://fargo.craigslist.org/",
+        "grand forks" : "https://grandforks.craigslist.org/",
+        "north dakota" : "https://nd.craigslist.org/",
+        "akron / canton" : "https://akroncanton.craigslist.org/",
+        "ashtabula" : "https://ashtabula.craigslist.org/",
+        "athens" : "https://athensohio.craigslist.org/",
+        "chillicothe" : "https://chillicothe.craigslist.org/",
+        "cincinnati" : "https://cincinnati.craigslist.org/",
+        "cleveland" : "https://cleveland.craigslist.org/",
+        "columbus" : "https://columbus.craigslist.org/",
+        "dayton / springfield" : "https://dayton.craigslist.org/",
+        "lima / findlay" : "https://limaohio.craigslist.org/",
+        "mansfield" : "https://mansfield.craigslist.org/",
+        "sandusky" : "https://sandusky.craigslist.org/",
+        "toledo" : "https://toledo.craigslist.org/",
+        "tuscarawas co" : "https://tuscarawas.craigslist.org/",
+        "youngstown" : "https://youngstown.craigslist.org/",
+        "zanesville / cambridge" : "https://zanesville.craigslist.org/",
+        "lawton" : "https://lawton.craigslist.org/",
+        "northwest OK" : "https://enid.craigslist.org/",
+        "oklahoma city" : "https://oklahomacity.craigslist.org/",
+        "stillwater" : "https://stillwater.craigslist.org/",
+        "tulsa" : "https://tulsa.craigslist.org/",
+        "bend" : "https://bend.craigslist.org/",
+        "corvallis/albany" : "https://corvallis.craigslist.org/",
+        "east oregon" : "https://eastoregon.craigslist.org/",
+        "eugene" : "https://eugene.craigslist.org/",
+        "klamath falls" : "https://klamath.craigslist.org/",
+        "medford-ashland" : "https://medford.craigslist.org/",
+        "oregon coast" : "https://oregoncoast.craigslist.org/",
+        "portland" : "https://portland.craigslist.org/",
+        "roseburg" : "https://roseburg.craigslist.org/",
+        "salem" : "https://salem.craigslist.org/",
+        "altoona-johnstown" : "https://altoona.craigslist.org/",
+        "cumberland valley" : "https://chambersburg.craigslist.org/",
+        "erie" : "https://erie.craigslist.org/",
+        "harrisburg" : "https://harrisburg.craigslist.org/",
+        "lancaster" : "https://lancaster.craigslist.org/",
+        "lehigh valley" : "https://allentown.craigslist.org/",
+        "meadville" : "https://meadville.craigslist.org/",
+        "philadelphia" : "https://philadelphia.craigslist.org/",
+        "pittsburgh" : "https://pittsburgh.craigslist.org/",
+        "poconos" : "https://poconos.craigslist.org/",
+        "reading" : "https://reading.craigslist.org/",
+        "scranton / wilkes-barre" : "https://scranton.craigslist.org/",
+        "state college" : "https://pennstate.craigslist.org/",
+        "williamsport" : "https://williamsport.craigslist.org/",
+        "york" : "https://york.craigslist.org/",
+        "rhode island" : "https://providence.craigslist.org/",
+        "charleston" : "https://charleston.craigslist.org/",
+        "columbia" : "https://columbia.craigslist.org/",
+        "florence" : "https://florencesc.craigslist.org/",
+        "greenville / upstate" : "https://greenville.craigslist.org/",
+        "hilton head" : "https://hiltonhead.craigslist.org/",
+        "myrtle beach" : "https://myrtlebeach.craigslist.org/",
+        "northeast SD" : "https://nesd.craigslist.org/",
+        "pierre / central SD" : "https://csd.craigslist.org/",
+        "rapid city / west SD" : "https://rapidcity.craigslist.org/",
+        "sioux falls / SE SD" : "https://siouxfalls.craigslist.org/",
+        "south dakota" : "https://sd.craigslist.org/",
+        "chattanooga" : "https://chattanooga.craigslist.org/",
+        "clarksville" : "https://clarksville.craigslist.org/",
+        "cookeville" : "https://cookeville.craigslist.org/",
+        "jackson" : "https://jacksontn.craigslist.org/",
+        "knoxville" : "https://knoxville.craigslist.org/",
+        "memphis" : "https://memphis.craigslist.org/",
+        "nashville" : "https://nashville.craigslist.org/",
+        "tri-cities" : "https://tricities.craigslist.org/",
+        "abilene" : "https://abilene.craigslist.org/",
+        "amarillo" : "https://amarillo.craigslist.org/",
+        "austin" : "https://austin.craigslist.org/",
+        "beaumont / port arthur" : "https://beaumont.craigslist.org/",
+        "brownsville" : "https://brownsville.craigslist.org/",
+        "college station" : "https://collegestation.craigslist.org/",
+        "corpus christi" : "https://corpuschristi.craigslist.org/",
+        "dallas / fort worth" : "https://dallas.craigslist.org/",
+        "deep east texas" : "https://nacogdoches.craigslist.org/",
+        "del rio / eagle pass" : "https://delrio.craigslist.org/",
+        "el paso" : "https://elpaso.craigslist.org/",
+        "galveston" : "https://galveston.craigslist.org/",
+        "houston" : "https://houston.craigslist.org/",
+        "killeen / temple / ft hood" : "https://killeen.craigslist.org/",
+        "laredo" : "https://laredo.craigslist.org/",
+        "lubbock" : "https://lubbock.craigslist.org/",
+        "mcallen / edinburg" : "https://mcallen.craigslist.org/",
+        "odessa / midland" : "https://odessa.craigslist.org/",
+        "san angelo" : "https://sanangelo.craigslist.org/",
+        "san antonio" : "https://sanantonio.craigslist.org/",
+        "san marcos" : "https://sanmarcos.craigslist.org/",
+        "southwest TX" : "https://bigbend.craigslist.org/",
+        "texoma" : "https://texoma.craigslist.org/",
+        "tyler / east TX" : "https://easttexas.craigslist.org/",
+        "victoria" : "https://victoriatx.craigslist.org/",
+        "waco" : "https://waco.craigslist.org/",
+        "wichita falls" : "https://wichitafalls.craigslist.org/",
+        "logan" : "https://logan.craigslist.org/",
+        "ogden-clearfield" : "https://ogden.craigslist.org/",
+        "provo / orem" : "https://provo.craigslist.org/",
+        "salt lake city" : "https://saltlakecity.craigslist.org/",
+        "st george" : "https://stgeorge.craigslist.org/",
+        "vermont" : "https://vermont.craigslist.org/",
+        "charlottesville" : "https://charlottesville.craigslist.org/",
+        "danville" : "https://danville.craigslist.org/",
+        "fredericksburg" : "https://fredericksburg.craigslist.org/",
+        "hampton roads" : "https://norfolk.craigslist.org/",
+        "harrisonburg" : "https://harrisonburg.craigslist.org/",
+        "lynchburg" : "https://lynchburg.craigslist.org/",
+        "new river valley" : "https://blacksburg.craigslist.org/",
+        "richmond" : "https://richmond.craigslist.org/",
+        "roanoke" : "https://roanoke.craigslist.org/",
+        "southwest VA" : "https://swva.craigslist.org/",
+        "winchester" : "https://winchester.craigslist.org/",
+        "bellingham" : "https://bellingham.craigslist.org/",
+        "kennewick-pasco-richland" : "https://kpr.craigslist.org/",
+        "moses lake" : "https://moseslake.craigslist.org/",
+        "olympic peninsula" : "https://olympic.craigslist.org/",
+        "pullman / moscow" : "https://pullman.craigslist.org/",
+        "seattle-tacoma" : "https://seattle.craigslist.org/",
+        "skagit / island / SJI" : "https://skagit.craigslist.org/",
+        "spokane / coeur d'alene" : "https://spokane.craigslist.org/",
+        "wenatchee" : "https://wenatchee.craigslist.org/",
+        "yakima" : "https://yakima.craigslist.org/",
+        "charleston" : "https://charlestonwv.craigslist.org/",
+        "eastern panhandle" : "https://martinsburg.craigslist.org/",
+        "huntington-ashland" : "https://huntington.craigslist.org/",
+        "morgantown" : "https://morgantown.craigslist.org/",
+        "northern panhandle" : "https://wheeling.craigslist.org/",
+        "parkersburg-marietta" : "https://parkersburg.craigslist.org/",
+        "southern WV" : "https://swv.craigslist.org/",
+        "west virginia (old)" : "https://wv.craigslist.org/",
+        "appleton-oshkosh-FDL" : "https://appleton.craigslist.org/",
+        "eau claire" : "https://eauclaire.craigslist.org/",
+        "green bay" : "https://greenbay.craigslist.org/",
+        "janesville" : "https://janesville.craigslist.org/",
+        "kenosha-racine" : "https://racine.craigslist.org/",
+        "la crosse" : "https://lacrosse.craigslist.org/",
+        "madison" : "https://madison.craigslist.org/",
+        "milwaukee" : "https://milwaukee.craigslist.org/",
+        "northern WI" : "https://northernwi.craigslist.org/",
+        "sheboygan" : "https://sheboygan.craigslist.org/",
+        "wausau" : "https://wausau.craigslist.org/",
+        "wyoming" : "https://wyoming.craigslist.org/",
+        "guam-micronesia" : "https://micronesia.craigslist.org/",
+        "puerto rico" : "https://puertorico.craigslist.org/",
+        "U.S. virgin islands" : "https://virgin.craigslist.org/",
+        "calgary" : "https://calgary.craigslist.org/",
+        "edmonton" : "https://edmonton.craigslist.org/",
+        "ft mcmurray" : "https://ftmcmurray.craigslist.org/",
+        "lethbridge" : "https://lethbridge.craigslist.org/",
+        "medicine hat" : "https://hat.craigslist.org/",
+        "peace river country" : "https://peace.craigslist.org/",
+        "red deer" : "https://reddeer.craigslist.org/",
+        "cariboo" : "https://cariboo.craigslist.org/",
+        "comox valley" : "https://comoxvalley.craigslist.org/",
+        "fraser valley" : "https://abbotsford.craigslist.org/",
+        "kamloops" : "https://kamloops.craigslist.org/",
+        "kelowna / okanagan" : "https://kelowna.craigslist.org/",
+        "kootenays" : "https://kootenays.craigslist.org/",
+        "nanaimo" : "https://nanaimo.craigslist.org/",
+        "prince george" : "https://princegeorge.craigslist.org/",
+        "skeena-bulkley" : "https://skeena.craigslist.org/",
+        "sunshine coast" : "https://sunshine.craigslist.org/",
+        "vancouver" : "https://vancouver.craigslist.org/",
+        "victoria" : "https://victoria.craigslist.org/",
+        "whistler" : "https://whistler.craigslist.org/",
+        "winnipeg" : "https://winnipeg.craigslist.org/",
+        "new brunswick" : "https://newbrunswick.craigslist.org/",
+        "st john's" : "https://newfoundland.craigslist.org/",
+        "territories" : "https://territories.craigslist.org/",
+        "yellowknife" : "https://yellowknife.craigslist.org/",
+        "halifax" : "https://halifax.craigslist.org/",
+        "barrie" : "https://barrie.craigslist.org/",
+        "belleville" : "https://belleville.craigslist.org/",
+        "brantford-woodstock" : "https://brantford.craigslist.org/",
+        "chatham-kent" : "https://chatham.craigslist.org/",
+        "cornwall" : "https://cornwall.craigslist.org/",
+        "guelph" : "https://guelph.craigslist.org/",
+        "hamilton-burlington" : "https://hamilton.craigslist.org/",
+        "kingston" : "https://kingston.craigslist.org/",
+        "kitchener-waterloo-cambridge" : "https://kitchener.craigslist.org/",
+        "london" : "https://londonon.craigslist.org/",
+        "niagara region" : "https://niagara.craigslist.org/",
+        "ottawa-hull-gatineau" : "https://ottawa.craigslist.org/",
+        "owen sound" : "https://owensound.craigslist.org/",
+        "peterborough" : "https://peterborough.craigslist.org/",
+        "sarnia" : "https://sarnia.craigslist.org/",
+        "sault ste marie" : "https://soo.craigslist.org/",
+        "sudbury" : "https://sudbury.craigslist.org/",
+        "thunder bay" : "https://thunderbay.craigslist.org/",
+        "toronto" : "https://toronto.craigslist.org/",
+        "windsor" : "https://windsor.craigslist.org/",
+        "prince edward island" : "https://pei.craigslist.org/",
+        "montreal" : "https://montreal.craigslist.org/",
+        "quebec city" : "https://quebec.craigslist.org/",
+        "saguenay" : "https://saguenay.craigslist.org/",
+        "sherbrooke" : "https://sherbrooke.craigslist.org/",
+        "trois-rivieres" : "https://troisrivieres.craigslist.org/",
+        "regina" : "https://regina.craigslist.org/",
+        "saskatoon" : "https://saskatoon.craigslist.org/",
+        "whitehorse" : "https://whitehorse.craigslist.org/",
+        "vienna" : "https://vienna.craigslist.org/",
+        "belgium" : "https://brussels.craigslist.org/",
+        "bulgaria" : "https://bulgaria.craigslist.org/",
+        "croatia" : "https://zagreb.craigslist.org/",
+        "prague" : "https://prague.craigslist.org/",
+        "copenhagen" : "https://copenhagen.craigslist.org/",
+        "finland" : "https://helsinki.craigslist.org/",
+        "bordeaux" : "https://bordeaux.craigslist.org/",
+        "brittany" : "https://rennes.craigslist.org/",
+        "grenoble" : "https://grenoble.craigslist.org/",
+        "lille" : "https://lille.craigslist.org/",
+        "loire valley" : "https://loire.craigslist.org/",
+        "lyon" : "https://lyon.craigslist.org/",
+        "marseille" : "https://marseilles.craigslist.org/",
+        "montpellier" : "https://montpellier.craigslist.org/",
+        "nice / cote d'azur" : "https://cotedazur.craigslist.org/",
+        "normandy" : "https://rouen.craigslist.org/",
+        "paris" : "https://paris.craigslist.org/",
+        "strasbourg" : "https://strasbourg.craigslist.org/",
+        "toulouse" : "https://toulouse.craigslist.org/",
+        "berlin" : "https://berlin.craigslist.org/",
+        "bremen" : "https://bremen.craigslist.org/",
+        "cologne" : "https://cologne.craigslist.org/",
+        "dresden" : "https://dresden.craigslist.org/",
+        "dusseldorf" : "https://dusseldorf.craigslist.org/",
+        "essen / ruhr" : "https://essen.craigslist.org/",
+        "frankfurt" : "https://frankfurt.craigslist.org/",
+        "hamburg" : "https://hamburg.craigslist.org/",
+        "hannover" : "https://hannover.craigslist.org/",
+        "heidelberg" : "https://heidelberg.craigslist.org/",
+        "kaiserslautern" : "https://kaiserslautern.craigslist.org/",
+        "leipzig" : "https://leipzig.craigslist.org/",
+        "munich" : "https://munich.craigslist.org/",
+        "nuremberg" : "https://nuremberg.craigslist.org/",
+        "stuttgart" : "https://stuttgart.craigslist.org/",
+        "greece" : "https://athens.craigslist.org/",
+        "budapest" : "https://budapest.craigslist.org/",
+        "reykjavik" : "https://reykjavik.craigslist.org/",
+        "dublin" : "https://dublin.craigslist.org/",
+        "bologna" : "https://bologna.craigslist.org/",
+        "florence / tuscany" : "https://florence.craigslist.org/",
+        "genoa" : "https://genoa.craigslist.org/",
+        "milan" : "https://milan.craigslist.org/",
+        "napoli / campania" : "https://naples.craigslist.org/",
+        "perugia" : "https://perugia.craigslist.org/",
+        "rome" : "https://rome.craigslist.org/",
+        "sardinia" : "https://sardinia.craigslist.org/",
+        "sicilia" : "https://sicily.craigslist.org/",
+        "torino" : "https://torino.craigslist.org/",
+        "venice / veneto" : "https://venice.craigslist.org/",
+        "luxembourg" : "https://luxembourg.craigslist.org/",
+        "amsterdam / randstad" : "https://amsterdam.craigslist.org/",
+        "norway" : "https://oslo.craigslist.org/",
+        "poland" : "https://warsaw.craigslist.org/",
+        "faro / algarve" : "https://faro.craigslist.org/",
+        "lisbon" : "https://lisbon.craigslist.org/",
+        "porto" : "https://porto.craigslist.org/",
+        "romania" : "https://bucharest.craigslist.org/",
+        "moscow" : "https://moscow.craigslist.org/",
+        "st petersburg" : "https://stpetersburg.craigslist.org/",
+        "alicante" : "https://alicante.craigslist.org/",
+        "baleares" : "https://baleares.craigslist.org/",
+        "barcelona" : "https://barcelona.craigslist.org/",
+        "bilbao" : "https://bilbao.craigslist.org/",
+        "cadiz" : "https://cadiz.craigslist.org/",
+        "canarias" : "https://canarias.craigslist.org/",
+        "granada" : "https://granada.craigslist.org/",
+        "madrid" : "https://madrid.craigslist.org/",
+        "malaga" : "https://malaga.craigslist.org/",
+        "sevilla" : "https://sevilla.craigslist.org/",
+        "valencia" : "https://valencia.craigslist.org/",
+        "sweden" : "https://stockholm.craigslist.org/",
+        "basel" : "https://basel.craigslist.org/",
+        "bern" : "https://bern.craigslist.org/",
+        "geneva" : "https://geneva.craigslist.org/",
+        "lausanne" : "https://lausanne.craigslist.org/",
+        "zurich" : "https://zurich.craigslist.org/",
+        "turkey" : "https://istanbul.craigslist.org/",
+        "ukraine" : "https://ukraine.craigslist.org/",
+        "aberdeen" : "https://aberdeen.craigslist.org/",
+        "bath" : "https://bath.craigslist.org/",
+        "belfast" : "https://belfast.craigslist.org/",
+        "birmingham / west mids" : "https://birmingham.craigslist.org/",
+        "brighton" : "https://brighton.craigslist.org/",
+        "bristol" : "https://bristol.craigslist.org/",
+        "cambridge, UK" : "https://cambridge.craigslist.org/",
+        "cardiff / wales" : "https://cardiff.craigslist.org/",
+        "coventry" : "https://coventry.craigslist.org/",
+        "derby" : "https://derby.craigslist.org/",
+        "devon & cornwall" : "https://devon.craigslist.org/",
+        "dundee" : "https://dundee.craigslist.org/",
+        "east anglia" : "https://norwich.craigslist.org/",
+        "east midlands" : "https://eastmids.craigslist.org/",
+        "edinburgh" : "https://edinburgh.craigslist.org/",
+        "essex" : "https://essex.craigslist.org/",
+        "glasgow" : "https://glasgow.craigslist.org/",
+        "hampshire" : "https://hampshire.craigslist.org/",
+        "kent" : "https://kent.craigslist.org/",
+        "leeds" : "https://leeds.craigslist.org/",
+        "liverpool" : "https://liverpool.craigslist.org/",
+        "london" : "https://london.craigslist.org/",
+        "manchester" : "https://manchester.craigslist.org/",
+        "newcastle / NE england" : "https://newcastle.craigslist.org/",
+        "nottingham" : "https://nottingham.craigslist.org/",
+        "oxford" : "https://oxford.craigslist.org/",
+        "sheffield" : "https://sheffield.craigslist.org/",
+        "bangladesh" : "https://bangladesh.craigslist.org/",
+        "beijing" : "https://beijing.craigslist.org/",
+        "chengdu" : "https://chengdu.craigslist.org/",
+        "chongqing" : "https://chongqing.craigslist.org/",
+        "dalian" : "https://dalian.craigslist.org/",
+        "guangzhou" : "https://guangzhou.craigslist.org/",
+        "hangzhou" : "https://hangzhou.craigslist.org/",
+        "nanjing" : "https://nanjing.craigslist.org/",
+        "shanghai" : "https://shanghai.craigslist.org/",
+        "shenyang" : "https://shenyang.craigslist.org/",
+        "shenzhen" : "https://shenzhen.craigslist.org/",
+        "wuhan" : "https://wuhan.craigslist.org/",
+        "xi'an" : "https://xian.craigslist.org/",
+        "guam-micronesia" : "https://micronesia.craigslist.org/",
+        "hong kong" : "https://hongkong.craigslist.org/",
+        "ahmedabad" : "https://ahmedabad.craigslist.org/",
+        "bangalore" : "https://bangalore.craigslist.org/",
+        "bhubaneswar" : "https://bhubaneswar.craigslist.org/",
+        "chandigarh" : "https://chandigarh.craigslist.org/",
+        "chennai (madras)" : "https://chennai.craigslist.org/",
+        "delhi" : "https://delhi.craigslist.org/",
+        "goa" : "https://goa.craigslist.org/",
+        "hyderabad" : "https://hyderabad.craigslist.org/",
+        "indore" : "https://indore.craigslist.org/",
+        "jaipur" : "https://jaipur.craigslist.org/",
+        "kerala" : "https://kerala.craigslist.org/",
+        "kolkata (calcutta)" : "https://kolkata.craigslist.org/",
+        "lucknow" : "https://lucknow.craigslist.org/",
+        "mumbai" : "https://mumbai.craigslist.org/",
+        "pune" : "https://pune.craigslist.org/",
+        "surat surat" : "https://surat.craigslist.org/",
+        "indonesia" : "https://jakarta.craigslist.org/",
+        "iran" : "https://tehran.craigslist.org/",
+        "iraq" : "https://baghdad.craigslist.org/",
+        "haifa" : "https://haifa.craigslist.org/",
+        "jerusalem" : "https://jerusalem.craigslist.org/",
+        "tel aviv" : "https://telaviv.craigslist.org/",
+        "west bank" : "https://ramallah.craigslist.org/",
+        "fukuoka" : "https://fukuoka.craigslist.org/",
+        "hiroshima" : "https://hiroshima.craigslist.org/",
+        "nagoya" : "https://nagoya.craigslist.org/",
+        "okinawa" : "https://okinawa.craigslist.org/",
+        "osaka-kobe-kyoto" : "https://osaka.craigslist.org/",
+        "sapporo" : "https://sapporo.craigslist.org/",
+        "sendai" : "https://sendai.craigslist.org/",
+        "tokyo" : "https://tokyo.craigslist.org/",
+        "seoul" : "https://seoul.craigslist.org/",
+        "kuwait" : "https://kuwait.craigslist.org/",
+        "beirut, lebanon" : "https://beirut.craigslist.org/",
+        "malaysia" : "https://malaysia.craigslist.org/",
+        "pakistan" : "https://pakistan.craigslist.org/",
+        "bacolod" : "https://bacolod.craigslist.org/",
+        "bicol region" : "https://naga.craigslist.org/",
+        "cagayan de oro" : "https://cdo.craigslist.org/",
+        "cebu" : "https://cebu.craigslist.org/",
+        "davao city" : "https://davaocity.craigslist.org/",
+        "iloilo" : "https://iloilo.craigslist.org/",
+        "manila" : "https://manila.craigslist.org/",
+        "pampanga" : "https://pampanga.craigslist.org/",
+        "zamboanga" : "https://zamboanga.craigslist.org/",
+        "singapore" : "https://singapore.craigslist.org/",
+        "taiwan" : "https://taipei.craigslist.org/",
+        "thailand" : "https://bangkok.craigslist.org/",
+        "united arab emirates" : "https://dubai.craigslist.org/",
+        "vietnam" : "https://vietnam.craigslist.org/",
+        "adelaide" : "https://adelaide.craigslist.org/",
+        "brisbane" : "https://brisbane.craigslist.org/",
+        "cairns" : "https://cairns.craigslist.org/",
+        "canberra" : "https://canberra.craigslist.org/",
+        "darwin" : "https://darwin.craigslist.org/",
+        "gold coast" : "https://goldcoast.craigslist.org/",
+        "melbourne" : "https://melbourne.craigslist.org/",
+        "newcastle, NSW" : "https://ntl.craigslist.org/",
+        "perth" : "https://perth.craigslist.org/",
+        "sydney" : "https://sydney.craigslist.org/",
+        "tasmania" : "https://hobart.craigslist.org/",
+        "wollongong" : "https://wollongong.craigslist.org/",
+        "auckland" : "https://auckland.craigslist.org/",
+        "christchurch" : "https://christchurch.craigslist.org/",
+        "dunedin" : "https://dunedin.craigslist.org/",
+        "wellington" : "https://wellington.craigslist.org/",
+        "buenos aires" : "https://buenosaires.craigslist.org/",
+        "bolivia" : "https://lapaz.craigslist.org/",
+        "belo horizonte" : "https://belohorizonte.craigslist.org/",
+        "brasilia" : "https://brasilia.craigslist.org/",
+        "curitiba" : "https://curitiba.craigslist.org/",
+        "fortaleza" : "https://fortaleza.craigslist.org/",
+        "porto alegre" : "https://portoalegre.craigslist.org/",
+        "recife" : "https://recife.craigslist.org/",
+        "rio de janeiro" : "https://rio.craigslist.org/",
+        "salvador, bahia" : "https://salvador.craigslist.org/",
+        "sao paulo" : "https://saopaulo.craigslist.org/",
+        "caribbean islands" : "https://caribbean.craigslist.org/",
+        "chile" : "https://santiago.craigslist.org/",
+        "colombia" : "https://colombia.craigslist.org/",
+        "costa rica" : "https://costarica.craigslist.org/",
+        "dominican republic" : "https://santodomingo.craigslist.org/",
+        "ecuador" : "https://quito.craigslist.org/",
+        "el salvador" : "https://elsalvador.craigslist.org/",
+        "guatemala" : "https://guatemala.craigslist.org/",
+        "acapulco" : "https://acapulco.craigslist.org/",
+        "baja california sur" : "https://bajasur.craigslist.org/",
+        "chihuahua" : "https://chihuahua.craigslist.org/",
+        "ciudad juarez" : "https://juarez.craigslist.org/",
+        "guadalajara" : "https://guadalajara.craigslist.org/",
+        "guanajuato" : "https://guanajuato.craigslist.org/",
+        "hermosillo" : "https://hermosillo.craigslist.org/",
+        "mazatlan" : "https://mazatlan.craigslist.org/",
+        "mexico city" : "https://mexicocity.craigslist.org/",
+        "monterrey" : "https://monterrey.craigslist.org/",
+        "oaxaca" : "https://oaxaca.craigslist.org/",
+        "puebla" : "https://puebla.craigslist.org/",
+        "puerto vallarta" : "https://pv.craigslist.org/",
+        "tijuana" : "https://tijuana.craigslist.org/",
+        "veracruz" : "https://veracruz.craigslist.org/",
+        "yucatan" : "https://yucatan.craigslist.org/",
+        "nicaragua" : "https://managua.craigslist.org/",
+        "panama" : "https://panama.craigslist.org/",
+        "peru" : "https://lima.craigslist.org/",
+        "puerto rico" : "https://puertorico.craigslist.org/",
+        "montevideo" : "https://montevideo.craigslist.org/",
+        "venezuela" : "https://caracas.craigslist.org/",
+        "virgin islands" : "https://virgin.craigslist.org/",
+        "egypt" : "https://cairo.craigslist.org/",
+        "ethiopia" : "https://addisababa.craigslist.org/",
+        "ghana" : "https://accra.craigslist.org/",
+        "kenya" : "https://kenya.craigslist.org/",
+        "morocco" : "https://casablanca.craigslist.org/",
+        "cape town" : "https://capetown.craigslist.org/",
+        "durban" : "https://durban.craigslist.org/",
+        "johannesburg" : "https://johannesburg.craigslist.org/",
+        "pretoria" : "https://pretoria.craigslist.org/",
+        "tunisia" : "https://tunis.craigslist.org/",
+    }
     
     query = request.GET.get("query", "").strip()
     location = request.GET.get("location", "").strip()
     marketplace = request.GET.get("marketplace", "").strip()
     scrapers = [marketplace]
-    print(query)
-    print(location)
-    print(marketplace)
-    print(scrapers)
-    resp = prod_API(query, scrapers, location)
+    if location:
+        location = LOCATION_CHOICES.get(location)
+    print("query",query)
+    print("location",location)
+    print("marketplace",marketplace)
+    print("scrapers",scrapers)
+
+    function_names = ["Fivemiles", "Fanaticscollect", "Ebay" ,"Craigslist","Offerup"]
+    resp = run_functions(marketplace, query, location, function_names)
+
     results = []
     today = datetime.now().date()
-    all_prod_data = []
+    all_prod_data = resp
 
-# Debugging: Check the type of resp['data']
-    data = resp.get('data', {})
+    # # Debugging: Check the type of resp['data']
+    # data = resp.get('data', {})
 
-    if not isinstance(data, dict):
-        print(f"Error: Expected a dictionary for 'data', but got {type(data)} instead.")
-        print("Full response:", resp)  # Print full response for debugging
-        data = {}  # Ensure 'data' is always a dictionary
+    # if not isinstance(data, dict):
+    #     print(f"Error: Expected a dictionary for 'data', but got {type(data)} instead.")
+    #     print("Full response:", resp)  # Print full response for debugging
+    #     data = {}  # Ensure 'data' is always a dictionary
 
-    try:
-        if 'all' in marketplace:
-            ebay = data.get('ebay', [])  # Default to empty list if missing
-            fivemiles = data.get('fivemiles', [])
-            fanatic = data.get('fanatic', [])
-            facebook = data.get('facebook', [])
-            craigslist = data.get('craigslist', [])
-            mercari = data.get('mercari', [])
-            # offerup = data.get('offerup', [])
-            all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari 
-            # all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari + offerup
-        elif 'fivemiles' in marketplace:
-            all_prod_data = data.get('fivemiles', [])
-        elif 'fanatic' in marketplace:
-            all_prod_data = data.get('fanatic', [])
-        elif 'ebay' in marketplace:
-            all_prod_data = data.get('ebay', [])
-        elif 'facebook' in marketplace:
-            all_prod_data = data.get('facebook', [])
-        elif 'mercari' in marketplace:
-            all_prod_data = data.get('mercari', [])
-        elif 'craigslist' in marketplace:
-            all_prod_data = data.get('craigslist', [])
-        elif 'offerup' in marketplace:
-            all_prod_data = data.get('offerup', [])
-    except Exception as e:
-        print(f"Unexpected error accessing marketplace data: {e}")
-        all_prod_data = []
+    # try:
+    #     if 'all' in marketplace:
+    #         ebay = data.get('ebay', [])  # Default to empty list if missing
+    #         fivemiles = data.get('fivemiles', [])
+    #         fanatic = data.get('fanatics', [])
+    #         # facebook = data.get('facebook', [])
+    #         craigslist = data.get('craigslist', [])
+    #         mercari = data.get('mercari', [])
+    #         offerup = data.get('offerup', [])
+    #         # all_prod_data = ebay + fivemiles + fanatic + facebook + craigslist + mercari 
+    #         all_prod_data = ebay + fivemiles + fanatic + craigslist + mercari + offerup
+    #     elif 'fivemiles' in marketplace:
+    #         all_prod_data = data.get('fivemiles', [])
+    #     elif 'fanatics' in marketplace:
+    #         all_prod_data = data.get('fanatics', [])
+    #     elif 'ebay' in marketplace:
+    #         all_prod_data = data.get('ebay', [])
+    #     elif 'facebook' in marketplace:
+    #         all_prod_data = data.get('facebook', [])
+    #     elif 'mercari' in marketplace:
+    #         all_prod_data = data.get('mercari', [])
+    #     elif 'craigslist' in marketplace:
+    #         all_prod_data = data.get('craigslist', [])
+    #     elif 'offerup' in marketplace:
+    #         all_prod_data = data.get('offerup', [])
+    # except Exception as e:
+    #     print(f"Unexpected error accessing marketplace data: {e}")
+    #     all_prod_data = []
 
 
     for p in all_prod_data:
@@ -1192,85 +1966,85 @@ def my_products(request):
             })
 
     return render(request, "myproducts.html", {"User_Subscription": subscription, "product_results": product_results})
-import boto3
-import paramiko
-import time
-import os
-from django.http import JsonResponse
-from django.shortcuts import render
-from dotenv import load_dotenv
+# import boto3
+# import paramiko
+# import time
+# import os
+# from django.http import JsonResponse
+# from django.shortcuts import render
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
-def server_page(request):
-    return render(request, 'server_page.html')
+# def server_page(request):
+#     return render(request, 'server_page.html')
 
-def run_scripts_on_aws(request):
-    if request.method == 'POST':
-        aws_access_key = os.getenv('AWS_ACCESS_KEY')
-        aws_secret_key = os.getenv('AWS_SECRET_KEY')
-        region = os.getenv('AWS_REGION')
-        ami_id = os.getenv('AMI_ID')
-        instance_type = os.getenv('INSTANCE_TYPE')
-        key_name = os.getenv('KEY_NAME')
-        security_group = os.getenv('SECURITY_GROUP')
-        private_key_path = os.getenv('PRIVATE_KEY_PATH')
+# def run_scripts_on_aws(request):
+#     if request.method == 'POST':
+#         aws_access_key = os.getenv('AWS_ACCESS_KEY')
+#         aws_secret_key = os.getenv('AWS_SECRET_KEY')
+#         region = os.getenv('AWS_REGION')
+#         ami_id = os.getenv('AMI_ID')
+#         instance_type = os.getenv('INSTANCE_TYPE')
+#         key_name = os.getenv('KEY_NAME')
+#         security_group = os.getenv('SECURITY_GROUP')
+#         private_key_path = os.getenv('PRIVATE_KEY_PATH')
 
-        try:
-            ec2 = boto3.client(
-                'ec2',
-                aws_access_key_id=aws_access_key,
-                aws_secret_access_key=aws_secret_key,
-                region_name=region
-            )
+#         try:
+#             ec2 = boto3.client(
+#                 'ec2',
+#                 aws_access_key_id=aws_access_key,
+#                 aws_secret_access_key=aws_secret_key,
+#                 region_name=region
+#             )
 
-            # Start EC2 instance
-            response = ec2.run_instances(
-                ImageId=ami_id,
-                InstanceType=instance_type,
-                MinCount=1,
-                MaxCount=1,
-                KeyName=key_name,
-                SecurityGroups=[security_group]
-            )
+#             # Start EC2 instance
+#             response = ec2.run_instances(
+#                 ImageId=ami_id,
+#                 InstanceType=instance_type,
+#                 MinCount=1,
+#                 MaxCount=1,
+#                 KeyName=key_name,
+#                 SecurityGroups=[security_group]
+#             )
 
-            instance_id = response['Instances'][0]['InstanceId']
+#             instance_id = response['Instances'][0]['InstanceId']
 
-            ec2_resource = boto3.resource(
-                'ec2',
-                aws_access_key_id=aws_access_key,
-                aws_secret_access_key=aws_secret_key,
-                region_name=region
-            )
+#             ec2_resource = boto3.resource(
+#                 'ec2',
+#                 aws_access_key_id=aws_access_key,
+#                 aws_secret_access_key=aws_secret_key,
+#                 region_name=region
+#             )
 
-            instance = ec2_resource.Instance(instance_id)
-            instance.wait_until_running()
-            instance.load()
+#             instance = ec2_resource.Instance(instance_id)
+#             instance.wait_until_running()
+#             instance.load()
 
-            public_ip = instance.public_ip_address
+#             public_ip = instance.public_ip_address
 
-            # SSH connection to the instance
-            key = paramiko.RSAKey.from_private_key_file(private_key_path)
-            client = paramiko.SSHClient()
-            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect(hostname=public_ip, username='ec2-user', pkey=key)
+#             # SSH connection to the instance
+#             key = paramiko.RSAKey.from_private_key_file(private_key_path)
+#             client = paramiko.SSHClient()
+#             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#             client.connect(hostname=public_ip, username='ec2-user', pkey=key)
 
-            # Run command on the instance
-            stdin, stdout, stderr = client.exec_command('echo "Hello from AWS EC2!"')
-            output = stdout.read().decode('utf-8')
+#             # Run command on the instance
+#             stdin, stdout, stderr = client.exec_command('echo "Hello from AWS EC2!"')
+#             output = stdout.read().decode('utf-8')
 
-            client.close()
+#             client.close()
 
-            # Stop the instance after use
-            ec2.stop_instances(InstanceIds=[instance_id])
+#             # Stop the instance after use
+#             ec2.stop_instances(InstanceIds=[instance_id])
 
-            return JsonResponse({
-                'status': 'Success',
-                'instance_id': instance_id,
-                'output': output
-            })
+#             return JsonResponse({
+#                 'status': 'Success',
+#                 'instance_id': instance_id,
+#                 'output': output
+#             })
 
-        except Exception as e:
-            return JsonResponse({'status': 'Failed', 'error': str(e)}, status=500)
+#         except Exception as e:
+#             return JsonResponse({'status': 'Failed', 'error': str(e)}, status=500)
 
-    return JsonResponse({'status': 'Invalid request'}, status=400)
+#     return JsonResponse({'status': 'Invalid request'}, status=400)

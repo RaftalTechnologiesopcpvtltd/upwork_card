@@ -31,6 +31,6 @@ urlpatterns = [
     path('favourites/', views.fav_view, name='favourites'),
     path('add-to-favourites/', views.add_to_favourites, name='add_to_favourites'),
     path('remove-from-favourites/', views.remove_from_favourites, name='remove_from_favourites'),
-    path('run-scripts/', views.run_scripts_on_aws, name='run_scripts_on_aws'),
-    path('server_page/', views.server_page, name='server_page'),
+    # path('run-scripts/', views.run_scripts_on_aws, name='run_scripts_on_aws'),
+    # path('server_page/', views.server_page, name='server_page'),
 ]
