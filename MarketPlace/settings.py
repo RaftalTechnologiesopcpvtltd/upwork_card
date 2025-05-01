@@ -27,9 +27,8 @@ SECRET_KEY = 'django-insecure-r94vjuxyy*@!kx^pk_djkxy0mt$9)t$q=q6u&mk=td2zaptknh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 # DEBUG = False
-
-# ALLOWED_HOSTS = ["buyredge.com","www.buyredge.com"]
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','buyredge.com']
+ALLOWED_HOSTS = ["buyredge.com","www.buyredge.com"]
+#ALLOWED_HOSTS = ['127.0.0.1', 'localhost','buyredge.com']
 
 AUTH_USER_MODEL = 'landingpage.CustomUser'
 
