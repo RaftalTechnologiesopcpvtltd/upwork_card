@@ -319,31 +319,32 @@ def invoke_lambda(function_name, query, location):
     return body
 
 
-def run_functions(selected_function, query, location, function_names=None):
-    if selected_function.upper() == "ALL":
+def run_functions(selected_functions, query, location, function_names=None):
+    # Ensure selected_functions is a list
+    if isinstance(selected_functions, str):
+        selected_functions = [selected_functions]
+
+    if "ALL" in [s.upper() for s in selected_functions]:
         if not function_names:
             raise ValueError("Please provide a list of function names when running 'ALL'.")
         
-        with ThreadPoolExecutor(max_workers=len(function_names)) as executor:
-            futures = [
-                executor.submit(invoke_lambda, fn, query, location)
-                for fn in function_names
-            ]
-            combined_results = []
-            for f in futures:
-                result = f.result()
-                if isinstance(result, list):
-                    # Normalize each item before extending
-                    normalized = [normalize_data(item) for item in result]
-                    combined_results.extend(normalized)
-                else:
-                    combined_results.append(normalize_data(result))
-            return combined_results
-    else:
-        result = invoke_lambda(selected_function, query, location)
-        if isinstance(result, list):
-            return [normalize_data(item) for item in result]
-        return [normalize_data(result)]
+        selected_functions = function_names  # Override with all function names
+
+    with ThreadPoolExecutor(max_workers=len(selected_functions)) as executor:
+        futures = [
+            executor.submit(invoke_lambda, fn, query, location)
+            for fn in selected_functions
+        ]
+        combined_results = []
+        for f in futures:
+            result = f.result()
+            if isinstance(result, list):
+                normalized = [normalize_data(item) for item in result]
+                combined_results.extend(normalized)
+            else:
+                combined_results.append(normalize_data(result))
+        return combined_results
+
 
 
 def product_search(request):
@@ -1066,13 +1067,14 @@ def product_search(request):
     
     query = request.GET.get("query", "").strip()
     location = request.GET.get("location", "").strip()
-    marketplace = request.GET.get("marketplace", "").strip()
-    scrapers = [marketplace]
+    marketplace = request.GET.getlist("marketplace")
+
+    scrapers = marketplace
     if location:
         location = LOCATION_CHOICES.get(location)
     print("query",query)
     print("location",location)
-    print("marketplace",marketplace)
+    print("marketplace :",marketplace)
     print("scrapers",scrapers)
 
     function_names = ["Fivemiles", "Fanaticscollect", "Ebay" ,"Craigslist","Offerup"]
