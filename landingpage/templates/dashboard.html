@@ -1757,6 +1757,14 @@
             left: 100%;
         }
     }
+
+    #suggestionBox .list-group-item {
+        cursor: pointer;
+    }
+
+    #suggestionBox .list-group-item:hover {
+        background-color: #f0f0f0;
+    }
 </style>
 
 <div class="d-flex align-items-center justify-content-end nav_section_block">
@@ -1767,7 +1775,7 @@
         <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
     </div> -->
 </div>
-<section id="dashboard">
+<section id="dashboard" style="min-height: 40vh;">
     <div class="m-4">
         <!-- Search Bar -->
         <div class="search-container">
@@ -1775,14 +1783,22 @@
                 <div class="col-md-12">
                     <div class="input-group">
                         <input type="text" id="searchInput" class="form-control form-control-lg"
-                            placeholder="Search for products...">
-                        <button id="searchBtn" class="btn btn-primary" type="button">
+                            placeholder="Search for products..." autocomplete="off">
+                        <button id="searchBtn" class="btn-dark-custom btn" type="button">
                             <i class="fas fa-search"></i> Search
                         </button>
+                    </div>
+                    <!-- Suggestion Dropdown -->
+                    <div id="suggestionBox" class="list-group mt-1"
+                        style="display:none; position:absolute; z-index:1000; width:100%;">
+                        <!-- Suggestions will be injected here -->
+                        <!-- "See all searches" option -->
+
                     </div>
                 </div>
             </div>
         </div>
+
 
         <div class="row">
             <!-- Mobile Filter Toggle Button -->
@@ -1845,6 +1861,12 @@
                                 <div class="form-check">
                                     <input class="form-check-input category-checkbox" type="checkbox" id="Offerup">
                                     <label class="form-check-label" for="Offerup">Offerup</label>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="form-check">
+                                    <input class="form-check-input category-checkbox" type="checkbox" id="Mercari">
+                                    <label class="form-check-label" for="Mercari">Mercari</label>
                                 </div>
                             </div>
                         </div>
@@ -5694,22 +5716,34 @@
             <!-- Search Results -->
             <div class="col-md-9">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="col-md-6 col-lg-4" id="searchSummary">
-                        <p style="font-size: 22px"><b>Search Results</b></p>
-                        <p class="light_text" style="font-size: 14px" id="resultCountText">About 0 results.</p>
+                    <div class="col-md-6 col-lg-4 d-flex justify-content-between align-items-center" id="searchSummary">
+                        <div>
+                            <p style="font-size: 22px"><b>Search Results</b></p>
+                            <p class="light_text" style="font-size: 14px" id="resultCountText">About 0 results.</p>
+                        </div>
+                        <div id="exportBtnContainer" class="ms-auto" style="display: none;">
+                            <button id="exportExcelBtn" class="btn btn-success">
+                                Export
+                            </button>
+                        </div>
                     </div>
 
+
+
                     <div class="dropdown ml-auto">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown"
+                        <button class="btn btn-dark-custom dropdown-toggle" type="button" id="sortDropdown"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             Sort By
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                            <li><a class="dropdown-item" data-sort="low-to-high" href="#">Price: Low to High</a></li>
-                            <li><a class="dropdown-item" data-sort="high-to-low" href="#">Price: High to Low</a></li>
+                            <li><a class="dropdown-item sortDropdown-item" data-sort="low-to-high" href="#">Price: Low
+                                    to High</a></li>
+                            <li><a class="dropdown-item sortDropdown-item" data-sort="high-to-low" href="#">Price: High
+                                    to Low</a></li>
                         </ul>
                     </div>
                 </div>
+
 
 
 
@@ -5720,12 +5754,12 @@
                         <!-- Background elements -->
                         <div class="bg-shape shape-1"></div>
                         <div class="bg-shape shape-2"></div>
-                    
+
                         <!-- Improved Marketplace illustration -->
                         <div class="marketplace-illustration">
                             <div class="market-search-container">
                                 <div class="marketplace-grid"></div>
-                    
+
                                 <!-- Static connection lines using only CSS -->
                                 <div class="connection-line line-1"></div>
                                 <div class="connection-line line-2"></div>
@@ -5733,7 +5767,7 @@
                                 <div class="connection-line line-4"></div>
                                 <div class="connection-line line-5"></div>
                                 <div class="connection-line line-6"></div>
-                    
+
                                 <div class="marketplace-icons">
                                     <div class="marketplace-icon icon-1">
                                         <i class="bi bi-cart-fill text-primary"></i>
@@ -5754,19 +5788,19 @@
                                         <i class="bi bi-basket3-fill text-secondary"></i>
                                     </div>
                                 </div>
-                    
+
                                 <div class="search-beam">
                                     <div class="search-ripple"></div>
                                     <i class="bi bi-search-heart search-icon"></i>
                                 </div>
                             </div>
                         </div>
-                    
+
                         <h2>Search Products Across Marketplaces</h2>
                         <p class="text-description">Please select both<span class="highlight">marketplace</span>
                             and<span class="highlight">location</span> to find the products you're looking for across
                             different platforms.</p>
-                    
+
                         <div class="marketplace-examples">
                             <span>Marketplace:</span>
                             <div class="mt-2">
@@ -5777,7 +5811,7 @@
                                 <span class="marketplace-tag"><i class="bi bi-shop"></i>Offerup</span>
                             </div>
                         </div>
-                    
+
                         <div class="location-examples">
                             <span>Locations:</span>
                             <div class="mt-2">
@@ -5922,29 +5956,89 @@
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const suggestionBox = document.getElementById("suggestionBox");
+
+        searchInput.addEventListener("focus", () => {
+            fetch('/get-suggestions/')
+                .then(response => response.json())
+                .then(data => {
+                    suggestionBox.innerHTML = "";
+
+                    data.history.forEach(item => {
+                        const div = document.createElement("div");
+                        div.className = "list-group-item";
+                        div.textContent = `Query: ${item.search_query} | Marketplace: ${item.marketplaces} | Location: ${item.location}`;
+                        div.onclick = () => {
+                            searchInput.value = item.search_query;
+
+                            // Deselect all checkboxes first
+                            document.querySelectorAll(".category-checkbox").forEach(cb => cb.checked = false);
+
+                            // Select marketplaces
+                            item.marketplaces.split(',').forEach(mp => {
+                                const trimmed = mp.trim();
+                                const checkbox = document.getElementById(trimmed);
+                                if (checkbox) checkbox.checked = true;
+                            });
+
+                            // Deselect all location radios
+                            document.querySelectorAll(".location-radio").forEach(radio => radio.checked = false);
+
+                            // Select location
+                            const locationRadio = document.getElementById(item.location);
+                            if (locationRadio) locationRadio.checked = true;
+
+                            suggestionBox.style.display = "none";
+                        };
+                        suggestionBox.appendChild(div);
+                    });
+
+                    // Add "See all searches" link
+                    const seeAllLink = document.createElement("a");
+                    seeAllLink.href = "{% url 'search_history' %}";
+                    seeAllLink.className = "list-group-item list-group-item-action text-center text-primary fw-semibold";
+                    seeAllLink.textContent = "See all searches";
+                    suggestionBox.appendChild(seeAllLink);
+
+                    suggestionBox.style.display = "block";
+                });
+        });
+
+
+        document.addEventListener("click", function (e) {
+            if (!searchInput.contains(e.target) && !suggestionBox.contains(e.target)) {
+                suggestionBox.style.display = "none";
+            }
+        });
+    });
+</script>
+
 
 <script>
     $(document).ready(function () {
         let currentProducts = [];
 
         let no_prod_html = `
-                <div class="no-products-container text-center">
+       <div class="no-products-container text-center">
                     <!-- Background elements -->
-                    <div class="bg-shape shape-1"></div>
-                    <div class="bg-shape shape-2"></div>
-                    <div class="bg-dots dots-1"></div>
-                    <div class="bg-dots dots-2"></div>
-                    
-                    <!-- Icon option 1: Illustration -->
-                    <img src="{% static 'images/not found.jpg' %}" alt="No products found" class="illustration">
-                    
-                    <!-- Icon option 2: Bootstrap icon (uncomment to use) -->
-                    <!-- <i class="bi bi-box icon-empty"></i> -->
-                    
-                    <h2>No Products Available</h2>
-                    <p class="text-description">No products found matching your current criteria. <br/> Try with some different criteria.</p>
-                </div>
-           `;
+           <div class="bg-shape shape-1"></div>
+           <div class="bg-shape shape-2"></div>
+           <div class="bg-dots dots-1"></div>
+           <div class="bg-dots dots-2"></div>
+
+           <!-- Icon option 1: Illustration -->
+           <img src="{% static 'images/not found.jpg' %}" alt="No products found" class="illustration">
+
+               <!-- Icon option 2: Bootstrap icon (uncomment to use) -->
+               <!-- <i class="bi bi-box icon-empty"></i> -->
+
+               <h2>No Products Available</h2>
+               <p class="text-description">No products found matching your current criteria. <br /> Try with some different criteria.</p>
+       </div>
+       `;
 
         $("#locationSearch").on("input", function () {
             const searchTerm = $(this).val().toLowerCase();
@@ -6007,36 +6101,36 @@
                 productData[product.id] = product;
 
                 let productHTML = `
-        <div class="my-5 openProductModal position-relative" data-product-id="${product.id}" 
-            data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
-            
-            <div class="ribbon">${product.website_name || "Unknown"}</div> 
+       <div class="my-5 openProductModal position-relative" data-product-id="${product.id}"
+           data-bs-toggle="modal" data-bs-target="#productModal" style="overflow:hidden;">
 
-            <div style="border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
-                <div style="display: flex; justify-content: center; height: 230.5px; width: 230.5px; overflow: hidden; padding: 8%; margin-left: 12%;">
-                    <img src="${product.product_images[0]}" class="img-fluid" alt="${product.product_title}">
-                </div>
-            </div>
-            <div class="p-3">
-                <h5 class="mt-4 card-title" style="font-size: 18px; font-weight: 700;">
-                    ${product.product_title}
-                </h5>
+           <div class="ribbon">${product.website_name || "Unknown"}</div>
 
-                <h6 class="mt-4 card-title ${String(product.selling_type).includes('Auction') ? 'auction-box' : 'fixed-price-box'}">
-                    ${product.selling_type || "Unknown"}
-                </h6>                                       
+           <div style="border-radius: 0; background-color: #EBF4F3; border: none; overflow: hidden;">
+               <div style="display: flex; justify-content: center; height: 230.5px; width: 230.5px; overflow: hidden; padding: 8%; margin-left: 12%;">
+                   <img src="${product.product_images[0]}" class="img-fluid" alt="${product.product_title}">
+               </div>
+           </div>
+           <div class="p-3">
+               <h5 class="mt-4 card-title" style="font-size: 18px; font-weight: 700;">
+                   ${product.product_title}
+               </h5>
 
-                ${String(product.selling_type).includes('Auction') ? `
+               <h6 class="mt-4 card-title ${String(product.selling_type).includes('Auction') ? 'auction-box' : 'fixed-price-box'}">
+                   ${product.selling_type || "Unknown"}
+               </h6>
+
+               ${String(product.selling_type).includes('Auction') ? `
                     <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Price: $${product.current_bid_price || "N/A"}</p>
                     <p class="bid mb-1"><i class="fas fa-gavel me-2"></i> Current Bid Count: ${product.current_bid_count || "N/A"}</p>
                 ` : `
                     <p class="selling_price mb-1">Selling Price: $${product.product_price || "N/A"}</p>
                 `}
 
-                <p class="date mb-3"><i class="far fa-calendar-alt me-2"></i> ${product.date || "N/A"}</p>
-            </div>
-        </div>
-        `;
+               <p class="date mb-3"><i class="far fa-calendar-alt me-2"></i> ${product.date || "N/A"}</p>
+           </div>
+       </div>
+       `;
 
                 prod_container.append(productHTML);
             });
@@ -6183,12 +6277,19 @@
                     allFetchedProducts = response.products; // Store all fetched products
                     currentProducts = [...allFetchedProducts]; // Initially set current products to all fetched
 
+                    if (response.products && response.products.length > 0) {
+                        $("#exportBtnContainer").show();
+                    } else {
+                        $("#exportBtnContainer").hide();
+                    }
+
                     // ✅ Update search summary
                     $("#resultCountText").text(`About ${currentProducts.length} results.`);
 
 
+
                     if (currentProducts.length > 0) {
-                        const sortType = $("#sortDropdown .dropdown-item.active").data('sort'); // Get the selected sorting option
+                        const sortType = $("#sortDropdown .sortDropdown-item.active").data('sort'); // Get the selected sorting option
                         console.log("Initial Sort Type:", sortType); // Log the initial sort type
                         const sortedProducts = sortProducts(currentProducts, sortType);
                         renderProducts(sortedProducts);
@@ -6228,7 +6329,7 @@
                             currentProducts = filteredProducts;
                             // ✅ Update search summary
                             $("#resultCountText").text(`About ${currentProducts.length} results.`);
-                            const sortType = $("#sortDropdown .dropdown-item.active").data('sort'); // Get the sort type again
+                            const sortType = $("#sortDropdown .sortDropdown-item.active").data('sort'); // Get the sort type again
                             console.log("Sort Type after filtering:", sortType); // Log the sort type after filtering
                             const sortedProducts = sortProducts(currentProducts, sortType);
                             renderProducts(sortedProducts);
@@ -6239,30 +6340,30 @@
                                 $("#sortContainer").hide();
                                 $("#results").html(
                                     `
-                <div class="no-products-container text-center">
-                    <!-- Background elements -->
-                    <div class="bg-shape shape-1"></div>
-                    <div class="bg-shape shape-2"></div>
-                    <div class="bg-dots dots-1"></div>
-                    <div class="bg-dots dots-2"></div>
-                    
-                    <!-- Icon option 1: Illustration -->
-                    <img src="{% static 'images/not found.jpg' %}" alt="No products found" class="illustration">
-                    
-                    <!-- Icon option 2: Bootstrap icon (uncomment to use) -->
-                    <!-- <i class="bi bi-box icon-empty"></i> -->
-                    
-                    <h2>No Products Available for ${selectedMarketplaces}</h2>
-                    <p class="text-description">No products found matching your current criteria. <br/> Try with some different criteria.</p>
-                </div>
-           `);
+       <div class="no-products-container text-center">
+           <!-- Background elements -->
+           <div class="bg-shape shape-1"></div>
+           <div class="bg-shape shape-2"></div>
+           <div class="bg-dots dots-1"></div>
+           <div class="bg-dots dots-2"></div>
+
+           <!-- Icon option 1: Illustration -->
+           <img src="{% static 'images/not found.jpg' %}" alt="No products found" class="illustration">
+
+               <!-- Icon option 2: Bootstrap icon (uncomment to use) -->
+               <!-- <i class="bi bi-box icon-empty"></i> -->
+
+               <h2>No Products Available for ${selectedMarketplaces}</h2>
+               <p class="text-description">No products found matching your current criteria. <br /> Try with some different criteria.</p>
+       </div>
+       `);
                             }
                         });
 
                         // Sort dropdown change event
-                        $("#sortDropdown .dropdown-item").on("click", function () {
+                        $("#sortDropdown .sortDropdown-item").on("click", function () {
                             // Highlight the selected sort option
-                            $("#sortDropdown .dropdown-item").removeClass('active');
+                            $("#sortDropdown .sortDropdown-item").removeClass('active');
                             $(this).addClass('active');
 
                             const selectedSort = $(this).data('sort');
@@ -6302,12 +6403,23 @@
         });
 
         // 🔁 Whenever user changes sort dropdown, apply sort
-        $(".dropdown-item").on("click", function (e) {
+        $(".sortDropdown-item").on("click", function (e) {
             e.preventDefault(); // Prevent default anchor behavior
             const sortType = $(this).data("sort");
             console.log("Sort type : ", sortType);
             const sortedProducts = sortProducts(currentProducts, sortType);
             renderProducts(sortedProducts);
+        });
+        // ✅ Export to Excel click event
+        document.getElementById("exportExcelBtn").addEventListener("click", function () {
+            if (!currentProducts || currentProducts.length === 0)
+                return alert("No products to export.");
+
+            const worksheet = XLSX.utils.json_to_sheet(currentProducts);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+
+            XLSX.writeFile(workbook, "search_results.xlsx");
         });
         // Handle modal opening
         $(document).on("click", ".openProductModal", function () {
@@ -6406,8 +6518,8 @@
             // Check if the button already exists
             if (prod_btns.find(`.add-to-fav`).length === 0) {
                 let add_to_fav_btn = `<a href="#" data-product-id="${data.id}" class="mb-2 ml-2 btn btn-danger add-to-fav">
-                <i class="fa fa-heart" aria-hidden="true"></i>
-                </a>`;
+           <i class="fa fa-heart" aria-hidden="true"></i>
+       </a>`;
                 prod_btns.append(add_to_fav_btn);
             }
 

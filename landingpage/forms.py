@@ -63,7 +63,7 @@ from .models import BlogPost
 class BlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
-        fields = ['title', 'image', 'quote', 'content', 'tags']
+        fields = ['title', 'image', 'video', 'quote', 'content', 'tags']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -76,6 +76,12 @@ class BlogPostForm(forms.ModelForm):
                 'id': 'postImage',
                 'accept': 'image/*',
                 'required': True
+            }),
+            'video': forms.ClearableFileInput(attrs={
+                'class': 'custom-file-input',
+                'id': 'postVideo',
+                'accept': 'video/*',
+                'required': False  # Set to True if you want video to be mandatory
             }),
             'quote': forms.Textarea(attrs={
                 'class': 'form-control',

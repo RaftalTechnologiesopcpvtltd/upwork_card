@@ -91,7 +91,7 @@ class Product(models.Model):
     
 class SearchHistory(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='search_histories')
-    query = models.CharField(max_length=255)
+    search_query = models.CharField(max_length=255)
     marketplaces = models.TextField(
     blank=True,
     default='',
@@ -101,7 +101,7 @@ class SearchHistory(models.Model):
     created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.user.username} searched '{self.query}' on {self.created.strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"{self.user.username} searched '{self.search_query}' on {self.created.strftime('%Y-%m-%d %H:%M:%S')}"
 
 class Favourites(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

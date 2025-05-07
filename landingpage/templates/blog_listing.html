@@ -98,6 +98,23 @@
         background-color: var(--primary-color);
         color: white;
     }
+
+    .blog-image-container {
+        padding-top: 20px;
+        height: 250px;
+        /* adjust as needed */
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+    }
+
+    .blog-img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+    }
 </style>
 <div class="d-flex align-items-center justify-content-end nav_section_block">
     <!-- <div class="container banner-text-container" style="color: #dee7e9;">
@@ -107,7 +124,7 @@
         <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>Payment checkout</b></span></p>
     </div> -->
 </div>
-<section>
+<section class="my-4" style="min-height: 40vh;">
     <div class="container py-5">
         <h1 class="main-title text-center mb-5">BLOGS</h1>
         <div class="row g-4">
@@ -115,7 +132,10 @@
             <!-- Card 1 -->
             <div class="col-lg-6 col-md-6 mb-5 d-flex">
                 <div class="blog-item w-100 d-flex flex-column">
-                    <img src="{{ post.image.url }}" alt="" class="img-fluid rounded">
+                    <!-- Image container with fixed height -->
+                    <div class="blog-image-container">
+                        <img src="{{ post.image.url }}" alt="" class="blog-img img-fluid rounded">
+                    </div>
 
                     <div class="blog-item-content bg-white p-5 d-flex flex-column flex-grow-1">
                         <div class="blog-item-meta bg-gray py-1">

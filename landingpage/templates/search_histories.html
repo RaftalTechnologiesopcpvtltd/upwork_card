@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- ✅ jQuery (must load BEFORE DataTables) -->
+
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<style>
+    /* #navbarTwo {
+        display: none !important;
+    } */
+
+    .navbar-btn {
+        margin-left: auto;
+    }
+</style>
+<style>
+
+</style>
+
+<div class="d-flex align-items-center justify-content-end nav_section_block">
+    <!-- <div class="container banner-text-container" style="color: #dee7e9;">
+        <div style="font-size: 36px">
+            <b>My Subscription</b>
+        </div>
+        <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
+    </div> -->
+</div>
+<section class="my-4" style="min-height: 40vh;">
+    <div class="container py-5">
+
+        <h1 class="mb-4 text-center">All Search History</h1>
+        <div class="table-responsive">
+            <table id="historyTable" class="table table-bordered table-striped">
+                <thead style="background-color: #001531; color: white;">
+                    <tr>
+                        <th>#</th>
+                        <th>Query</th>
+                        <th>Marketplaces</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for history in search_history %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ history.search_query }}</td>
+                        <td>{{ history.marketplaces }}</td>
+                        <td>{{ history.location }}</td>
+                        <td>{{ history.created|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+<!-- ✅ jQuery (must load BEFORE DataTables) -->
+<!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
+
+<!-- ✅ DataTables JS (core + Bootstrap 5 integration) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- ✅ Initialize DataTable -->
+<script>
+    $(document).ready(function () {
+        $('#historyTable').DataTable();
+    });
+</script>
+
+{% endblock %}

@@ -57,7 +57,6 @@
     }
 
     .faq-header {
-        text-align: center;
         margin-bottom: 3rem;
     }
 
@@ -71,7 +70,6 @@
         color: #6c757d;
         font-size: 1.1rem;
         max-width: 600px;
-        margin: 0 auto;
     }
 
     .card {
@@ -182,130 +180,136 @@
     }
 </style>
 <!-- Page Header -->
-<header class="page-header">
-    <div class="container">
-        <h1 class="page-title">Frequently Asked Questions</h1>
-    </div>
-</header>
-
-<div class="container mb-5">
-    <!-- FAQ Header -->
-    <div class="faq-header">
-        <h2>How can we help you?</h2>
-        <p>Find answers to frequently asked questions about our services and features</p>
-    </div>
-
-    <!-- Search Box -->
-    <!-- <div class="search-box">
-        <input type="text" placeholder="Search for answers...">
-        <i class="fas fa-search"></i>
+<div class="d-flex align-items-center justify-content-end nav_section_block">
+    <!-- <div class="container banner-text-container" style="color: #dee7e9;">
+        <div style="font-size: 36px">
+            <b>My Subscription</b>
+        </div>
+        <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
     </div> -->
-
-    <!-- General Questions -->
-    <h3 class="category-title">General Questions</h3>
-    <div id="generalFAQ" class="accordion">
-        {% for faq in faqs %}
-        <div class="card">
-            <div class="card-header" id="heading{{ forloop.counter }}">
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}"
-                        aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
-                        {{ faq.question }} <i class="fas fa-chevron-down float-right"></i>
-                    </button>
-                </h5>
-            </div>
-            <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}"
-                data-parent="#generalFAQ">
-                <div class="card-body">
-                    {{ faq.answer }}
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-
-    <!-- Pricing & Plans -->
-    <!-- <h3 class="category-title">Pricing & Plans</h3>
-    <div id="pricingFAQ" class="accordion">
-        <div class="card">
-            <div class="card-header" id="headingThree">
-                <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
-                        aria-expanded="false" aria-controls="collapseThree">
-                        What are your payment terms?
-                        <i class="fas fa-chevron-down float-right"></i> </button>
-                </h5>
-            </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#pricingFAQ">
-                <div class="card-body">
-                    We typically require a 50% upfront payment to begin work, with the remaining 50% due upon project
-                    completion. For larger projects, we can arrange milestone-based payments. We accept all major credit
-                    cards and bank transfers.
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header" id="headingFour">
-                <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour"
-                        aria-expanded="false" aria-controls="collapseFour">
-                        Do you offer refunds? <i class="fas fa-chevron-down float-right"></i>
-                    </button>
-                </h5>
-            </div>
-            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#pricingFAQ">
-                <div class="card-body">
-                    Yes, we offer refunds within 30 days of purchase if you're not satisfied with our services. Please
-                    refer to our refund policy for detailed terms and conditions.
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Technical Support -->
-    <!-- <h3 class="category-title">Technical Support</h3>
-    <div id="technicalFAQ" class="accordion">
-        <div class="card">
-            <div class="card-header" id="headingFive">
-                <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive"
-                        aria-expanded="false" aria-controls="collapseFive">
-                        What kind of support do you provide? <i class="fas fa-chevron-down float-right"></i>
-                    </button>
-                </h5>
-            </div>
-            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#technicalFAQ">
-                <div class="card-body">
-                    We provide 24/7 technical support through email and live chat. Our support team is available to help
-                    you with any issues or questions you may have about our services.
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header" id="headingSix">
-                <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix"
-                        aria-expanded="false" aria-controls="collapseSix">
-                        How do I report a technical issue?
-                        <i class="fas fa-chevron-down float-right"></i> </button>
-                </h5>
-            </div>
-            <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#technicalFAQ">
-                <div class="card-body">
-                    You can report technical issues through our support portal, email, or live chat. For urgent matters,
-                    we recommend using the live chat feature for immediate assistance.
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Contact Support Section -->
-    <div class="contact-support">
-        <h3>Still have questions?</h3>
-        <p>Can't find the answer you're looking for? Please chat to our friendly team.</p>
-        <a href="#" class="btn-support">Contact Support</a>
-    </div>
 </div>
+<section class="my-4" style="min-height: 40vh;">
+
+    <div class="container mb-5">
+        <h1 class="main-title text-center mb-5">Frequently Asked Questions</h1>
+        <!-- FAQ Header -->
+        <div class="faq-header">
+            <h2>How can we help you?</h2>
+            <p>Find answers to frequently asked questions about our services and features</p>
+        </div>
+
+        <!-- Search Box -->
+        <!-- <div class="search-box">
+            <input type="text" placeholder="Search for answers...">
+            <i class="fas fa-search"></i>
+        </div> -->
+
+        <!-- General Questions -->
+        <h3 class="category-title">General Questions</h3>
+        <div id="generalFAQ" class="accordion">
+            {% for faq in faqs %}
+            <div class="card">
+                <div class="card-header" id="heading{{ forloop.counter }}">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ forloop.counter }}"
+                            aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                            {{ faq.question }} <i class="fas fa-chevron-down float-right"></i>
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}"
+                    data-parent="#generalFAQ">
+                    <div class="card-body">
+                        {{ faq.answer }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        <!-- Pricing & Plans -->
+        <!-- <h3 class="category-title">Pricing & Plans</h3>
+        <div id="pricingFAQ" class="accordion">
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
+                            aria-expanded="false" aria-controls="collapseThree">
+                            What are your payment terms?
+                            <i class="fas fa-chevron-down float-right"></i> </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#pricingFAQ">
+                    <div class="card-body">
+                        We typically require a 50% upfront payment to begin work, with the remaining 50% due upon project
+                        completion. For larger projects, we can arrange milestone-based payments. We accept all major credit
+                        cards and bank transfers.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour"
+                            aria-expanded="false" aria-controls="collapseFour">
+                            Do you offer refunds? <i class="fas fa-chevron-down float-right"></i>
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#pricingFAQ">
+                    <div class="card-body">
+                        Yes, we offer refunds within 30 days of purchase if you're not satisfied with our services. Please
+                        refer to our refund policy for detailed terms and conditions.
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Technical Support -->
+        <!-- <h3 class="category-title">Technical Support</h3>
+        <div id="technicalFAQ" class="accordion">
+            <div class="card">
+                <div class="card-header" id="headingFive">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive"
+                            aria-expanded="false" aria-controls="collapseFive">
+                            What kind of support do you provide? <i class="fas fa-chevron-down float-right"></i>
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#technicalFAQ">
+                    <div class="card-body">
+                        We provide 24/7 technical support through email and live chat. Our support team is available to help
+                        you with any issues or questions you may have about our services.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingSix">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix"
+                            aria-expanded="false" aria-controls="collapseSix">
+                            How do I report a technical issue?
+                            <i class="fas fa-chevron-down float-right"></i> </button>
+                    </h5>
+                </div>
+                <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#technicalFAQ">
+                    <div class="card-body">
+                        You can report technical issues through our support portal, email, or live chat. For urgent matters,
+                        we recommend using the live chat feature for immediate assistance.
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Contact Support Section -->
+        <!-- <div class="contact-support">
+            <h3>Still have questions?</h3>
+            <p>Can't find the answer you're looking for? Please chat to our friendly team.</p>
+            <a href="#" class="btn-support">Contact Support</a>
+        </div> -->
+    </div>
+</section>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 {% endblock %}

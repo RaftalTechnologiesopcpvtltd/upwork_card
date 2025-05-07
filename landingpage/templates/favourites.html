@@ -45,78 +45,80 @@
         <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
     </div> -->
 </div>
-<div class="container py-3">
-    <!-- <p class="light_text" style="font-size: 14px">Products in whishlis</p> -->
-    <div class="table-responsive" style="border: 1px solid #E4E7E9; border-radius: 4px;">
-        <h4 class="m-4">Whishlist</h4>
-        <table class="table mb-4 table-borderless" id="wishlist-table">
-            <thead style="border: 1px solid #E4E7E9;border-left:none ;border-right:none ;">
-                <tr class="align-middle m-4">
-                    <th style="width: 50%;" scope="col">PRODUCTS</th>
-                    <th style="width: 15%;" class="text-center" scope="col">PRICE</th>
-                    <th style="width: 15%;" class="text-center" scope="col">SELLING STATUS</th>
-                    <th style="width: 20%;" scope="col">ACTIONS</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if fav_products %}
-                {% for item in fav_products %}
-                <tr class="align-middle">
-                    <td>
-                        <div class="prod-details d-flex align-items-center my-2">
-                            <div class="prod-card-id d-flex align-items-center justify-content-center"
-                                data-product-id="{{ item.id }}" style="margin-right: 10px;">
-                                <div class="px-3 py-2" style="width: 100px; background-color: #f4f4fc;">
-                                    <img class="img-fluid " width="100%" src="{{ item.image }}" alt="Product 1">
+<section class="my-4" style="min-height: 40vh;">
+    <div class="container py-3">
+        <!-- <p class="light_text" style="font-size: 14px">Products in whishlis</p> -->
+        <div class="table-responsive" style="border: 1px solid #E4E7E9; border-radius: 4px;">
+            <h4 class="m-4">Whishlist</h4>
+            <table class="table mb-4 table-borderless" id="wishlist-table">
+                <thead style="border: 1px solid #E4E7E9;border-left:none ;border-right:none ;">
+                    <tr class="align-middle m-4">
+                        <th style="width: 50%;" scope="col">PRODUCTS</th>
+                        <th style="width: 15%;" class="text-center" scope="col">PRICE</th>
+                        <th style="width: 15%;" class="text-center" scope="col">SELLING STATUS</th>
+                        <th style="width: 20%;" scope="col">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if fav_products %}
+                    {% for item in fav_products %}
+                    <tr class="align-middle">
+                        <td>
+                            <div class="prod-details d-flex align-items-center my-2">
+                                <div class="prod-card-id d-flex align-items-center justify-content-center"
+                                    data-product-id="{{ item.id }}" style="margin-right: 10px;">
+                                    <div class="px-3 py-2" style="width: 100px; background-color: #f4f4fc;">
+                                        <img class="img-fluid " width="100%" src="{{ item.image }}" alt="Product 1">
+                                    </div>
+                                </div>
+    
+                                <div id="productDetails" class="">
+                                    <div>
+                                        <p class="mb-0 " id="productName" style="font-size: 14px;"><b>{{ item.title }}</b>
+                                        </p>
+                                    </div>
+                                    <div class="description">
+                                        <p class="mb-0 light_text" id=" productColor" style="font-size: 12px;"><span
+                                                style="font-size: 14px;">{{ item.decscription }}</span></p>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div id="productDetails" class="">
-                                <div>
-                                    <p class="mb-0 " id="productName" style="font-size: 14px;"><b>{{ item.title }}</b>
-                                    </p>
-                                </div>
-                                <div class="description">
-                                    <p class="mb-0 light_text" id=" productColor" style="font-size: 12px;"><span
-                                            style="font-size: 14px;">{{ item.decscription }}</span></p>
-                                </div>
+                        </td>
+                        {% if 'Auction' in item.selling_type %}
+                        <td class="text-center">${{ item.current_bid_price }}-{{ item.current_bid_count }}</td>
+                        {% else %}
+                        <td class="text-center">${{ item.price }}</td>
+                        {% endif %}
+                        <td class="text-center">
+                            <div class="in_stock {% if 'Auction' in item.selling_type %} auction-box {% else %} fixed-price-box {% endif %}">{{ item.selling_type }}</div>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex align-items-center">
+                                <!-- <a href="#"
+                                    class="add-to-cart btn btn-primary d-flex align-items-center {% if not item.product_stock_quantity %} disabled {% endif %}"
+                                    data-product-id="{{ item.product_id }}" data-quantity="1"><span>Add to Cart</span><i
+                                        class='ms-2 bx bx-cart' style='font-size: 18px; color:#fafafa'></i></a> -->
+                                <a href="#" class="remove-fav ms-auto me-4" data-product-id="{{ item.id }}"><i
+                                        class='fa-solid fa-trash' style='font-size: 20px; color:#929FA5'></i></a>
+    
+    
                             </div>
-                        </div>
-                    </td>
-                    {% if 'Auction' in item.selling_type %}
-                    <td class="text-center">${{ item.current_bid_price }}-{{ item.current_bid_count }}</td>
+                        </td>
+                    </tr>
+                    {% endfor %}
                     {% else %}
-                    <td class="text-center">${{ item.price }}</td>
+                    <tr>
+                        <td colspan="4" class="text-center py-4">
+                            <p class="mb-0">Your wishlist is empty.</p>
+                        </td>
+                    </tr>
                     {% endif %}
-                    <td class="text-center">
-                        <div class="in_stock {% if 'Auction' in item.selling_type %} auction-box {% else %} fixed-price-box {% endif %}">{{ item.selling_type }}</div>
-                    </td>
-                    <td class="text-center">
-                        <div class="d-flex align-items-center">
-                            <!-- <a href="#"
-                                class="add-to-cart btn btn-primary d-flex align-items-center {% if not item.product_stock_quantity %} disabled {% endif %}"
-                                data-product-id="{{ item.product_id }}" data-quantity="1"><span>Add to Cart</span><i
-                                    class='ms-2 bx bx-cart' style='font-size: 18px; color:#fafafa'></i></a> -->
-                            <a href="#" class="remove-fav ms-auto me-4" data-product-id="{{ item.id }}"><i
-                                    class='fa-solid fa-trash' style='font-size: 20px; color:#929FA5'></i></a>
-
-
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-                {% else %}
-                <tr>
-                    <td colspan="4" class="text-center py-4">
-                        <p class="mb-0">Your wishlist is empty.</p>
-                    </td>
-                </tr>
-                {% endif %}
-            </tbody>
-
-        </table>
+                </tbody>
+    
+            </table>
+        </div>
     </div>
-</div>
+</section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <!-- Toastr CSS -->
 
