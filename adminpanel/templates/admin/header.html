@@ -1,0 +1,42 @@
+{% load static %}
+
+
+<div class="header">
+    <div class="header-left">
+        <button id="sidebarToggle" class="sidebar-toggle d-none d-md-flex">
+            <i class="fas fa-bars"></i>
+        </button>
+        <button id="mobileToggle" class="sidebar-toggle d-md-none">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="search-form">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-control" placeholder="Search...">
+        </div>
+    </div>
+    <div class="header-right">
+        <!-- <div class="header-action">
+            <i class="fas fa-bell"></i>
+            <span class="badge bg-danger">3</span>
+        </div>
+        <div class="header-action">
+            <i class="fas fa-envelope"></i>
+            <span class="badge bg-danger">7</span>
+        </div> -->
+        <div class="dropdown">
+            <div class="user-dropdown" data-bs-toggle="dropdown">
+                <img src="{% static 'images/user.jpg' %}" alt="User">
+                <span class="user-name">John Doe</span>
+                <i class="fas fa-chevron-down ms-2 small"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> BUYERDGE</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

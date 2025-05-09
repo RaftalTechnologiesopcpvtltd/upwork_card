@@ -1,0 +1,125 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{% if slider %}Edit Slider{% else %}Add New Slider{% endif %}{% endblock %}
+{% block page_title %}{% if slider %}Edit Slider{% else %}Add New Slider{% endif %}{% endblock %}
+
+{% block header_buttons %}
+<a href="{% url 'admin_sliders' %}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Back to Sliders
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="id_title" class="form-label">Title</label>
+                        <input type="text" name="title" id="id_title" class="form-control {% if form.title.errors %}is-invalid{% endif %}" value="{{ form.title.value|default:'' }}">
+                        {% if form.title.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.title.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_subtitle" class="form-label">Subtitle</label>
+                        <input type="text" name="subtitle" id="id_subtitle" class="form-control {% if form.subtitle.errors %}is-invalid{% endif %}" value="{{ form.subtitle.value|default:'' }}">
+                        {% if form.subtitle.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.subtitle.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_button_text" class="form-label">Button Text</label>
+                        <input type="text" name="button_text" id="id_button_text" class="form-control {% if form.button_text.errors %}is-invalid{% endif %}" value="{{ form.button_text.value|default:'' }}">
+                        {% if form.button_text.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.button_text.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_button_url" class="form-label">Button URL</label>
+                        <input type="url" name="button_url" id="id_button_url" class="form-control {% if form.button_url.errors %}is-invalid{% endif %}" value="{{ form.button_url.value|default:'' }}">
+                        {% if form.button_url.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.button_url.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="id_image" class="form-label">Slider Image</label>
+                        {% if slider and slider.image %}
+                        <div class="mb-2">
+                            <img src="{{ slider.image.url }}" alt="Slider Image" class="img-fluid img-thumbnail" style="max-height: 200px;">
+                        </div>
+                        {% endif %}
+                        <input type="file" name="image" id="id_image" class="form-control {% if form.image.errors %}is-invalid{% endif %}" {% if not slider %}required{% endif %}>
+                        {% if form.image.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.image.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_order" class="form-label">Display Order</label>
+                        <input type="number" name="order" id="id_order" class="form-control {% if form.order.errors %}is-invalid{% endif %}" value="{{ form.order.value|default:'0' }}">
+                        {% if form.order.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.order.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">Lower numbers appear first</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="is_active" id="id_is_active" class="form-check-input" {% if form.is_active.value %}checked{% endif %}>
+                            <label for="id_is_active" class="form-check-label">Active</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Save Slider
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

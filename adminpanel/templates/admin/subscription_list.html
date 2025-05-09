@@ -1,0 +1,82 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <h1 class="page-title mb-4">Manage Subscription</h1>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>User</th>
+                                <th>Subscription Name</th>
+                                <th>Subscription Id</th>
+                                <th>Price</th>
+                                <th>Duration</th>
+                                <th>Features</th>
+                                <th>Status</th>
+                                <th>Payment Status</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for plan in plans %}
+                            <tr>
+                                <td>{{ plan.user.first_name }} {{ plan.user.last_name }}</td>
+                                <td>{{ plan.plan.price_heading }}</td>
+                                <td>{{ plan.subscription_id }}</td>
+                                <td>${{ plan.plan.price }}</td>
+                                <td>{{ plan.plan.duration_in_days }} days</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#features{{ plan.id }}" aria-expanded="false"
+                                        aria-controls="features{{ plan.id }}">
+                                        <i class="fas fa-eye me-1"></i> View Features
+                                    </button>
+                                    <div class="collapse mt-2" id="features{{ plan.id }}">
+                                        <ul class="list-group list-group-flush">
+                                            {% if plan.plan.description %}<li class="list-group-item">{{ plan.plan.description }}
+                                            </li>{% endif %}
+                                            {% if plan.plan.price_feature1 %}<li class="list-group-item">{{ plan.plan.price_feature1 }}</li>{% endif %}
+                                            {% if plan.plan.price_feature2 %}<li class="list-group-item">{{ plan.plan.price_feature2 }}</li>{% endif %}
+                                            {% if plan.plan.price_feature3 %}<li class="list-group-item">{{ plan.plan.price_feature3 }}</li>{% endif %}
+                                            {% if plan.plan.price_feature4 %}<li class="list-group-item">{{ plan.plan.price_feature4 }}</li>{% endif %}
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if plan.active %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ plan.payment_status }}</td>
+                                <td>{{ plan.start_date }}</td>
+                                <td>{{ plan.end_date }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url 'admin_subscription_edit' plan_id=plan.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>                                        
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No subscription plans found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -170,9 +170,9 @@
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between mt-4">
-                        <button class="save-button">₹{{ amount|floatformat:0 }}</button>
+                        <button class="save-button">$ {{ amount|floatformat:0 }}</button>
                         <div class="text-right">
-                            <div class="price-display">₹{{ amount|floatformat:0 }}/month</div>
+                            <div class="price-display">$ {{ amount|floatformat:0 }}/{{ plan.duration_in_days }}</div>
                         </div>
                     </div>
 
@@ -200,7 +200,7 @@
                                 <span class="subtotal-text">Subtotal</span>
                                 <div class="text-right">
                                     <!-- <div class="price-original mb-1">₹31,152.00</div> -->
-                                    <div class="subtotal-price">₹{{ amount|floatformat:0 }}</div>
+                                    <div class="subtotal-price">$ {{ amount|floatformat:0 }}</div>
                                 </div>
                             </div>
                             <small class="text-muted">Subtotal does not include applicable taxes</small>

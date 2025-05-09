@@ -1,0 +1,166 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <h1 class="page-title mb-4">Manage Subscription</h1>
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_user" class="form-label">User</label>
+                                {{ form.user }}
+                                {% if form.user.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.user.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_plan" class="form-label">Plan</label>
+                                {{ form.plan }}
+                                {% if form.plan.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.plan.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3 form-check form-switch">
+                                {{ form.active }}
+                                <label for="id_active" class="form-check-label">Active</label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_subscription_id" class="form-label">Subscription ID</label>
+                                {{ form.subscription_id }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_customer_id" class="form-label">Customer ID</label>
+                                {{ form.customer_id }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_session_id" class="form-label">Session ID</label>
+                                {{ form.session_id }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_payment_status" class="form-label">Payment Status</label>
+                                {{ form.payment_status }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_interval" class="form-label">Interval</label>
+                                {{ form.interval }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_start_date" class="form-label">Start Date</label>
+                                {{ form.start_date }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_end_date" class="form-label">End Date</label>
+                                {{ form.end_date }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Subscription
+                        </button>
+                    </div>
+                </form>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelImmediateModal">Cancel
+                    Immediately</button>
+                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelEndModal">Cancel at
+                    End of Billing Period</button>
+
+            </div>
+        </div>
+
+        <!-- Cancel Immediate Modal -->
+        <div class="modal fade" id="cancelImmediateModal" tabindex="-1" aria-labelledby="cancelImmediateModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelImmediateModalLabel">Cancel Subscription Immediately</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to cancel your subscription immediately? Your access will be revoked
+                            right
+                            away, and you won't receive a refund for the remaining days of your billing period.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep My
+                            Subscription</button>
+                        <form method="POST" action="{% url 'cancel_subscription' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="subscription_id" value="{{ form.subscription_id }}">
+                            <input type="hidden" name="cancel_now" value="True">
+                            <!-- <button type="submit" class="btn btn-warning">Cancel</button> -->
+                            <button type="submit" class="btn btn-danger">Yes, Cancel Immediately</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel at End of Billing Period Modal -->
+        <div class="modal fade" id="cancelEndModal" tabindex="-1" aria-labelledby="cancelEndModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelEndModalLabel">Cancel Subscription at End of Billing Period
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Your subscription will be canceled at the end of the current billing period (June 1, 2023).
+                            You'll continue to have access until then. Are you sure you want to proceed?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep My
+                            Subscription</button>
+                        <form method="POST" action="{% url 'cancel_subscription' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="subscription_id" value="{{ form.subscription_id }}">
+                            <button type="submit" class="btn btn-danger">Yes, Cancel at End of Period</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

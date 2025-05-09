@@ -374,7 +374,15 @@ class Slidder(models.Model):
     def __str__(self):
         return self.heading
     
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
 
 class Pricing(models.Model):
     price_heading = models.CharField(max_length=100)
@@ -391,10 +399,10 @@ class Pricing(models.Model):
 
 
 class Contactus(models.Model):
-    about = models.TextField()
-    company_address = models.TextField()
-    company_phone = models.CharField(max_length=20)
-    company_email = models.EmailField()
+    about = models.TextField(null=True,blank=True)
+    company_address = models.TextField(null=True,blank=True)
+    company_phone = models.CharField(null=True,blank=True,max_length=20)
+    company_email = models.EmailField(null=True,blank=True)
 
     def __str__(self):
         return self.company_email
@@ -441,7 +449,7 @@ class UserSubscription(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.user.username} - (Active: {self.active})"
+        return f"{self.user.first_name} - (Active: {self.active})"
     
 
 

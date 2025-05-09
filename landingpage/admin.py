@@ -94,3 +94,9 @@ class SearchHistoryAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'search_query', 'location')
     list_filter = ('created', 'location')
     ordering = ('-created',)
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'created_at')
+    search_fields = ('name', 'email', 'subject')
+    list_filter = ('created_at',)

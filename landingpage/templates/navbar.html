@@ -89,8 +89,10 @@
                             </a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
+                                {% if User_Subscription.active %}
                                 <a class="dropdown-item" href="{% url 'my_subscription' %}">My Subscriptiong</a>
                                 <a class="dropdown-item" href="{% url 'my_products' %}">My Listing</a>
+                                {% endif %}
                                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                             </div>
                         </div>

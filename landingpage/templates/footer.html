@@ -1,26 +1,204 @@
 {% load static %}
+<style>
+    /* Custom styles */
 
-<section class="footer-area footer-dark" id="about">
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .footer {
+        background-color: #001531;
+        color: white !important;
+        padding: 20px 0;
+        width: 100%;
+    }
+
+    .company-logo {
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .contact-info {
+        font-size: 0.95rem;
+    }
+
+    .contact-info p {
+        color: white !important;
+    }
+
+    .contact-info i {
+        width: 20px;
+        margin-left: 8px;
+        color: #8bb9fe;
+    }
+
+    .social-icons {
+        margin-top: 15px;
+    }
+
+    .social-icons a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.1);
+        /* margin-right: 10px; */
+        color: #fff;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .social-icons a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+    }
+
+    .footer-links {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .footer-links li {
+        margin-bottom: 8px;
+    }
+
+    .footer-links a {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+        color: #8bb9fe;
+    }
+
+    .copyright {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 767px) {
+        .footer-content {
+
+            text-align: center !important;
+        }
+
+        .footer-logo {
+            justify-content: center;
+        }
+    }
+</style>
+<!--  -->
+
+<footer class="footer">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="footer-logo text-center mb-4">
-                    <a href="{% url 'landingpage' %}"><img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 70px; width: auto;"></a>
-                </div> <!-- footer logo -->
-                <ul class="social text-center">
-                    <li><a href="https://facebook.com/"><i class="lni lni-facebook-filled"></i></a></li>
-                    <li><a href="https://twitter.com/"><i class="lni lni-twitter-original"></i></a></li>
-                    <li><a href="https://instagram.com/"><i class="lni lni-instagram-original"></i></a></li>
-                    <li><a href="#"><i class="lni lni-linkedin-original"></i></a></li>
-                </ul> <!-- social -->
-                <div class="footer-support text-center">
-                    <span class="number">+91123456789</span>
-                    <span class="mail">support@shabi.com</span>
+        <div class="row footer-content">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <!-- Company Logo and Name -->
+                <!-- Company Logo and Name -->
+                <a class="navbar-brand footer-logo d-flex align-items-center" href="{% url 'landingpage' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 70px; width: auto;">
+                </a>
+
+                <!-- Contact Information -->
+                <div class="contact-info mt-3">
+                    <p class="mb-3">{{ Contact.about }}</p>
+                    <!-- <p><i class="fas fa-phone-alt"></i> +1 234 567 8900</p> -->
+                    <p><i class="fas fa-envelope"></i> <a style="color: white;" href="mailto:{{ contact.email }}">{{ Contact.company_email }}</a></p>
+
                 </div>
-                <div class="copyright text-center mt-35">
-                    <p class="text">Designed by <a href="#" rel="nofollow">Mohd Faiz Khan</a></p>
-                </div> <!--  copyright -->
             </div>
-        </div> <!-- row -->
-    </div> <!-- container -->
-</section>
+
+            <div class="col-md-4 mb-4 mb-md-0">
+                <!-- Links (Conditional based on subscription) -->
+                <h5 style="color: white;" class="mb-3">USEFUL LINKS</h5>
+
+                <!-- If User_Subscription.active is True -->
+                <ul class="footer-links" id="subscriber-links">
+                    <li><a href="{% url 'landingpage' %}">Home</a></li>
+                    <li><a href="{% url 'favourites' %}">Favorites</a></li>
+                    <li><a href="{% url 'blog_listings' %}">All Blogs</a></li>
+                    <li><a href="{% url 'create_post' %}">Create Blogs</a></li>
+                    <li><a href="{% url 'faq' %}">FAQs</a></li>
+                </ul>
+
+                <!-- If User_Subscription.active is False -->
+                <ul class="footer-links d-none" id="non-subscriber-links">
+                    <li><a href="{% url 'landingpage' %}">Home</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="{% url 'faq' %}">FAQs</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <!-- User Related Links -->
+                <h5 style="color: white;" class="mb-3">MY ACCOUNT</h5>
+
+                <!-- If user is authenticated -->
+                <ul class="footer-links" id="authenticated-links">
+                    <li><a href="{% url 'profile' %}">My Profile</a></li>
+                    <li class="d-none" id="Mysub"><a href="{% url 'my_subscription' %}">My Subscription</a></li>
+                    <li class="d-none" id="Mylist"><a href="{% url 'my_products' %}">My Listing</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+
+                <!-- If user is not authenticated -->
+                <ul class="footer-links d-none" id="unauthenticated-links">
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                </ul>
+
+                <!-- Social Media Links -->
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <hr style="background-color: white;">
+        <div class="row">
+            <div class="col-12">
+                <div class="copyright text-center">
+                    © 2025 BUYERDGE. All rights reserved. | Created By - Raftal Technologies
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<script>
+    // This script is for demonstration purposes only
+    // In your actual implementation, you would use Django template logic
+    // to conditionally display the appropriate links based on user status
+
+    // Demo toggle for subscription status
+    const isSubscriber = {{ User_Subscription.active|yesno:"true,false" }};
+    const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+
+
+    if (isSubscriber) {
+        document.getElementById('subscriber-links').classList.remove('d-none');
+        document.getElementById('Mysub').classList.remove('d-none');
+        document.getElementById('Mylist').classList.remove('d-none');
+        document.getElementById('non-subscriber-links').classList.add('d-none');
+    } else {
+        document.getElementById('subscriber-links').classList.add('d-none');
+        document.getElementById('Mysub').classList.add('d-none');
+        document.getElementById('Mylist').classList.add('d-none');
+        document.getElementById('non-subscriber-links').classList.remove('d-none');
+    }
+
+    if (isAuthenticated) {
+        document.getElementById('authenticated-links').classList.remove('d-none');
+        document.getElementById('unauthenticated-links').classList.add('d-none');
+    } else {
+        document.getElementById('authenticated-links').classList.add('d-none');
+        document.getElementById('unauthenticated-links').classList.remove('d-none');
+    }
+</script>

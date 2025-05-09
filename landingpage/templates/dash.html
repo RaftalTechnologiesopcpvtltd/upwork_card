@@ -1,137 +1,1090 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Search Loader Animation</title>
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <style>
-        body {
-            background-color: #f8fafc;
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            color: #334155;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .sidebar {
             min-height: 100vh;
-            margin: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        
-        .loader-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            background: white;
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
+
+        .sidebar .nav-link {
+            color: #333;
+            padding: 0.8rem 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 0.2rem;
         }
-        
-        .loader-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+
+        .sidebar .nav-link:hover {
+            background-color: #f8f9fa;
         }
-        
-        .loader-title {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #1e293b;
-            margin: 0 0 1.5rem 0;
-            display: flex;
-            align-items: center;
+
+        .sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
         }
-        
-        .loader-title i {
-            margin-right: 0.75rem;
-            color: #2563eb;
-        }
-        
-        .search-status {
-            display: flex;
-            align-items: center;
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-        
-        .search-pulse {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background-color: #22c55e;
-            border-radius: 50%;
+
+        .sidebar .nav-link i {
             margin-right: 0.5rem;
-            animation: pulse 1.5s infinite;
         }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(0.8);
-                opacity: 0.8;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(0.8);
-                opacity: 0.8;
-            }
+
+        main {
+            padding: 2rem;
         }
-        
-        .progress-container {
-            position: relative;
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 1.5rem 0 0 0;
+
+        .card-counter {
+            padding: 20px 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
-        
-        .progress-bar {
+
+        .card-counter i {
+            font-size: 3rem;
+            opacity: 0.5;
+        }
+
+        .card-counter .count-numbers {
             position: absolute;
-            height: 100%;
-            width: 20%;
-            background: linear-gradient(90deg, #2563eb, #3b82f6);
-            border-radius: 3px;
-            animation: progressMove 2s infinite ease-in-out;
+            right: 35px;
+            top: 20px;
+            font-size: 2rem;
+            font-weight: bold;
         }
-        
-        @keyframes progressMove {
-            0% {
-                left: -20%;
-            }
-            100% {
-                left: 100%;
-            }
+
+        .card-counter .count-name {
+            position: absolute;
+            right: 35px;
+            top: 65px;
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        .bg-primary-light {
+            background-color: #cfe2ff;
+            color: #084298;
+        }
+
+        .bg-success-light {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .bg-warning-light {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+
+        .bg-info-light {
+            background-color: #cff4fc;
+            color: #055160;
+        }
+
+        .bg-danger-light {
+            background-color: #f8d7da;
+            color: #842029;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="loader-container">
-            <h2 class="loader-title">
-                <i class="bi bi-search"></i>
-                Searching Products
-            </h2>
-            
-            <div class="search-status">
-                <span class="search-pulse"></span>
-                Searching across multiple marketplaces...
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="pt-4 pb-3 px-3 text-center">
+                    <h3>Admin Panel</h3>
+                    <hr>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#blogs">
+                            <i class="bi bi-file-earmark-text"></i> Blogs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#subscriptions">
+                            <i class="bi bi-credit-card"></i> Subscription Plans
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sliders">
+                            <i class="bi bi-images"></i> Sliders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faqs">
+                            <i class="bi bi-question-circle"></i> FAQs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacts">
+                            <i class="bi bi-envelope"></i> Contact Submissions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#settings">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                    </li>
+                    <li class="nav-item mt-5">
+                        <a class="nav-link text-danger" href="#logout">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                </ul>
             </div>
-            
-            <div class="progress-container">
-                <div class="progress-bar"></div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Dashboard Section -->
+                <div id="dashboard" class="pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                    <p class="text-muted">Welcome to your admin dashboard</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="card-counter bg-primary-light">
+                                <i class="bi bi-file-earmark-text"></i>
+                                <span class="count-numbers">24</span>
+                                <span class="count-name">Total Blogs</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-counter bg-success-light">
+                                <i class="bi bi-credit-card"></i>
+                                <span class="count-numbers">5</span>
+                                <span class="count-name">Subscription Plans</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-counter bg-warning-light">
+                                <i class="bi bi-people"></i>
+                                <span class="count-numbers">156</span>
+                                <span class="count-name">Subscribers</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-counter bg-info-light">
+                                <i class="bi bi-envelope"></i>
+                                <span class="count-numbers">8</span>
+                                <span class="count-name">New Messages</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Blogs</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Title</th>
+                                                    <th>Category</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Top 10 Python Tips</td>
+                                                    <td>Technology</td>
+                                                    <td>May 06, 2025</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Django vs Flask</td>
+                                                    <td>Web Development</td>
+                                                    <td>May 03, 2025</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Introduction to Bootstrap 5</td>
+                                                    <td>Frontend</td>
+                                                    <td>May 01, 2025</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Recent Messages</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>John Doe</td>
+                                                    <td>john@example.com</td>
+                                                    <td>May 07, 2025</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Jane Smith</td>
+                                                    <td>jane@example.com</td>
+                                                    <td>May 05, 2025</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Bob Johnson</td>
+                                                    <td>bob@example.com</td>
+                                                    <td>May 02, 2025</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blogs Section -->
+                <div id="blogs" class="pt-3 pb-2 mb-3 border-bottom" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                        <h1 class="h2">Manage Blogs</h1>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBlogModal">
+                            <i class="bi bi-plus"></i> Add New Blog
+                        </button>
+                    </div>
+
+                    <div class="table-responsive mt-4">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Getting Started with Django</td>
+                                    <td>Admin</td>
+                                    <td>Web Development</td>
+                                    <td>May 07, 2025</td>
+                                    <td><span class="badge bg-success">Published</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Python for Beginners</td>
+                                    <td>Admin</td>
+                                    <td>Programming</td>
+                                    <td>May 05, 2025</td>
+                                    <td><span class="badge bg-success">Published</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Tips for Database Optimization</td>
+                                    <td>Admin</td>
+                                    <td>Database</td>
+                                    <td>May 03, 2025</td>
+                                    <td><span class="badge bg-warning text-dark">Draft</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Bootstrap 5 Features</td>
+                                    <td>Admin</td>
+                                    <td>Frontend</td>
+                                    <td>May 01, 2025</td>
+                                    <td><span class="badge bg-success">Published</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- Add Blog Modal -->
+                <div class="modal fade" id="addBlogModal" tabindex="-1" aria-labelledby="addBlogModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addBlogModalLabel">Add New Blog</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="blogTitle" class="form-label">Title</label>
+                                        <input type="text" class="form-control" id="blogTitle" required>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="blogCategory" class="form-label">Category</label>
+                                            <select class="form-select" id="blogCategory" required>
+                                                <option value="">Select Category</option>
+                                                <option value="1">Web Development</option>
+                                                <option value="2">Programming</option>
+                                                <option value="3">Database</option>
+                                                <option value="4">Frontend</option>
+                                                <option value="5">Backend</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="blogStatus" class="form-label">Status</label>
+                                            <select class="form-select" id="blogStatus" required>
+                                                <option value="1">Published</option>
+                                                <option value="2">Draft</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="blogThumbnail" class="form-label">Featured Image</label>
+                                        <input class="form-control" type="file" id="blogThumbnail">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="blogContent" class="form-label">Content</label>
+                                        <textarea class="form-control" id="blogContent" rows="10" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="blogMeta" class="form-label">Meta Description</label>
+                                        <textarea class="form-control" id="blogMeta" rows="3"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="blogTags" class="form-label">Tags (comma separated)</label>
+                                        <input type="text" class="form-control" id="blogTags">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary">Save Blog</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscription Plans Section -->
+                <div id="subscriptions" class="pt-3 pb-2 mb-3 border-bottom" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                        <h1 class="h2">Manage Subscription Plans</h1>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubscriptionModal">
+                            <i class="bi bi-plus"></i> Add New Plan
+                        </button>
+                    </div>
+
+                    <div class="table-responsive mt-4">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Plan Name</th>
+                                    <th>Price</th>
+                                    <th>Duration</th>
+                                    <th>Features</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Basic</td>
+                                    <td>$9.99</td>
+                                    <td>Monthly</td>
+                                    <td>3 features</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Standard</td>
+                                    <td>$19.99</td>
+                                    <td>Monthly</td>
+                                    <td>5 features</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Premium</td>
+                                    <td>$29.99</td>
+                                    <td>Monthly</td>
+                                    <td>All features</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Annual Basic</td>
+                                    <td>$99.99</td>
+                                    <td>Yearly</td>
+                                    <td>3 features</td>
+                                    <td><span class="badge bg-danger">Inactive</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Subscription Modal -->
+                <div class="modal fade" id="addSubscriptionModal" tabindex="-1"
+                    aria-labelledby="addSubscriptionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addSubscriptionModalLabel">Add New Subscription Plan</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="planName" class="form-label">Plan Name</label>
+                                        <input type="text" class="form-control" id="planName" required>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="planPrice" class="form-label">Price</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" class="form-control" id="planPrice" step="0.01"
+                                                    required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="planDuration" class="form-label">Duration</label>
+                                            <select class="form-select" id="planDuration" required>
+                                                <option value="monthly">Monthly</option>
+                                                <option value="quarterly">Quarterly</option>
+                                                <option value="biannual">Bi-Annual</option>
+                                                <option value="annual">Annual</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Features</label>
+                                        <div class="feature-inputs">
+                                            <div class="input-group mb-2">
+                                                <input type="text" class="form-control" placeholder="Feature 1">
+                                                <button class="btn btn-outline-secondary" type="button"><i
+                                                        class="bi bi-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="planDescription" class="form-label">Description</label>
+                                        <textarea class="form-control" id="planDescription" rows="3"></textarea>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="sliderActive" checked>
+                                        <label class="form-check-label" for="sliderActive">Active</label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary">Save Slider</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQs Section -->
+                <div id="faqs" class="pt-3 pb-2 mb-3 border-bottom" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                        <h1 class="h2">Manage FAQs</h1>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFaqModal">
+                            <i class="bi bi-plus"></i> Add New FAQ
+                        </button>
+                    </div>
+
+                    <div class="accordion mt-4" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header d-flex align-items-center" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    How do I create a new blog post?
+                                </button>
+                                <div class="ms-auto me-3">
+                                    <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    To create a new blog post, log in to your admin panel and navigate to the Blogs
+                                    section. Click on "Add New Blog" button, fill in all the required information
+                                    including title, content, and category, then click on "Save Blog" to publish it.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header d-flex align-items-center" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    How do I manage subscription plans?
+                                </button>
+                                <div class="ms-auto me-3">
+                                    <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    To manage subscription plans, navigate to the Subscription Plans section in your
+                                    admin panel. Here you can view all existing plans, edit them, or add new ones by
+                                    clicking on "Add New Plan" button.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header d-flex align-items-center" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    How can I update the homepage slider?
+                                </button>
+                                <div class="ms-auto me-3">
+                                    <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    To update the homepage slider, go to the Sliders section in your admin panel. You
+                                    can add new slides, edit existing ones, or change their order. Make sure the
+                                    "Active" toggle is on for slides you want to display.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header d-flex align-items-center" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    How do I respond to contact form submissions?
+                                </button>
+                                <div class="ms-auto me-3">
+                                    <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    To respond to contact form submissions, navigate to the Contact Submissions section
+                                    in your admin panel. Click on a message to view its details, and use the provided
+                                    email information to respond to the inquiry.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add FAQ Modal -->
+                <div class="modal fade" id="addFaqModal" tabindex="-1" aria-labelledby="addFaqModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addFaqModalLabel">Add New FAQ</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="faqQuestion" class="form-label">Question</label>
+                                        <input type="text" class="form-control" id="faqQuestion" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="faqAnswer" class="form-label">Answer</label>
+                                        <textarea class="form-control" id="faqAnswer" rows="5" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="faqCategory" class="form-label">Category</label>
+                                        <select class="form-select" id="faqCategory">
+                                            <option value="">No Category</option>
+                                            <option value="1">General</option>
+                                            <option value="2">Blogs</option>
+                                            <option value="3">Subscriptions</option>
+                                            <option value="4">Technical</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="faqOrder" class="form-label">Display Order</label>
+                                        <input type="number" class="form-control" id="faqOrder" min="1" value="1">
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="faqActive" checked>
+                                        <label class="form-check-label" for="faqActive">Active</label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary">Save FAQ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Submissions Section -->
+                <div id="contacts" class="pt-3 pb-2 mb-3 border-bottom" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                        <h1 class="h2">Contact Form Submissions</h1>
+                    </div>
+
+                    <div class="table-responsive mt-4">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>John Doe</td>
+                                    <td>john@example.com</td>
+                                    <td>Subscription Inquiry</td>
+                                    <td>May 07, 2025</td>
+                                    <td><span class="badge bg-warning text-dark">Unread</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#viewContactModal"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Jane Smith</td>
+                                    <td>jane@example.com</td>
+                                    <td>Blog Feedback</td>
+                                    <td>May 05, 2025</td>
+                                    <td><span class="badge bg-success">Read</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#viewContactModal"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Bob Johnson</td>
+                                    <td>bob@example.com</td>
+                                    <td>Technical Support</td>
+                                    <td>May 02, 2025</td>
+                                    <td><span class="badge bg-success">Read</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#viewContactModal"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Alice Brown</td>
+                                    <td>alice@example.com</td>
+                                    <td>Partnership Opportunity</td>
+                                    <td>May 01, 2025</td>
+                                    <td><span class="badge bg-warning text-dark">Unread</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#viewContactModal"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- View Contact Modal -->
+                <div class="modal fade" id="viewContactModal" tabindex="-1" aria-labelledby="viewContactModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="viewContactModalLabel">Contact Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Name:</label>
+                                    <p>John Doe</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Email:</label>
+                                    <p>john@example.com</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Subject:</label>
+                                    <p>Subscription Inquiry</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Date:</label>
+                                    <p>May 07, 2025</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Message:</label>
+                                    <div class="border p-3 rounded bg-light">
+                                        <p>I'm interested in learning more about your premium subscription plans. Could
+                                            you provide me with detailed information about what's included in each plan
+                                            and the pricing options available?</p>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="replyMessage" class="form-label fw-bold">Reply:</label>
+                                    <textarea class="form-control" id="replyMessage" rows="4"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success">Mark as Read</button>
+                                <button type="button" class="btn btn-primary">Send Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settings" class="pt-3 pb-2 mb-3 border-bottom" style="display: none;">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+                        <h1 class="h2">Settings</h1>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>General Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="siteName" class="form-label">Site Name</label>
+                                            <input type="text" class="form-control" id="siteName"
+                                                value="My Django Blog">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="siteDescription" class="form-label">Site Description</label>
+                                            <textarea class="form-control" id="siteDescription"
+                                                rows="2">A blog about web development and technology.</textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="contactEmail" class="form-label">Contact Email</label>
+                                            <input type="email" class="form-control" id="contactEmail"
+                                                value="contact@example.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="logo" class="form-label">Logo</label>
+                                            <input class="form-control" type="file" id="logo">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="favicon" class="form-label">Favicon</label>
+                                            <input class="form-control" type="file" id="favicon">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5>Social Media Links</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="facebook" class="form-label">Facebook</label>
+                                            <input type="url" class="form-control" id="facebook"
+                                                value="https://facebook.com/mypage">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="twitter" class="form-label">Twitter</label>
+                                            <input type="url" class="form-control" id="twitter"
+                                                value="https://twitter.com/myhandle">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="instagram" class="form-label">Instagram</label>
+                                            <input type="url" class="form-control" id="instagram"
+                                                value="https://instagram.com/myaccount">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="linkedin" class="form-label">LinkedIn</label>
+                                            <input type="url" class="form-control" id="linkedin"
+                                                value="https://linkedin.com/in/myprofile">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Social Links</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>SEO Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="metaTitle" class="form-label">Default Meta Title</label>
+                                            <input type="text" class="form-control" id="metaTitle"
+                                                value="My Django Blog - Web Development and Technology">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="metaDescription" class="form-label">Default Meta
+                                                Description</label>
+                                            <textarea class="form-control" id="metaDescription"
+                                                rows="2">Explore the latest articles on web development, programming, and technology.</textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="googleAnalytics" class="form-label">Google Analytics ID</label>
+                                            <input type="text" class="form-control" id="googleAnalytics"
+                                                placeholder="UA-XXXXXXXXX-X">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save SEO Settings</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple script to toggle between sections
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = ['dashboard', 'blogs', 'subscriptions', 'sliders', 'faqs', 'contacts', 'settings'];
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Remove active class from all links
+                    navLinks.forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+
+                    // Add active class to clicked link
+                    this.classList.add('active');
+
+                    // Hide all sections
+                    sections.forEach(section => {
+                        document.getElementById(section).style.display = 'none';
+                    });
+
+                    // Show the selected section
+                    const targetSection = this.getAttribute('href').substring(1);
+                    document.getElementById(targetSection).style.display = 'block';
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>-input" id="planActive" checked>
+<label class="form-check-label" for="planActive">Active</label>
+</div>
+</form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <button type="button" class="btn btn-primary">Save Plan</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Sliders Section -->
+<div id="sliders" class="pt-3 pb-2 mb-3 border-bottom" style="display: none;">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
+        <h1 class="h2">Manage Sliders</h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSliderModal">
+            <i class="bi bi-plus"></i> Add New Slider
+        </button>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/api/placeholder/400/200" class="card-img-top" alt="Slider 1">
+                <div class="card-body">
+                    <h5 class="card-title">Welcome to Our Blog</h5>
+                    <p class="card-text">Discover the latest in web development and technology.</p>
+                    <div class="d-flex justify-content-between">
+                        <span class="badge bg-success">Active</span>
+                        <div>
+                            <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/api/placeholder/400/200" class="card-img-top" alt="Slider 2">
+                <div class="card-body">
+                    <h5 class="card-title">Premium Subscriptions</h5>
+                    <p class="card-text">Get exclusive access to our premium content.</p>
+                    <div class="d-flex justify-content-between">
+                        <span class="badge bg-success">Active</span>
+                        <div>
+                            <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/api/placeholder/400/200" class="card-img-top" alt="Slider 3">
+                <div class="card-body">
+                    <h5 class="card-title">Django Development</h5>
+                    <p class="card-text">Learn about Django framework and its features.</p>
+                    <div class="d-flex justify-content-between">
+                        <span class="badge bg-danger">Inactive</span>
+                        <div>
+                            <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
 
-
+<!-- Add Slider Modal -->
+<div class="modal fade" id="addSliderModal" tabindex="-1" aria-labelledby="addSliderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSliderModalLabel">Add New Slider</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="sliderTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="sliderTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sliderSubtitle" class="form-label">Subtitle/Description</label>
+                        <textarea class="form-control" id="sliderSubtitle" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sliderImage" class="form-label">Image</label>
+                        <input class="form-control" type="file" id="sliderImage" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="sliderButtonText" class="form-label">Button Text (optional)</label>
+                            <input type="text" class="form-control" id="sliderButtonText">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="sliderButtonLink" class="form-label">Button Link (optional)</label>
+                            <input type="url" class="form-control" id="sliderButtonLink">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sliderOrder" class="form-label">Display Order</label>
+                        <input type="number" class="form-control" id="sliderOrder" min="1" value="1">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check

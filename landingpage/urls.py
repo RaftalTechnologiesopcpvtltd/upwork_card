@@ -33,6 +33,7 @@ urlpatterns = [
     path('remove-from-favourites/', views.remove_from_favourites, name='remove_from_favourites'),
     path('get-suggestions/', views.get_suggestions, name='get_suggestions'),
     path('search_history/', views.search_history, name='search_history'),
+    path('contact/submit/', views.contact_submit, name='contact_submit'),
 
     # path('run-scripts/', views.run_scripts_on_aws, name='run_scripts_on_aws'),
     # path('server_page/', views.server_page, name='server_page'),

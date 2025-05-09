@@ -1,0 +1,590 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .search-history-item {
+        display: flex;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .search-history-icon {
+        margin-right: 15px;
+        font-size: 24px;
+        color: #007bff;
+    }
+
+    .search-history-content {
+        flex-grow: 1;
+    }
+
+    .search-history-query {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .search-history-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+
+    .search-history-meta span {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+    }
+
+    .search-history-meta i {
+        margin-right: 5px;
+    }
+
+    .search-history-meta span:first-child {
+        margin-right: 10px;
+    }
+
+    .search-history-meta span:last-child {
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<!-- Main Content -->
+<div id="content">
+    {% include 'admin/header.html' %}
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">Dashboard</h1>
+
+        <!-- Slider Section -->
+        <!-- <div class="card">
+                <div class="card-header">
+                    <span>Featured Slider</span>
+                    <div class="card-actions">
+                        <button><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="https://via.placeholder.com/1200x400" alt="Slide 1">
+                                <div class="slide-content">
+                                    <h2 class="slide-title">Welcome to Admin Dashboard</h2>
+                                    <p class="slide-desc">Manage your website with our powerful admin tools</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="https://via.placeholder.com/1200x400" alt="Slide 2">
+                                <div class="slide-content">
+                                    <h2 class="slide-title">New Features Available</h2>
+                                    <p class="slide-desc">Check out our latest updates and improvements</p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="https://via.placeholder.com/1200x400" alt="Slide 3">
+                                <div class="slide-content">
+                                    <h2 class="slide-title">Boost Your Productivity</h2>
+                                    <p class="slide-desc">Use our tools to streamline your workflow</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div> -->
+
+        <!-- Status Cards -->
+        <div class="row">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="status-card primary">
+                    <div class="status-title">Total Users</div>
+                    <div class="status-value">{{ all_user_count }}</div>
+                    <div class="status-desc">
+                        <i class="fas fa-users"></i> Users
+                    </div>
+                    <div class="status-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="status-card success">
+                    <div class="status-title">Active Subscriptions</div>
+                    <div class="status-value">{{subscription_count}}</div>
+                    <div class="status-desc">
+                        <i class="fas fa-credit-card"></i> Active Subscriptions
+                    </div>
+                    <div class="status-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="status-card warning">
+                    <div class="status-title">Blog Posts</div>
+                    <div class="status-value">{{blog_count}}</div>
+                    <div class="status-desc">
+                        <i class="fas fa-blog"></i> Blog Posts
+                    </div>
+                    <div class="status-icon">
+                        <i class="fas fa-blog"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="status-card info">
+                    <div class="status-title">Total Searchs</div>
+                    <div class="status-value">{{SearchHistory_count}}</div>
+                    <div class="status-desc">
+                        <i class="fa-solid fa-cart-shopping"></i> Total Searchs
+                    </div>
+                    <div class="status-icon">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Subscriptions -->
+        <div class="row">
+            <div class="col-12 d-flex">
+                <h4 class="mb-4">User Subscriptions</h4>
+                <div class="ms-2">
+                    <a href="{% url 'admin_subscriptions' %}" class="btn btn-sm"><i class="fa-solid fa-up-right-from-square"></i></i></a>
+                </div>
+            </div>
+            {% for subscription in subscriptions %}
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="subscription-card">
+                    <div class="subscription-header">
+                        <div class="subscription-title">{{subscription.user.first_name}} {{subscription.user.last_name}}
+                        </div>
+                        <div class="subscription-plan">{{subscription.plan.price_heading}}</div>
+                    </div>
+                    <div class="subscription-body">
+                        <div class="subscription-info">
+                            <div class="subscription-label">Status</div>
+                            <div class="subscription-value text-success">
+                                {% if subscription.active %}Active{% else %}Not Active{% endif %}
+                            </div>
+                        </div>
+                        <div class="subscription-info">
+                            <div class="subscription-label">Start Date</div>
+                            <span class="start-date" data-value="{{ subscription.start_date }}"></span>
+                            <div class="subscription-value">{{ subscription.start_date }}</div>
+                        </div>
+                        <div class="subscription-info">
+                            <div class="subscription-label">Next Billing</div>
+                            <span class="end-date" data-value="{{ subscription.end_date }}"></span>
+                            <div class="subscription-value">{{ subscription.end_date }}</div>
+                        </div>
+                        <div class="subscription-info">
+                            <div class="subscription-label">Amount</div>
+                            <div class="subscription-value">{{ subscription.plan.price }}/{{ subscription.interval }}
+                            </div>
+                        </div>
+                        <div class="subscription-progress">
+                            <div class="subscription-progress-label">
+                                <span>Usage</span>
+                                <span class="usage-percentage">0%</span>
+                            </div>
+                            <div class="subscription-progress-bar">
+                                <div class="subscription-progress-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+
+        <!-- Users and Blog Posts -->
+        <div class="row">
+            <!-- Users Table -->
+            <div class="col-xl-8 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Recent Users</span>
+                        <div class="card-actions">
+                            <button><i class="fa-solid fa-up-right-from-square"></i></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Role</th>
+                                        <th>Joined</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in all_user %}
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="{% static 'images/user.jpg' %}" alt="User">
+                                                <div>
+                                                    <div class="user-name">{{ user.first_name }} {{ user.last_name }}
+                                                    </div>
+                                                    <div class="user-email">{{ user.email }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if user.is_superuser %}
+                                            Super Admin
+                                            {% elif user.is_staff %}
+                                            Staff Admin
+                                            {% else %}
+                                            Regular User
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    {# Fill remaining empty rows to make at least 6 #}
+                                    {% for i in "12345"|slice:":5"|make_list %}
+                                    {% if forloop.counter0 >= all_user|length %}
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                <img src="{% static 'images/user.jpg' %}" alt="User">
+                                                <div>
+                                                    <div class="user-name text-muted">---</div>
+                                                    <div class="user-email text-muted">---</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-muted">---</td>
+                                        <td class="text-muted">---</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search History -->
+            <div class="col-xl-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Recent Search History</span>
+                        <div class="card-actions">
+                            <button><i class="fa-solid fa-up-right-from-square"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% for search in SearchHistory %}
+                        <div class="search-history-item">
+                            <div class="search-history-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="search-history-content">
+                                <div class="search-history-query">{{ search.search_query }}</div>
+                                <div class="search-history-meta">
+                                    <span title="{{ search.marketplaces }}">
+                                        <i class="fas fa-clock me-1"></i>
+                                        {% if search.marketplaces|length > 10 %}
+                                        {{ search.marketplaces|slice:":10" }}...
+                                        {% else %}
+                                        {{ search.marketplaces }}
+                                        {% endif %}
+                                    </span>
+                                    {% if search.location %}
+                                    <span><i class="fas fa-map-marker-alt me-1"></i> {{ search.location }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="search-history-meta">
+                                    <span><i class="fas fa-calendar-alt me-1"></i>{{ search.created|date:"M d, Y" }}</span>
+                                    <span><i class="fas fa-user me-1"></i>{{ search.user.first_name }} {{ search.user.last_name }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Posts and Comments -->
+        <div class="row">
+            <div class="col-12 d-flex">
+                <h4 class="mb-4">Recent Blog Posts</h4>
+                <div class="ms-2">
+                    <a href="#" class="btn btn-sm"><i class="fa-solid fa-up-right-from-square"></i></i></a>
+                </div>
+            </div>
+            {% for blog in recent_blogs %}
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="{{ blog.image.url }}" alt="Blog Post">
+                    </div>
+                    <div class="blog-body">
+                        <span class="blog-category design">{% for tag in blog.tags.all %}
+                            {{ tag.name }}{% if not forloop.last %} |{% endif %}
+                            {% endfor %}</span>
+                        <h5 class="blog-title">{{ blog.title }}</h5>
+                        <p class="blog-excerpt">{{ blog.content }}</p>
+                        <div class="blog-meta">
+                            <div><i class="far fa-calendar me-1"></i> {{ blog.created_at|date:"d M" }}</div>
+                            <div><i class="far fa-comment me-1"></i> {{ blog.comment_count }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Blog Comments -->
+        <!-- <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Recent Comments</span>
+                        <div class="card-actions">
+                            <button><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="comment">
+                            <div class="comment-header">
+                                <img src="https://via.placeholder.com/150" alt="User" class="comment-avatar">
+                                <div class="comment-info">
+                                    <div class="comment-author">John Smith</div>
+                                    <div class="comment-date">May 8, 2023 at 10:30 AM</div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                Great article! I've been using React Hooks for a while now and they've completely
+                                changed how I build components. Looking forward to more content like this.
+                            </div>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-header">
+                                <img src="https://via.placeholder.com/150" alt="User" class="comment-avatar">
+                                <div class="comment-info">
+                                    <div class="comment-author">Sarah Johnson</div>
+                                    <div class="comment-date">May 7, 2023 at 3:45 PM</div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                These UI design trends are spot on! I've been seeing a lot of these in recent
+                                projects. The focus on accessibility is particularly important and I'm glad you
+                                highlighted it.
+                            </div>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-header">
+                                <img src="https://via.placeholder.com/150" alt="User" class="comment-avatar">
+                                <div class="comment-info">
+                                    <div class="comment-author">Michael Brown</div>
+                                    <div class="comment-date">May 6, 2023 at 9:15 AM</div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                I implemented some of these email marketing strategies and saw a 20% increase in
+                                open rates! The segmentation tip was particularly helpful for our campaign.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Pricing Plans (View-Only) -->
+        <div class="row mt-4">
+            <div class="col-12 d-flex">
+                <h4 class="mb-4">Pricing Plans</h4>
+                <div class="ms-2">
+                    <a href="#" class="btn btn-sm"><i class="fa-solid fa-up-right-from-square"></i></i></a>
+                </div>
+            </div>
+
+            <!-- Plans -->
+             {% for pricing in pricings %}
+            <div class="col-lg-4 mb-4">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <div class="pricing-title">{{pricing.price_heading}}</div>
+                        <div class="pricing-price">${{pricing.price}}/{{pricing.duration_in_days}}</div>
+                        <div class="pricing-period">{{pricing.desc}}</div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul class="pricing-features">
+                            <li class="pricing-feature"><i class="fas fa-check"></i> {{pricing.price_feature1}}</li>
+                            <li class="pricing-feature"><i class="fas fa-check"></i> {{pricing.price_feature2}}</li>
+                            <li class="pricing-feature"><i class="fas fa-check"></i> {{pricing.price_feature3}}</li>
+                            <li class="pricing-feature"><i class="fas fa-check"></i> {{pricing.price_feature4}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        <!-- FAQ Section -->
+        <div class="row mt-4">
+            <!-- FAQ Table -->
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Frequently Asked Questions</span>
+                        <div class="card-actions">
+                            <button><i class="fa-solid fa-up-right-from-square"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Question</th>
+                                        <th>Answer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for faq in faqs %}
+                                    <tr>
+                                        <td>{{ faq.question }}?</td>
+                                        <td>{{faq.answer}}.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Us Section
+        <div class="row mt-4">
+            <div class="col-12">
+                <h4 class="mb-4">Contact Us</h4>
+            </div>
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Send us a message</span>
+                    </div>
+                    <div class="card-body">
+                        <form class="contact-form">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Your name">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Your email">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="subject" placeholder="Subject">
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="5"
+                                    placeholder="Your message"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="contact-info">
+                    <h5>Contact Information</h5>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            123 Business Street<br>
+                            Suite 100<br>
+                            San Francisco, CA 94107
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            +1 (555) 123-4567
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-text">
+                            info@example.com<br>
+                            support@example.com
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-text">
+                            Monday - Friday: 9AM - 5PM<br>
+                            Saturday: 10AM - 2PM<br>
+                            Sunday: Closed
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="copyright">
+                &copy; 2025 BUYERDGE. All rights reserved. | Created By - Raftal Technologies.
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.querySelectorAll('.subscription-card').forEach(card => {
+        const startDateStr = card.querySelector('.start-date').dataset.value;
+        const endDateStr = card.querySelector('.end-date').dataset.value;
+
+        const startDate = new Date(startDateStr);
+        const endDate = new Date(endDateStr);
+        const currentDate = new Date();
+
+        const totalDays = Math.max(1, Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)));
+        const usedDays = Math.max(0, Math.ceil((currentDate - startDate) / (1000 * 60 * 60 * 24)));
+
+        let usagePercent = Math.round((usedDays / totalDays) * 100);
+        usagePercent = Math.min(100, Math.max(0, usagePercent)); // clamp between 0 and 100
+
+        card.querySelector('.usage-percentage').textContent = usagePercent + '%';
+        card.querySelector('.subscription-progress-value').style.width = usagePercent + '%';
+    });
+</script>
+{% endblock %}

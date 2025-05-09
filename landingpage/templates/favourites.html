@@ -45,7 +45,7 @@
         <p style="color: #dee7e9;">Home.Pages.<span class="" style="color: #dee7e9;"><b>My Subscription</b></span></p>
     </div> -->
 </div>
-<section class="my-4" style="min-height: 40vh;">
+<section class="my-4" style="min-height: 50vh;">
     <div class="container py-3">
         <!-- <p class="light_text" style="font-size: 14px">Products in whishlis</p> -->
         <div class="table-responsive" style="border: 1px solid #E4E7E9; border-radius: 4px;">
@@ -71,10 +71,11 @@
                                         <img class="img-fluid " width="100%" src="{{ item.image }}" alt="Product 1">
                                     </div>
                                 </div>
-    
+
                                 <div id="productDetails" class="">
                                     <div>
-                                        <p class="mb-0 " id="productName" style="font-size: 14px;"><b>{{ item.title }}</b>
+                                        <p class="mb-0 " id="productName" style="font-size: 14px;"><b>{{ item.title
+                                                }}</b>
                                         </p>
                                     </div>
                                     <div class="description">
@@ -90,7 +91,9 @@
                         <td class="text-center">${{ item.price }}</td>
                         {% endif %}
                         <td class="text-center">
-                            <div class="in_stock {% if 'Auction' in item.selling_type %} auction-box {% else %} fixed-price-box {% endif %}">{{ item.selling_type }}</div>
+                            <div
+                                class="in_stock {% if 'Auction' in item.selling_type %} auction-box {% else %} fixed-price-box {% endif %}">
+                                {{ item.selling_type }}</div>
                         </td>
                         <td class="text-center">
                             <div class="d-flex align-items-center">
@@ -100,8 +103,8 @@
                                         class='ms-2 bx bx-cart' style='font-size: 18px; color:#fafafa'></i></a> -->
                                 <a href="#" class="remove-fav ms-auto me-4" data-product-id="{{ item.id }}"><i
                                         class='fa-solid fa-trash' style='font-size: 20px; color:#929FA5'></i></a>
-    
-    
+
+
                             </div>
                         </td>
                     </tr>
@@ -114,7 +117,7 @@
                     </tr>
                     {% endif %}
                 </tbody>
-    
+
             </table>
         </div>
     </div>

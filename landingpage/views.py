@@ -41,10 +41,12 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 def Landing_page(request):
     faqs = FAQ.objects.all()
     slidders = Slidder.objects.all()
-    Contact = Contactus.objects.all()
+    Contact = Contactus.objects.first()
+
     Pricings = Pricing.objects.all()
 
     User_Subscription = None
+    
     
 
     if request.user.is_authenticated:
@@ -74,7 +76,32 @@ def Landing_page(request):
     return render(request, 'home.html',context)
 
 
+def contact_submit(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        subject = request.POST.get('subject', '').strip()
+        message = request.POST.get('message', '').strip()
 
+        # Basic validation
+        if not all([name, email, subject, message]):
+            messages.error(request, 'All fields are required.')
+            return redirect(request.META.get('HTTP_REFERER', 'landingpage'))
+
+        
+
+        # Save to database
+        ContactMessage.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message
+        )
+
+        messages.success(request, 'Your message has been sent successfully!')
+        return redirect(request.META.get('HTTP_REFERER', 'landingpage'))
+
+    return redirect('landingpage')
 
 logger = logging.getLogger(__name__)
 
@@ -130,6 +157,8 @@ def register_view(request):
 
 @login_required
 def subscribe_to_plan(request, plan_id):
+    Contact = Contactus.objects.first()
+
     """
     Subscribe to a pricing plan.
     """
@@ -140,7 +169,7 @@ def subscribe_to_plan(request, plan_id):
 
     subscription_prod = {
         'Monthly' : 'price_1QtpecKyDQNgXXcfn7iWYSRF',
-        'Yearly' : 'price_1Qtpk3KyDQNgXXcfzS4EApeg',
+        'Annual' : 'price_1Qtpk3KyDQNgXXcfzS4EApeg',
     }
     try:
         active_subscription = UserSubscription.objects.get(user=request.user)
@@ -180,6 +209,7 @@ def subscribe_to_plan(request, plan_id):
         return redirect(checkout_session.url, code=303)
 
     context = {
+        "Contact" : Contact,
         # 'subscription' : subscription,
         'plan': plan,
         'amount': plan.price,  # Amount in paise
@@ -203,6 +233,7 @@ def payment_success(request):
 
         user = CustomUser.objects.get(id=user_id)
         subscription_info = stripe.Subscription.retrieve(session.subscription)
+        print("subscription_info : ",subscription_info)
         price = subscription_info['items']['data'][0]['price']
         product_id = price['product']
         product = stripe.Product.retrieve(product_id)
@@ -222,8 +253,8 @@ def payment_success(request):
         subscription.customer_id = customer_id
         subscription.payment_status = 'captured'
         subscription.interval = price['recurring']['interval']
-        subscription.start_date = datetime.fromtimestamp(int(subscription_info['current_period_start']))
-        subscription.end_date = datetime.fromtimestamp(int(subscription_info['current_period_end']))  # ✅ Fixed key
+        subscription.start_date = datetime.fromtimestamp(int(subscription_info['items']['data'][0]['current_period_start']))
+        subscription.end_date = datetime.fromtimestamp(int(subscription_info['items']['data'][0]['current_period_end']))  # ✅ Fixed key
 
         subscription.save()
 
@@ -347,12 +378,14 @@ def run_functions(selected_functions, query, location, function_names=None):
 
 
 def search_history(request):
+    Contact = Contactus.objects.first()
+
     search_history = SearchHistory.objects.all().order_by('-created')
     try:
         subscription = UserSubscription.objects.get(user=request.user)
     except:
         subscription = None
-    return render(request, "search_histories.html", {'search_history': search_history,"User_Subscription" : subscription})
+    return render(request, "search_histories.html", {'search_history': search_history,"User_Subscription" : subscription,"Contact":Contact})
 
 def product_search(request):
     LOCATION_CHOICES = {
@@ -1093,7 +1126,7 @@ def product_search(request):
     print("marketplace :",marketplace)
     print("scrapers",scrapers)
 
-    function_names = ["Fivemiles", "Fanaticscollect", "Ebay" ,"Craigslist","Offerup","Mercari"]
+    function_names = ["Fivemiles", "Fanaticscollect", "Ebay" ,"amazon","Craigslist","Offerup","Mercari"]
     resp = run_functions(marketplace, query, location_link, function_names)
 
     if resp:
@@ -1106,9 +1139,6 @@ def product_search(request):
                 location=location,
                 marketplaces=marketplaces,
             )
-
-        
-    
     
     results = []
     today = datetime.now().date()
@@ -1232,6 +1262,8 @@ def product_search(request):
 
 @login_required
 def fav_view(request):
+    Contact = Contactus.objects.first()
+
     try:
         subscription = UserSubscription.objects.get(user=request.user)
     except:
@@ -1260,7 +1292,7 @@ def fav_view(request):
             "image": product_images_list[0] if product_images_list else "",  # Handle missing images
             "decscription" : fav_prod.product.description,
         })
-    return render(request, 'favourites.html',{"fav_products":fav_results,"User_Subscription" : subscription})
+    return render(request, 'favourites.html',{"fav_products":fav_results,"User_Subscription" : subscription,"Contact":Contact})
 
 def get_product_details(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -1352,8 +1384,8 @@ def get_product_details(request, product_id):
     return JsonResponse(product_data, safe=False)
 
 
-from django.http import JsonResponse
 
+@login_required
 def get_suggestions(request):
     # Get latest 5 search history records ordered by created timestamp
     search_history = SearchHistory.objects.order_by('-created')[:5].values(
@@ -1368,6 +1400,8 @@ def dashboard_view(request):
     """
     Dashboard view for users with an active subscription.
     """
+    Contact = Contactus.objects.first()
+
     Search_History = SearchHistory.objects.all()
     print("Search_History : ",Search_History)
     today = now().date()
@@ -1393,7 +1427,7 @@ def dashboard_view(request):
             
         if subscription.active:
             # Render the dashboard page if the subscription is active
-            return render(request, 'dashboard.html',{"marketplaces":list(set(All_brands)),"User_Subscription" : subscription,"today":today})  # Replace with your dashboard template
+            return render(request, 'dashboard.html',{"marketplaces":list(set(All_brands)),"User_Subscription" : subscription,"today":today,"Contact":Contact})  # Replace with your dashboard template
         else:
             # Redirect to landing page if the subscription is not active
             return redirect('landingpage')
@@ -1403,18 +1437,22 @@ def dashboard_view(request):
 
 @login_required
 def profile(request):
+    Contact = Contactus.objects.first()
+
     try:
         subscription = UserSubscription.objects.get(user=request.user)
-        return render(request, 'profile.html',{"User_Subscription" : subscription})
+        return render(request, 'profile.html',{"User_Subscription" : subscription,"Contact":Contact})
     except:
         subscription = None
-    return render(request, 'profile.html')
+    return render(request, 'profile.html',{"Contact":Contact})
 
 @login_required
 def my_subscription(request):
     """
     View the current active subscription.
     """
+    Contact = Contactus.objects.first()
+
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except Exception as e:
@@ -1425,7 +1463,7 @@ def my_subscription(request):
         return redirect("landingpage")
     # stripe_subscription = stripe.Subscription.retrieve(subscription.subscription_id)
     # print(stripe_subscription)
-    return render(request, 'my_subscription.html', {'User_Subscription': subscription})
+    return render(request, 'my_subscription.html', {'User_Subscription': subscription,"Contact":Contact})
 
 
 @csrf_exempt
@@ -1466,6 +1504,8 @@ def stripe_webhook(request):
 
 @login_required
 def create_post(request):
+    Contact = Contactus.objects.first()
+
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except Exception as e:
@@ -1485,11 +1525,13 @@ def create_post(request):
     else:
         form = BlogPostForm()
     
-    return render(request, 'post_form.html', {'form': form,'User_Subscription': subscription})
+    return render(request, 'post_form.html', {'form': form,'User_Subscription': subscription,"Contact":Contact})
 
 
 @login_required
 def blog_listings(request):
+    Contact = Contactus.objects.first()
+
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except Exception as e:
@@ -1515,10 +1557,13 @@ def blog_listings(request):
     return render(request, "blog_listing.html", {
         'posts': posts,
         'User_Subscription': subscription,
+        "Contact":Contact
     })
 
 @login_required
 def blog_post(request,post_id):
+    Contact = Contactus.objects.first()
+
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except Exception as e:
@@ -1542,17 +1587,19 @@ def blog_post(request,post_id):
                 comment.parent = Comment.objects.get(id=parent_id)  # Set parent comment
             comment.save()
             return redirect('blog_post', post_id=post.id)
-    return render(request,"blog_post.html", {'post': post, 'comments': comments, 'form': form,'User_Subscription': subscription})
+        
+    return render(request,"blog_post.html", {'post': post, 'comments': comments, 'form': form,'User_Subscription': subscription,"Contact":Contact})
 
 
 def faq(request):
     faqs = FAQ.objects.all()
+    Contact = Contactus.objects.first()
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except:
         subscription = None
 
-    return render(request,"faq.html",{'faqs': faqs,'User_Subscription': subscription})
+    return render(request,"faq.html",{'faqs': faqs,'User_Subscription': subscription,"Contact":Contact})
 
 
 def cancel_subscription(request):
@@ -1897,6 +1944,7 @@ def download_csv_template(request):
 
 @login_required
 def bulk_upload_products(request):
+    Contact = Contactus.objects.first()
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except Exception as e:
@@ -1952,11 +2000,12 @@ def bulk_upload_products(request):
             return redirect("bulk_upload_products")
 
     form = CSVUploadForm()
-    return render(request, "bulk_upload.html", {"form": form,'User_Subscription': subscription})
+    return render(request, "bulk_upload.html", {"form": form,'User_Subscription': subscription,"Contact":Contact})
 
 
 @login_required
 def my_products(request):
+    Contact = Contactus.objects.first()
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except Exception as e:
@@ -2007,7 +2056,7 @@ def my_products(request):
                 "date": p.updated,
             })
 
-    return render(request, "myproducts.html", {"User_Subscription": subscription, "product_results": product_results})
+    return render(request, "myproducts.html", {"User_Subscription": subscription, "product_results": product_results,"Contact":Contact})
 # import boto3
 # import paramiko
 # import time
