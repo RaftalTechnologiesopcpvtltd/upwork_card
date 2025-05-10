@@ -4,11 +4,22 @@ from . import views
 urlpatterns = [
     # Dashboard
     path('', views.dashboard, name='admin_dashboard'),
-    
+
+    # User
+    path('users/', views.user_list, name='admin_users'),
+    # path('users/add/', views.user_add, name='admin_user_add'),
+    path('users/edit/<int:user_id>/', views.user_edit, name='admin_user_edit'),
+    # path('users/view/<int:user_id>/', views.user_view, name='admin_user_view'),
+    path('users/delete/<int:user_id>/', views.user_delete, name='admin_user_delete'),
+
+    #search_history
+    path('admin_search_history/', views.search_history, name='admin_search_history'),
+
+
     # Blogs
-    # path('blogs/', views.blog_list, name='admin_blogs'),
+    path('blogs/', views.blog_list, name='admin_blogs'),
     # path('blogs/add/', views.blog_add, name='admin_blog_add'),
-    # path('blogs/edit/<int:blog_id>/', views.blog_edit, name='admin_blog_edit'),
+    path('blogs/edit/<int:blog_id>/', views.blog_edit, name='admin_blog_edit'),
     # path('blogs/view/<int:blog_id>/', views.blog_view, name='admin_blog_view'),
     # path('blogs/delete/<int:blog_id>/', views.blog_delete, name='admin_blog_delete'),
     
@@ -16,7 +27,7 @@ urlpatterns = [
     path('subscriptions/', views.subscription_list, name='admin_subscriptions'),
     # path('subscriptions/add/', views.subscription_add, name='admin_subscription_add'),
     path('subscriptions/edit/<int:plan_id>/', views.subscription_edit, name='admin_subscription_edit'),
-    # path('subscriptions/delete/<int:plan_id>/', views.subscription_delete, name='admin_subscription_delete'),
+    path('subscriptions/cancel/', views.subscription_cancel, name='admin_subscription_cancel'),
     
     # # Sliders
     # path('sliders/', views.slider_list, name='admin_sliders'),

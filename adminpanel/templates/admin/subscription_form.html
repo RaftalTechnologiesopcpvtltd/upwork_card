@@ -88,7 +88,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end mt-3">
+                    <div class="d-flex my-3">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> Save Subscription
                         </button>
@@ -119,9 +119,9 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep My
                             Subscription</button>
-                        <form method="POST" action="{% url 'cancel_subscription' %}">
+                        <form method="POST" action="{% url 'admin_subscription_cancel' %}">
                             {% csrf_token %}
-                            <input type="hidden" name="subscription_id" value="{{ form.subscription_id }}">
+                            <input type="hidden" name="subscription_id" value="{{ form.initial.subscription_id }}">
                             <input type="hidden" name="cancel_now" value="True">
                             <!-- <button type="submit" class="btn btn-warning">Cancel</button> -->
                             <button type="submit" class="btn btn-danger">Yes, Cancel Immediately</button>
@@ -148,9 +148,9 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep My
                             Subscription</button>
-                        <form method="POST" action="{% url 'cancel_subscription' %}">
+                        <form method="POST" action="{% url 'admin_subscription_cancel' %}">
                             {% csrf_token %}
-                            <input type="hidden" name="subscription_id" value="{{ form.subscription_id }}">
+                            <input type="hidden" name="subscription_id" value="{{ form.initial.subscription_id }}">
                             <button type="submit" class="btn btn-danger">Yes, Cancel at End of Period</button>
                         </form>
                     </div>

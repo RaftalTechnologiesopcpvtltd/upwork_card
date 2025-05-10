@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -7,6 +8,7 @@ from django.utils.text import slugify
 from landingpage.models import *
 from .forms import *
 from django.db import transaction
+import stripe
 
 # Dashboard
 @login_required
@@ -27,37 +29,61 @@ def dashboard(request):
     }
     return render(request, 'admin/dashboard.html', context)
 
-# @login_required
-# def blog_list(request):
-#     """Display a list of all blogs with search and filter options."""
-#     blogs = BlogPost.objects.all().order_by('-created_at')
+@login_required
+def user_list(request):
+    context = {
+        'active_page': 'users',
+        'all_user' : CustomUser.objects.all(),
+    }
+    return render(request, 'admin/user_list.html', context)
+
+@login_required
+def user_edit(request, user_id):
+    """Edit an existing subscription plan."""
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        form = CustomUserForm(request.POST, instance=user)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('admin_users')  # Replace with your actual redirect URL name
+    else:
+        form = CustomUserForm(instance=user)
     
-#     # Filter by search query
-#     search_query = request.GET.get('search', '')
-#     if search_query:
-#         blogs = blogs.filter(
-#             Q(title__icontains=search_query) | 
-#             Q(content__icontains=search_query) |
-#             Q(excerpt__icontains=search_query)
-#         )
+    context = {
+        'active_page': 'users',
+        'user': user,
+        'form': form,
+    }
+    return render(request, 'admin/user_form.html', context)
+
+@login_required
+def user_delete(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    user.delete()
+    messages.success(request, 'User deleted successfully.')
+    return redirect('admin_users')  # Change to your actual list view name
+
+@login_required
+def search_history(request):
+    context = {
+        'search_history': SearchHistory.objects.all().order_by('-created'),
+        'active_page': 'Search History',
+    }
+    return render(request, 'admin/search_history.html', context)
+
+@login_required
+def blog_list(request):
+    """Display a list of all blogs with search and filter options."""
+    blogs = BlogPost.objects.all().order_by('-created_at')
     
-#     # Filter by status
-#     status = request.GET.get('status', '')
-#     if status == 'published':
-#         blogs = blogs.filter(is_published=True)
-#     elif status == 'draft':
-#         blogs = blogs.filter(is_published=False)
     
-#     # Pagination
-#     paginator = Paginator(blogs, 10)  # Show 10 blogs per page
-#     page = request.GET.get('page', 1)
-#     blogs = paginator.get_page(page)
     
-#     context = {
-#         'active_page': 'blogs',
-#         'blogs': blogs,
-#     }
-#     return render(request, 'admin/blogs/list.html', context)
+    context = {
+        'active_page': 'blogs',
+        'blogs': blogs,
+    }
+    return render(request, 'admin/blog_list.html', context)
 
 # @login_required
 # def blog_view(request, blog_id):
@@ -106,47 +132,31 @@ def dashboard(request):
 #     }
 #     return render(request, 'admin/blogs/form.html', context)
 
-# @login_required
-# def blog_edit(request, blog_id):
-#     """Edit an existing blog post."""
-#     blog = get_object_or_404(Blog, id=blog_id)
+@login_required
+def blog_edit(request, blog_id):
+    """Edit an existing blog post."""
+    blog = get_object_or_404(BlogPost, id=blog_id)
+
     
-#     if request.method == 'POST':
-#         form = BlogForm(request.POST, request.FILES, instance=blog)
-#         if form.is_valid():
-#             blog = form.save(commit=False)
-            
-#             # Generate slug if not provided
-#             if not BlogPost.slug:
-#                 BlogPost.slug = slugify(BlogPost.title)
-            
-#             BlogPost.save()
-            
-#             # Handle tags (if your model uses a ManyToMany relationship)
-#             if 'tags' in form.cleaned_data:
-#                 BlogPost.tags.clear()
-#                 if form.cleaned_data['tags']:
-#                     tags = [tag.strip() for tag in form.cleaned_data['tags'].split(',')]
-#                     for tag_name in tags:
-#                         tag, created = Tag.objects.get_or_create(name=tag_name)
-#                         BlogPost.tags.add(tag)
-            
-#             messages.success(request, 'Blog post updated successfully!')
-#             return redirect('admin_blogs')
-#     else:
-#         # Prepare tags string for the form
-#         tags = ', '.join([tag.name for tag in BlogPost.tags.all()]) if hasattr(blog, 'tags') else ''
+    if request.method == 'POST':
+        form = BlogPostForm(instance=blog)
+        # print(form)
         
-#         # Initialize form with blog instance
-#         form = BlogForm(instance=blog, initial={'tags': tags})
+        if form.is_valid():
+            form.save()
+            return redirect('admin_blogs')  # Replace with your actual redirect URL name
+        else:
+            print(form.errors)
+    else:
+        form = BlogPostForm(instance=blog)
     
-#     context = {
-#         'active_page': 'blogs',
-#         'blog': blog,
-#         'form': form,
-#         #'categories': Category.objects.all(),
-#     }
-#     return render(request, 'admin/blogs/form.html', context)
+    context = {
+        'active_page': 'blogs',
+        'blog': blog,
+        'form': form,
+        #'categories': Category.objects.all(),
+    }
+    return render(request, 'admin/blog_form.html', context)
 
 # @login_required
 # def blog_delete(request, blog_id):
@@ -220,16 +230,27 @@ def subscription_edit(request, plan_id):
     }
     return render(request, 'admin/subscription_form.html', context)
 
-# @login_required
-# def subscription_delete(request, plan_id):
-#     """Delete a subscription plan."""
-#     plan = get_object_or_404(SubscriptionPlan, id=plan_id)
-    
-#     if request.method == 'POST':
-#         plan.delete()
-#         messages.success(request, 'Subscription plan deleted successfully!')
-    
-#     return redirect('admin_subscriptions')
+@login_required
+def subscription_cancel(request):
+    try:
+        subscription_id = request.POST.get("subscription_id")
+        cancel_now = request.POST.get("cancel_now", False)  # Default: Cancel at end of period
+        subscription = UserSubscription.objects.filter(subscription_id=subscription_id)
+
+        print("subscription_id :",subscription_id)
+        print("cancel_now: ",cancel_now)
+
+        if cancel_now:
+            stripe.Subscription.delete(subscription_id)  # Cancel Immediately
+            subscription.delete()
+            print(subscription)
+            return redirect("admin_subscriptions")
+        else:
+            stripe.Subscription.modify(subscription_id, cancel_at_period_end=True)  # Cancel at end
+            return redirect("admin_subscriptions")
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
 # @login_required
 # def slider_list(request):

@@ -1,0 +1,65 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <h1 class="page-title mb-4">Search History</h1>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="searchHistoryTable" class="table table-striped align-middle my-2" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Search Query</th>
+                                <th>Marketplaces</th>
+                                <th>Location</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for history in search_history %}
+                            <tr>
+                                <td>{{ history.user.first_name }} {{ history.user.last_name }}</td>
+                                <td>{{ history.user.email }}</td>
+                                <td>{{ history.search_query }}</td>
+                                <td>{{ history.marketplaces }}</td>
+                                <td>{{ history.location }}</td>
+                                <td>{{ history.created|date:"Y-m-d H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No search history found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#searchHistoryTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthChange: true,
+            language: {
+                search: "Search:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                paginate: {
+                    next: "Next",
+                    previous: "Previous"
+                },
+            }
+        });
+    });
+</script>
+{% endblock %}

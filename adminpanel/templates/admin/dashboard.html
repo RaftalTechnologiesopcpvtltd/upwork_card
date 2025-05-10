@@ -157,7 +157,8 @@
             <div class="col-12 d-flex">
                 <h4 class="mb-4">User Subscriptions</h4>
                 <div class="ms-2">
-                    <a href="{% url 'admin_subscriptions' %}" class="btn btn-sm"><i class="fa-solid fa-up-right-from-square"></i></i></a>
+                    <a href="{% url 'admin_subscriptions' %}" class="btn btn-sm"><i
+                            class="fa-solid fa-up-right-from-square"></i></a>
                 </div>
             </div>
             {% for subscription in subscriptions %}
@@ -215,7 +216,8 @@
                     <div class="card-header">
                         <span>Recent Users</span>
                         <div class="card-actions">
-                            <button><i class="fa-solid fa-up-right-from-square"></i></i></button>
+                            <a href="{% url 'admin_users' %}" class="btn btn-sm"><i
+                                    class="fa-solid fa-up-right-from-square"></i></a>
                         </div>
                     </div>
                     <div class="card-body p-0">
@@ -286,7 +288,8 @@
                     <div class="card-header">
                         <span>Recent Search History</span>
                         <div class="card-actions">
-                            <button><i class="fa-solid fa-up-right-from-square"></i></button>
+                            <a href="{% url 'admin_search_history' %}" class="btn btn-sm"><i
+                                    class="fa-solid fa-up-right-from-square"></i></a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -322,13 +325,12 @@
                 </div>
             </div>
         </div>
-
         <!-- Blog Posts and Comments -->
         <div class="row">
             <div class="col-12 d-flex">
                 <h4 class="mb-4">Recent Blog Posts</h4>
                 <div class="ms-2">
-                    <a href="#" class="btn btn-sm"><i class="fa-solid fa-up-right-from-square"></i></i></a>
+                    <a href="{% url 'admin_blogs' %}" class="btn btn-sm"><i class="fa-solid fa-up-right-from-square"></i></i></a>
                 </div>
             </div>
             {% for blog in recent_blogs %}
@@ -419,7 +421,7 @@
             </div>
 
             <!-- Plans -->
-             {% for pricing in pricings %}
+            {% for pricing in pricings %}
             <div class="col-lg-4 mb-4">
                 <div class="pricing-card">
                     <div class="pricing-header">

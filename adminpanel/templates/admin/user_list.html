@@ -1,0 +1,216 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <h1 class="page-title mb-4">User Information</h1>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="userTable" class="table table-striped align-middle my-2" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Date Joined</th>
+                                <th>Last Login</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in all_user %}
+                            <tr>
+                                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                <td>{% if user.is_superuser %}
+                                    Super Admin
+                                    {% elif user.is_staff %}
+                                    Staff Admin
+                                    {% else %}
+                                    Regular User
+                                    {% endif %}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone_number }}</td>
+                                <td>
+                                    {% if user.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                                <td>{{ user.last_login|date:"M d, Y H:i" }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url 'admin_user_edit' user_id=user.id %}"
+                                            class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <!-- Trigger Button -->
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}"
+                                            title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+
+
+
+                                        <!-- View Button -->
+                                        <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal"
+                                            data-bs-target="#viewModal_{{ user.id }}" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+
+
+
+
+                                    </div>
+
+                                    <!-- View User Modal -->
+                                    <div class="modal fade" id="viewModal_{{ user.id }}" tabindex="-1"
+                                        aria-labelledby="viewModalLabel_{{ user.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content border-0 shadow-lg">
+                                                <div class="modal-header bg-primary text-white">
+                                                    <h5 class="modal-title" id="viewModalLabel{{ user.id }}">
+                                                        <i class="fas fa-user-circle me-2"></i> User Profile
+                                                    </h5>
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body bg-light">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">First Name</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.first_name }}</div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">Last Name</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.last_name }}</div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">Email</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.email }}</div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">Phone
+                                                                Number</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.phone_number }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">Gender</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.gender }}</div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">City</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.city }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">Country</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.country }}</div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">Zip Code</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.zip_code }}</div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">Address</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.address }}</div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="fw-semibold text-muted">Country
+                                                                Code</label>
+                                                            <div class="border rounded p-2 bg-white">{{ user.country_code }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer bg-white">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                        <i class="fas fa-times me-1"></i> Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Delete Confirmation Modal -->
+                                    <div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1"
+                                        aria-labelledby="deleteModalLabel{{ user.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel{{ user.id }}">
+                                                        Confirm Deletion
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete <strong>{{ user.first_name }} {{ user.last_name }}</strong>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST"
+                                                        action="{% url 'admin_user_delete' user_id=user.id %}">
+                                                        {% csrf_token %}
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-danger">Yes,
+                                                            Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">No users found</td>
+                            </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#userTable').DataTable(
+            {
+                responsive: true,
+                pageLength: 10,
+                lengthChange: true,
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ users",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                }
+            });
+    });
+</script>
+{% endblock %}
