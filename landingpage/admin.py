@@ -45,6 +45,7 @@ admin.site.register(Slidder)
 admin.site.register(Contactus)
 admin.site.register(Pricing)
 admin.site.register(UserSubscription)
+admin.site.register(SubscriptionHistory)
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'approved', 'created_at')

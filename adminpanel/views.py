@@ -76,7 +76,10 @@ def search_history(request):
 def blog_list(request):
     """Display a list of all blogs with search and filter options."""
     blogs = BlogPost.objects.all().order_by('-created_at')
+
+    blogs = blogs.annotate(comment_count=Count('comments'))
     
+    # print(blogs[1].comments.all())
     
     
     context = {
@@ -84,6 +87,27 @@ def blog_list(request):
         'blogs': blogs,
     }
     return render(request, 'admin/blog_list.html', context)
+
+@login_required
+def blog_comment_list(request, post_id):
+    """Display a list of all blogs with search and filter options."""
+    post = get_object_or_404(BlogPost, id=post_id)    
+    comments = Comment.objects.filter(post=post)
+   
+    context = {
+        'active_page': 'blogs',
+        'comments': comments,
+    }
+    return render(request, 'admin/comments_list.html', context)
+
+@login_required
+def approve_comment(request, comment_id):
+    if request.method == 'POST':
+        comment = get_object_or_404(Comment, id=comment_id)
+        comment.approved = not comment.approved  # toggle
+        comment.save()
+    return redirect(request.META.get('HTTP_REFERER', 'blog_comment_list'))
+
 
 # @login_required
 # def blog_view(request, blog_id):
@@ -139,16 +163,16 @@ def blog_edit(request, blog_id):
 
     
     if request.method == 'POST':
-        form = BlogPostForm(instance=blog)
-        # print(form)
-        
+        form = BlogPostForm(request.POST, request.FILES, instance=blog)
         if form.is_valid():
             form.save()
-            return redirect('admin_blogs')  # Replace with your actual redirect URL name
+            return redirect('admin_blogs')
         else:
-            print(form.errors)
+            print("Form Errors:", form.errors)
     else:
-        form = BlogPostForm(instance=blog)
+        # Set tags as comma-separated string
+        initial_tags = ', '.join(tag.name for tag in blog.tags.all())
+        form = BlogPostForm(instance=blog, initial={'tags': initial_tags})
     
     context = {
         'active_page': 'blogs',
@@ -172,11 +196,19 @@ def blog_edit(request, blog_id):
 @login_required
 def subscription_list(request):
     """Display a list of all subscription plans."""
-    plans = UserSubscription.objects.all()
+    subscription = UserSubscription.objects.all().order_by("-start_date")
+    subscription_history = SubscriptionHistory.objects.all().order_by("-start_date")
+
+    for sub in subscription:
+        for hist in subscription_history:
+            if sub.subscription_id == hist.subscription_id:
+                sub.was_renewed = hist.was_renewed
+                sub.cancel_at = hist.cancel_at
+
     
     context = {
         'active_page': 'subscriptions',
-        'plans': plans,
+        'plans': subscription.order_by("-id"),
     }
     return render(request, 'admin/subscription_list.html', context)
 
@@ -214,6 +246,7 @@ def subscription_list(request):
 def subscription_edit(request, plan_id):
     """Edit an existing subscription plan."""
     plan = get_object_or_404(UserSubscription, id=plan_id)
+    
     if request.method == 'POST':
         form = UserSubscriptionForm(request.POST, instance=plan)
         
@@ -251,6 +284,16 @@ def subscription_cancel(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+    
+@login_required
+def pricing_list(request):
+    try:
+        pricings = Pricing.objects.all()
+
+        return render(request, 'admin/pricing_list.html', {"pricings":pricings})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400) 
 
 # @login_required
 # def slider_list(request):
@@ -320,35 +363,19 @@ def subscription_cancel(request):
     
 #     return redirect('admin_sliders')
 
-# @login_required
-# def faq_list(request):
-#     """Display a list of all FAQs with search and filter options."""
-#     faqs = FAQ.objects.all().order_by('category', 'order')
+@login_required
+def faq_list(request):
+    """Display a list of all FAQs with search and filter options."""
+    faqs = FAQ.objects.all()
     
-#     # Filter by search query
-#     search_query = request.GET.get('search', '')
-#     if search_query:
-#         faqs = faqs.filter(
-#             Q(question__icontains=search_query) | 
-#             Q(answer__icontains=search_query)
-#         )
     
-#     # Filter by category
-#     category_id = request.GET.get('category', '')
-#     if category_id:
-#         faqs = faqs.filter(category_id=category_id)
     
-#     # Pagination
-#     paginator = Paginator(faqs, 15)  # Show 15 FAQs per page
-#     page = request.GET.get('page', 1)
-#     faqs = paginator.get_page(page)
-    
-#     context = {
-#         'active_page': 'faqs',
-#         'faqs': faqs,
-#         #'categories': Category.objects.all(),
-#     }
-#     return render(request, 'admin/faqs/list.html', context)
+    context = {
+        'active_page': 'faqs',
+        'faqs': faqs,
+        #'categories': Category.objects.all(),
+    }
+    return render(request, 'admin/faq_list.html', context)
 
 # @login_required
 # def faq_add(request):

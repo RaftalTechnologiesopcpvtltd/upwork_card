@@ -1,0 +1,89 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">Manage pricings</h1>
+            <!-- <span>
+                <a href="{% url 'create_post' %}" class="btn btn-outline-primary" target="_blank">
+                    Create
+                </a>
+            </span> -->
+        </div>
+        <div class="card">
+            <div class="card-body">
+
+
+                <div class="table-responsive">
+                    <table id="pricingTable" class="table table-striped align-middle my-2" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Price Heading</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Duration in Days</th>
+                                <th>Features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pricing in pricings %}
+                            <tr>
+                                <td>{{ pricing.price_heading }}</td>
+                                <td>{{ pricing.price }}</td>
+                                <td>{{ pricing.desc }}</td>
+                                <td>{{ pricing.duration_in_days }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#features{{ plan.id }}" aria-expanded="false"
+                                        aria-controls="features{{ plan.id }}">
+                                        <i class="fas fa-eye me-1"></i> View Features
+                                    </button>
+                                    <div class="collapse mt-2" id="features{{ plan.id }}">
+                                        <ul class="list-group list-group-flush">
+                                            {% if pricing.description %}<li class="list-group-item">{{ pricing.description }}
+                                            </li>{% endif %}
+                                            {% if pricing.price_feature1 %}<li class="list-group-item">{{ pricing.price_feature1 }}</li>{% endif %}
+                                            {% if pricing.price_feature2 %}<li class="list-group-item">{{ pricing.price_feature2 }}</li>{% endif %}
+                                            {% if pricing.price_feature3 %}<li class="list-group-item">{{ pricing.price_feature3 }}</li>{% endif %}
+                                            {% if pricing.price_feature4 %}<li class="list-group-item">{{ pricing.price_feature4 }}</li>{% endif %}
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No Pricing found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#pricingTable').DataTable(
+            {
+                responsive: true,
+                pageLength: 10,
+                lengthChange: true,
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ users",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                }
+            });
+    });
+</script>
+{% endblock %}

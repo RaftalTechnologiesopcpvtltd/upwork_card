@@ -1,0 +1,83 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">Manage Blogs Comments</h1>
+            <span>
+                <a href="{% url 'create_post' %}" class="btn btn-outline-primary" target="_blank">
+                    Create
+                </a>
+            </span>
+        </div>
+        <div class="card">
+            <div class="card-body">
+
+
+                <div class="table-responsive">
+                    <table id="commentsTable" class="table table-striped align-middle my-2" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Post</th>
+                                <th>Comment Body</th>
+                                <th>User</th>
+                                <th>Created At</th>
+                                <th>Approval</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comment in comments %}
+                            <tr>
+                                <td>{{ comment.post }}</td>
+                                <td>{{ comment.body }}</td>
+                                <td>{{ comment.user.first_name }} {{ comment.user.last_name }}</td>
+                                <td>{{ comment.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'approve_comment' comment.id %}">
+                                        {% csrf_token %}
+                                        {% if comment.approved %}
+                                            <button type="submit" class="btn btn-outline-danger">Disapprove</button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-primary">Approve</button>
+                                        {% endif %}
+                                    </form>
+                                    
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No blogs found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#commentsTable').DataTable(
+            {
+                responsive: true,
+                pageLength: 10,
+                lengthChange: true,
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ users",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                }
+            });
+    });
+</script>
+{% endblock %}

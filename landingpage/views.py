@@ -52,9 +52,11 @@ def Landing_page(request):
     if request.user.is_authenticated:
         try:
             # Check if the user has an active subscription
-            subscription = UserSubscription.objects.get(user=request.user)
-            if subscription.active:
-                return redirect('dashboard_view')  # Redirect to dashboard if active subscription            
+            subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
+            print(subscription)
+            if subscription:
+                if subscription.active:
+                    return redirect('dashboard_view')  # Redirect to dashboard if active subscription            
         except UserSubscription.DoesNotExist:
             context = {
                 "User_Subscription" : User_Subscription,
@@ -172,10 +174,11 @@ def subscribe_to_plan(request, plan_id):
         'Annual' : 'price_1Qtpk3KyDQNgXXcfzS4EApeg',
     }
     try:
-        active_subscription = UserSubscription.objects.get(user=request.user)
+        recent_subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
     except UserSubscription.DoesNotExist:
-        active_subscription = None
-    
+        recent_subscription = None
+    if recent_subscription:
+        print("recent : ",recent_subscription.plan)
     if request.method == 'POST':
         price_id = request.POST.get('price_id')
         print("Price id : ",price_id)
@@ -193,19 +196,28 @@ def subscribe_to_plan(request, plan_id):
                 "user_id" : request.user.id,
             }
         )
-        if active_subscription:
-            active_subscription.user=request.user
-            active_subscription.session_id = checkout_session.id
-            active_subscription.plan=plan
-            active_subscription.active=False
-            active_subscription.save() 
-        else:
-            UserSubscription.objects.create(
+        
+        UserSubscription.objects.create(
             user=request.user,
             session_id = checkout_session.id,
             plan=plan,
             active=False
-            )
+        )
+        if recent_subscription:
+            if recent_subscription.plan == plan:
+                SubscriptionHistory.objects.create(
+                    user=request.user,
+                    session_id = checkout_session.id,
+                    plan=plan,
+                    was_renewed=True
+                )
+            else:
+                SubscriptionHistory.objects.create(
+                    user=request.user,
+                    session_id = checkout_session.id,
+                    plan=plan,
+                    was_renewed=False
+                )
         return redirect(checkout_session.url, code=303)
 
     context = {
@@ -248,15 +260,21 @@ def payment_success(request):
         customer_id = session.customer
 
         subscription = UserSubscription.objects.get(session_id=session_id)
+        subscription_history = SubscriptionHistory.objects.get(session_id=session_id)
         subscription.active = True
         subscription.subscription_id = subscription_id
+        subscription_history.subscription_id = subscription_id
         subscription.customer_id = customer_id
+        subscription_history.customer_id = customer_id
         subscription.payment_status = 'captured'
         subscription.interval = price['recurring']['interval']
         subscription.start_date = datetime.fromtimestamp(int(subscription_info['items']['data'][0]['current_period_start']))
         subscription.end_date = datetime.fromtimestamp(int(subscription_info['items']['data'][0]['current_period_end']))  # ✅ Fixed key
+        subscription_history.start_date = datetime.fromtimestamp(int(subscription_info['items']['data'][0]['current_period_start']))
+        subscription_history.end_date = datetime.fromtimestamp(int(subscription_info['items']['data'][0]['current_period_end']))  # ✅ Fixed key
 
         subscription.save()
+        subscription_history.save()
 
         return render(request, "subscription_success.html", {"subscription_id": subscription_id})
 
@@ -382,7 +400,7 @@ def search_history(request):
 
     search_history = SearchHistory.objects.all().order_by('-created')
     try:
-        subscription = UserSubscription.objects.get(user=request.user)
+        subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
     except:
         subscription = None
     return render(request, "search_histories.html", {'search_history': search_history,"User_Subscription" : subscription,"Contact":Contact})
@@ -1265,7 +1283,7 @@ def fav_view(request):
     Contact = Contactus.objects.first()
 
     try:
-        subscription = UserSubscription.objects.get(user=request.user)
+        subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
     except:
         subscription = None
     fav_products = Favourites.objects.filter(user=request.user)
@@ -1417,13 +1435,28 @@ def dashboard_view(request):
             All_brands.append(product.website_name)
             
         print(set(All_brands))
-        subscription = UserSubscription.objects.get(user=request.user)
+        subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
         stripe_sub = stripe.Subscription.retrieve(subscription.subscription_id)
         
         if stripe_sub.status in ["canceled", "past_due", "unpaid"] or subscription.end_date <= today:
             subscription.active = False
-            subscription.save(update_fields=['active'])
+            if subscription.end_date <= today:
+                subscription.is_finished = True
+            subscription.is_finished = False
+            subscription.save(update_fields=['active','is_finished'])
             print(f"Subscription {subscription.id} deactivated")
+
+            # SubscriptionHistory.objects.create(
+            #     user=subscription.user,
+            #     plan=subscription.plan,
+            #     subscription_id=subscription.subscription_id,
+            #     customer_id=subscription.customer_id,
+            #     session_id=subscription.session_id,
+            #     start_date=subscription.start_date,
+            #     end_date=subscription.end_date,
+            # )
+
+            # print(f"History entry saved for user {subscription.user}")
             
         if subscription.active:
             # Render the dashboard page if the subscription is active
@@ -1440,7 +1473,7 @@ def profile(request):
     Contact = Contactus.objects.first()
 
     try:
-        subscription = UserSubscription.objects.get(user=request.user)
+        subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
         return render(request, 'profile.html',{"User_Subscription" : subscription,"Contact":Contact})
     except:
         subscription = None
@@ -1497,7 +1530,18 @@ def stripe_webhook(request):
         if subscription and status in ["canceled", "past_due", "unpaid"]:
             subscription.active = False
             subscription.save(update_fields=['active'])
-            print(f"Subscription {stripe_subscription_id} marked as inactive")
+            print(f"Subscription {subscription.id} deactivated")
+
+            # SubscriptionHistory.objects.create(
+            #     user=subscription.user,
+            #     plan=subscription.plan,
+            #     subscription_id=subscription.subscription_id,
+            #     customer_id=subscription.customer_id,
+            #     session_id=subscription.session_id,
+            #     start_date=subscription.start_date,
+            #     end_date=subscription.end_date,
+            # )
+            # print(f"Subscription {stripe_subscription_id} marked as inactive")
 
     return JsonResponse({"status": "success"})
 
@@ -1606,22 +1650,34 @@ def cancel_subscription(request):
     try:
         subscription_id = request.POST.get("subscription_id")
         cancel_now = request.POST.get("cancel_now", False)  # Default: Cancel at end of period
-        subscription = UserSubscription.objects.filter(user=request.user, subscription_id=subscription_id)
 
-        print("subscription_id :",subscription_id)
-        print("cancel_now: ",cancel_now)
+        # ✅ Get single instances instead of QuerySets
+        subscription = UserSubscription.objects.get(user=request.user, subscription_id=subscription_id)
+        subscription_history = SubscriptionHistory.objects.filter(user=request.user, subscription_id=subscription_id).first()
+
+        print("subscription_id:", subscription_id)
+        print("cancel_now:", cancel_now)
 
         if cancel_now:
-            stripe.Subscription.delete(subscription_id)  # Cancel Immediately
-            subscription.delete()
-            print(subscription)
+            # stripe.Subscription.delete(subscription_id)  # Cancel Immediately
+            subscription.active = False
+
+            if subscription_history:
+                subscription_history.cancel_at = timezone.now()
+                subscription_history.save()
+
+            subscription.save(update_fields=['active'])
+
+            print("subscription:", subscription)
+            print("subscription_history:", subscription_history)
             return redirect("my_subscription")
         else:
-            stripe.Subscription.modify(subscription_id, cancel_at_period_end=True)  # Cancel at end
+            stripe.Subscription.modify(subscription_id, cancel_at_period_end=True)
             return redirect("my_subscription")
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
+
 
 
 def resume_subscription(request):
@@ -1661,14 +1717,19 @@ def update_subscription(request):
         )
         subscription_info = stripe.Subscription.retrieve(subscriptionId)
         subscription = UserSubscription.objects.get(subscription_id=subscriptionId)
+        subscription_history = SubscriptionHistory.objects.get(subscription_id=subscriptionId)
         subscription.plan = Pricings
+        subscription_history.plan = Pricings
         price = subscription_info['items']['data'][0]['price']
         product_id = price['product']
         subscription.interval = price['recurring']['interval']
         subscription.start_date = datetime.fromtimestamp(int(subscription_info['current_period_start']))
+        subscription_history.start_date = datetime.fromtimestamp(int(subscription_info['current_period_start']))
         subscription.end_date = datetime.fromtimestamp(int(subscription_info['current_period_end']))  # ✅ Fixed key
+        subscription_history.end_date = datetime.fromtimestamp(int(subscription_info['current_period_end']))  # ✅ Fixed key
 
         subscription.save()
+        subscription_history.save()
 
         return redirect("my_subscription")
 

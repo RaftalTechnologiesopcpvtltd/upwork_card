@@ -419,6 +419,7 @@ class UserSubscription(models.Model):
     interval = models.CharField(max_length=50, default="month")
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    is_finished = models.BooleanField(default=False)
 
     @property
     def is_active(self):
@@ -453,7 +454,24 @@ class UserSubscription(models.Model):
     
 
 
+class SubscriptionHistory(models.Model):
+   
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    plan = models.ForeignKey(Pricing, on_delete=models.CASCADE)
+    subscription_id = models.CharField(max_length=100, null=True, blank=True)
+    customer_id = models.CharField(max_length=100, null=True, blank=True)
+    session_id = models.CharField(max_length=100, null=True, blank=True)
+    cancel_at = models.DateTimeField(null=True, blank=True)
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    was_renewed = models.BooleanField(default=False)
 
+    def __str__(self):
+        if self.start_date and self.end_date:
+            return f"{self.user.first_name} - {self.plan} from {self.start_date.date()} to {self.end_date.date()}"
+        else:
+            return f"{self.user.first_name} - {self.plan}"
+    
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='blog_images/', blank=True, null=True)

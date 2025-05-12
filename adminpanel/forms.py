@@ -39,7 +39,7 @@ class BlogPostForm(forms.ModelForm):
                 'class': 'custom-file-input',
                 'id': 'postImage',
                 'accept': 'image/*',
-                'required': True
+                'required': False
             }),
             'video': forms.ClearableFileInput(attrs={
                 'class': 'custom-file-input',
@@ -76,6 +76,7 @@ class BlogPostForm(forms.ModelForm):
         help_texts = {
             'tags': 'Example: technology, coding, web development'
         }
+        
 
 
 class UserSubscriptionForm(forms.ModelForm):
