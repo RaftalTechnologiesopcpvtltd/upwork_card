@@ -40,8 +40,8 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def Landing_page(request):
     faqs = FAQ.objects.all()
-    slidders = Slidder.objects.all()
-    Contact = Contactus.objects.first()
+    slidders = Slidder.objects.filter(is_active=True).order_by('order')
+    Contact = Contactus.objects.order_by('-id').first()
 
     Pricings = Pricing.objects.all()
 
@@ -90,20 +90,32 @@ def contact_submit(request):
             messages.error(request, 'All fields are required.')
             return redirect(request.META.get('HTTP_REFERER', 'landingpage'))
 
-        
+        # Determine the user or default to None (guest)
+        user = request.user if request.user.is_authenticated else None
 
         # Save to database
         ContactMessage.objects.create(
+            user=user,
             name=name,
             email=email,
             subject=subject,
-            message=message
+            message=message,
+            status=False  # default "unread/unresolved"
         )
 
         messages.success(request, 'Your message has been sent successfully!')
         return redirect(request.META.get('HTTP_REFERER', 'landingpage'))
 
     return redirect('landingpage')
+
+
+logger = logging.getLogger(__name__)
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib import messages
+import logging
+from .forms import CustomAuthenticationForm  # Custom form with username & password fields
 
 logger = logging.getLogger(__name__)
 
@@ -113,29 +125,34 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             remember_me = request.POST.get('remember_me')
+
             login(request, user)
-            
-            # Log the successful login
-            logger.debug(f'User {user.username} logged in.')
-            
-            # Print the session key for debugging purposes
+
+            # Logging
+            logger.info(f'User {user.username} logged in successfully.')
             session_key = request.session.session_key
-            print(f"Session key at login: {session_key}")  # Debug statement
-            
-            # Set session expiry based on "Remember Me" checkbox
+            logger.debug(f'Session key: {session_key}')
+
+            # Session expiry
             if remember_me:
                 request.session.set_expiry(1209600)  # 2 weeks
-            else:
-                request.session.set_expiry(0)  # Browser session
-            return redirect('landingpage')
+            
+
+            # Superuser redirect
+            if user.is_superuser:
+                return redirect('admin_dashboard')  # Change to your admin dashboard URL name
+
+            # Regular user redirect
+            next_url = request.GET.get('next') or request.POST.get('next')
+            return redirect(next_url or 'landingpage')
         else:
-            # Handle form errors
-            print(form.errors)
-            logger.error('Login failed: invalid form data')
+            logger.warning('Login failed due to invalid form submission.')
+            messages.error(request, 'Invalid username or password.')
     else:
         form = CustomAuthenticationForm()
-    
+
     return render(request, 'login.html', {'form': form})
+
 
 
 def register_view(request):
@@ -159,7 +176,7 @@ def register_view(request):
 
 @login_required
 def subscribe_to_plan(request, plan_id):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     """
     Subscribe to a pricing plan.
@@ -218,6 +235,13 @@ def subscribe_to_plan(request, plan_id):
                     plan=plan,
                     was_renewed=False
                 )
+        else:
+            SubscriptionHistory.objects.create(
+                user=request.user,
+                session_id = checkout_session.id,
+                plan=plan,
+                was_renewed=False
+            )
         return redirect(checkout_session.url, code=303)
 
     context = {
@@ -396,7 +420,7 @@ def run_functions(selected_functions, query, location, function_names=None):
 
 
 def search_history(request):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     search_history = SearchHistory.objects.all().order_by('-created')
     try:
@@ -1280,7 +1304,7 @@ def product_search(request):
 
 @login_required
 def fav_view(request):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     try:
         subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
@@ -1418,7 +1442,7 @@ def dashboard_view(request):
     """
     Dashboard view for users with an active subscription.
     """
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     Search_History = SearchHistory.objects.all()
     print("Search_History : ",Search_History)
@@ -1436,31 +1460,35 @@ def dashboard_view(request):
             
         print(set(All_brands))
         subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
-        stripe_sub = stripe.Subscription.retrieve(subscription.subscription_id)
+        if subscription:
+            stripe_sub = stripe.Subscription.retrieve(subscription.subscription_id)
         
-        if stripe_sub.status in ["canceled", "past_due", "unpaid"] or subscription.end_date <= today:
-            subscription.active = False
-            if subscription.end_date <= today:
-                subscription.is_finished = True
-            subscription.is_finished = False
-            subscription.save(update_fields=['active','is_finished'])
-            print(f"Subscription {subscription.id} deactivated")
+            if stripe_sub.status in ["canceled", "past_due", "unpaid"] or subscription.end_date <= today:
+                subscription.active = False
+                if subscription.end_date <= today:
+                    subscription.is_finished = True
+                subscription.is_finished = False
+                subscription.save(update_fields=['active','is_finished'])
+                print(f"Subscription {subscription.id} deactivated")
 
-            # SubscriptionHistory.objects.create(
-            #     user=subscription.user,
-            #     plan=subscription.plan,
-            #     subscription_id=subscription.subscription_id,
-            #     customer_id=subscription.customer_id,
-            #     session_id=subscription.session_id,
-            #     start_date=subscription.start_date,
-            #     end_date=subscription.end_date,
-            # )
+                # SubscriptionHistory.objects.create(
+                #     user=subscription.user,
+                #     plan=subscription.plan,
+                #     subscription_id=subscription.subscription_id,
+                #     customer_id=subscription.customer_id,
+                #     session_id=subscription.session_id,
+                #     start_date=subscription.start_date,
+                #     end_date=subscription.end_date,
+                # )
 
-            # print(f"History entry saved for user {subscription.user}")
+                # print(f"History entry saved for user {subscription.user}")
             
-        if subscription.active:
-            # Render the dashboard page if the subscription is active
-            return render(request, 'dashboard.html',{"marketplaces":list(set(All_brands)),"User_Subscription" : subscription,"today":today,"Contact":Contact})  # Replace with your dashboard template
+            if subscription.active:
+                # Render the dashboard page if the subscription is active
+                return render(request, 'dashboard.html',{"marketplaces":list(set(All_brands)),"User_Subscription" : subscription,"today":today,"Contact":Contact})  # Replace with your dashboard template
+            else:
+                # Redirect to landing page if the subscription is not active
+                return redirect('landingpage')
         else:
             # Redirect to landing page if the subscription is not active
             return redirect('landingpage')
@@ -1470,7 +1498,7 @@ def dashboard_view(request):
 
 @login_required
 def profile(request):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     try:
         subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
@@ -1484,7 +1512,7 @@ def my_subscription(request):
     """
     View the current active subscription.
     """
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
@@ -1548,7 +1576,7 @@ def stripe_webhook(request):
 
 @login_required
 def create_post(request):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
@@ -1574,7 +1602,7 @@ def create_post(request):
 
 @login_required
 def blog_listings(request):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
@@ -1606,7 +1634,7 @@ def blog_listings(request):
 
 @login_required
 def blog_post(request,post_id):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
 
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
@@ -1637,7 +1665,7 @@ def blog_post(request,post_id):
 
 def faq(request):
     faqs = FAQ.objects.all()
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except:
@@ -2005,7 +2033,7 @@ def download_csv_template(request):
 
 @login_required
 def bulk_upload_products(request):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except Exception as e:
@@ -2066,7 +2094,7 @@ def bulk_upload_products(request):
 
 @login_required
 def my_products(request):
-    Contact = Contactus.objects.first()
+    Contact = Contactus.objects.order_by('-id').first()
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
     except Exception as e:

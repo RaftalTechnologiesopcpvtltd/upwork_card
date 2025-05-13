@@ -1268,88 +1268,60 @@
 
     <!-- Custom JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Initialize Swiper
-            const swiper = new Swiper('.swiper', {
-                loop: true,
-                autoplay: {
-                    delay: 5000,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-            });
-
-            // Sidebar toggle (desktop)
-            const sidebarToggle = document.getElementById('sidebarToggle');
+        document.addEventListener('DOMContentLoaded', () => {
             const sidebar = document.getElementById('sidebar');
             const content = document.getElementById('content');
-
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function () {
-                    sidebar.classList.toggle('collapsed');
-                    content.classList.toggle('expanded');
-                });
-            }
-
-            // Mobile sidebar toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
             const mobileToggle = document.getElementById('mobileToggle');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
             const closeSidebar = document.getElementById('closeSidebar');
-
-            if (mobileToggle) {
-                mobileToggle.addEventListener('click', function () {
-                    sidebar.classList.add('mobile-show');
-                    sidebarOverlay.classList.add('show');
-                    document.body.style.overflow = 'hidden';
-                });
-            }
-
-            if (closeSidebar) {
-                closeSidebar.addEventListener('click', function () {
-                    sidebar.classList.remove('mobile-show');
-                    sidebarOverlay.classList.remove('show');
-                    document.body.style.overflow = '';
-                });
-            }
-
-            if (sidebarOverlay) {
-                sidebarOverlay.addEventListener('click', function () {
-                    sidebar.classList.remove('mobile-show');
-                    sidebarOverlay.classList.remove('show');
-                    document.body.style.overflow = '';
-                });
-            }
-
-            // Submenu handling
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
             const submenuToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
 
-            submenuToggles.forEach(function (toggle) {
-                toggle.addEventListener('click', function () {
-                    if (window.innerWidth < 768 && sidebar.classList.contains('collapsed')) {
-                        sidebar.classList.remove('collapsed');
-                        content.classList.remove('expanded');
+            // Toggle sidebar (desktop)
+            sidebarToggle?.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+            });
+
+            // Open sidebar (mobile)
+            mobileToggle?.addEventListener('click', () => {
+                sidebar.classList.add('mobile-show');
+                sidebarOverlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            });
+
+            // Close sidebar (mobile)
+            const closeMobileSidebar = () => {
+                sidebar.classList.remove('mobile-show');
+                sidebarOverlay.classList.remove('show');
+                document.body.style.overflow = '';
+            };
+
+            closeSidebar?.addEventListener('click', closeMobileSidebar);
+            sidebarOverlay?.addEventListener('click', closeMobileSidebar);
+
+            // Submenu toggle behavior
+            submenuToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    const isCollapsed = sidebar.classList.contains('collapsed');
+                    const targetHref = this.getAttribute('href');
+
+                    // If sidebar is collapsed and link has href (not just #), go to page directly
+                    if (isCollapsed && targetHref && targetHref !== '#' && !targetHref.startsWith('#')) {
+                        window.location.href = targetHref;
+                        e.preventDefault(); // Optional: prevent Bootstrap's collapse behavior
                     }
                 });
             });
 
-            // Responsive adjustments
-            function handleResize() {
-                if (window.innerWidth < 768) {
-                    sidebar.classList.remove('mobile-show');
-                    sidebarOverlay.classList.remove('show');
-                    document.body.style.overflow = '';
+            // Close mobile sidebar on resize to desktop
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    closeMobileSidebar();
                 }
-            }
-
-            window.addEventListener('resize', handleResize);
+            });
         });
+
     </script>
     {% block extra_js %}{% endblock %}
 </body>

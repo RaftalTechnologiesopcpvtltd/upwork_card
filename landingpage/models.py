@@ -369,16 +369,34 @@ class CustomUser(AbstractUser):
 class Slidder(models.Model):
     image = models.ImageField(upload_to='slidder/')
     heading = models.CharField(max_length=100)
-    text=models.TextField()
-    
+    text = models.TextField()
+    is_active = models.BooleanField(default=True)  # Slider is active by default
+    order = models.IntegerField(default=0)         # Default order is 0
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Only set order when creating
+            max_order = Slidder.objects.aggregate(models.Max('order'))['order__max'] or 0
+            self.order = max_order + 1
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def reorder_all():
+        sliders = Slidder.objects.order_by('order')
+        for index, s in enumerate(sliders, start=1):
+            s.order = index
+            s.save()
+
+
     def __str__(self):
-        return self.heading
+        return f"{self.heading} at {self.order} position"
     
 class ContactMessage(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=100)
     email = models.EmailField()
     subject = models.CharField(max_length=200)
     message = models.TextField()
+    status = models.BooleanField(default=False)  # False = unread/unresolved, True = read/resolved
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -399,10 +417,13 @@ class Pricing(models.Model):
 
 
 class Contactus(models.Model):
-    about = models.TextField(null=True,blank=True)
-    company_address = models.TextField(null=True,blank=True)
-    company_phone = models.CharField(null=True,blank=True,max_length=20)
+    company_about = models.TextField(null=True,blank=True)
     company_email = models.EmailField(null=True,blank=True)
+    facebook_url = models.URLField(blank=True, null=True, default="")
+    twitter_url = models.URLField(blank=True, null=True, default="")
+    linkedin_url = models.URLField(blank=True, null=True, default="")
+    instagram_url = models.URLField(blank=True, null=True, default="")
+    youtube_url = models.URLField(blank=True, null=True, default="")
 
     def __str__(self):
         return self.company_email
@@ -501,7 +522,12 @@ class Comment(models.Model):
 class FAQ(models.Model):
     question = models.CharField(max_length=255)
     answer = models.TextField()
+    order = models.PositiveIntegerField(default=1)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order']  # ensures ordered retrieval
 
     def __str__(self):
         return self.question

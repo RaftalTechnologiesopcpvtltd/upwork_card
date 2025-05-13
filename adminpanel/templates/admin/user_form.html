@@ -4,7 +4,11 @@
 <div id="content">
     {% include 'admin/header.html' %}
     <div class="main-content">
+        {% if not form.editing %}
+        <h1 class="page-title mb-4">Create User</h1>
+        {% else %}
         <h1 class="page-title mb-4">Edit User</h1>
+        {% endif %}
         <div class="card">
             <div class="card-body">
                 <form method="post">
@@ -59,6 +63,15 @@
                                 <div class="invalid-feedback d-block">{{ error }}</div>
                                 {% endfor %}
                             </div>
+                            {% if not form.editing %}
+                            <div class="mb-3">
+                                <label for="id_password" class="form-label">password</label>
+                                {{ form.password }}
+                                {% for error in form.password.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
 
                         <div class="col-md-6">

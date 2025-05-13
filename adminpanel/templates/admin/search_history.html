@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="searchHistoryTable" class="table table-striped align-middle my-2" style="width:100%">
+                    <table {% if search_history %} id="searchHistoryTable" {% endif %} class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
                                 <th>User</th>

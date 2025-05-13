@@ -17,7 +17,8 @@
 
 
                 <div class="table-responsive">
-                    <table id="commentsTable" class="table table-striped align-middle my-2" style="width:100%">
+                    <table {% if comments %} id="commentsTable" {% endif %}
+                        class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
                                 <th>Post</th>
@@ -38,12 +39,12 @@
                                     <form method="POST" action="{% url 'approve_comment' comment.id %}">
                                         {% csrf_token %}
                                         {% if comment.approved %}
-                                            <button type="submit" class="btn btn-outline-danger">Disapprove</button>
+                                        <button type="submit" class="btn btn-outline-danger">Disapprove</button>
                                         {% else %}
-                                            <button type="submit" class="btn btn-outline-primary">Approve</button>
+                                        <button type="submit" class="btn btn-outline-primary">Approve</button>
                                         {% endif %}
                                     </form>
-                                    
+
                                 </td>
                             </tr>
                             {% empty %}
@@ -71,7 +72,7 @@
                 language: {
                     search: "Search:",
                     lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ users",
+                    info: "Showing _START_ to _END_ of _TOTAL_ Comments",
                     paginate: {
                         next: "Next",
                         previous: "Previous"

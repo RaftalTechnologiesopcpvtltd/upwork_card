@@ -4,11 +4,18 @@
 <div id="content">
     {% include 'admin/header.html' %}
     <div class="main-content">
-        <h1 class="page-title mb-4">User Information</h1>
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">User Information</h1>
+            <span>
+                <a href="{% url 'admin_user_add' %}" class="btn btn-outline-primary">
+                    Add User
+                </a>
+            </span>
+        </div>
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="userTable" class="table table-striped align-middle my-2" style="width:100%">
+                    <table {% if user %} id="userTable" {% endif %} class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
                                 <th>Name</th>

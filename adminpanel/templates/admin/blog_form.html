@@ -1,14 +1,33 @@
 {% extends 'admin/adminbase.html' %}
 
+{% block extra_css %}
+<style>
+    .preview-image {
+        max-height: 200px;
+        object-fit: contain;
+    }
+
+    .preview-video {
+        max-height: 200px;
+        max-width: 100%;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div id="content">
     {% include 'admin/header.html' %}
     <div class="main-content">
+        {% if blog %}
         <h1 class="page-title mb-4">Edit Blog</h1>
+        {% else %}
+        <h1 class="page-title mb-4">Create Blog</h1>
+        {% endif %}
+       
 
-        <div class="card shadow-sm">
+        <div class="card">
             <div class="card-body">
-                <form method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit();">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     {% if form.non_field_errors %}
@@ -19,102 +38,136 @@
                     </div>
                     {% endif %}
 
-                    <div class="row">
-                        <!-- LEFT SECTION -->
-                        <div class="col-md-8">
-                            <!-- Title -->
+                    <div class="row mb-3">
+                        <div class="col-md-12">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-heading me-1"></i> {{ form.title.label }}
-                                </label>
-                                {{ form.title }}
+                                <label for="id_title" class="form-label">Title</label>
+                                <input type="text" name="title" id="id_title"
+                                    class="form-control {% if form.title.errors %}is-invalid{% endif %}"
+                                    value="{{ form.title.value|default:'' }}" required>
                                 {% if form.title.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.title.errors.0 }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                    {{ error }}
+                                    {% endfor %}
                                 </div>
                                 {% endif %}
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Quote -->
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-quote-left me-1"></i> {{ form.quote.label }}
-                                </label>
-                                {{ form.quote }}
-                            </div>
-
-                            <!-- Content -->
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-align-left me-1"></i> {{ form.content.label }}
-                                </label>
-                                {{ form.content }}
-                                {% if form.content.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.content.errors.0 }}
+                    <div class="row mb-3 d-flex align-items-stretch">
+                        <div class="col-md-6 d-flex">
+                            <div class="w-100 p-3 border rounded">
+                                <!-- Featured Image content here -->
+                                <label for="id_image" class="form-label">Featured Image</label>
+                                {% if blog and blog.image %}
+                                <div class="mb-2">
+                                    <img src="{{ blog.image.url }}" alt="Featured Image"
+                                        class="img-fluid img-thumbnail preview-image">
                                 </div>
                                 {% endif %}
-                            </div>
-
-                            <!-- Tags -->
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-tags me-1"></i> {{ form.tags.label }}
-                                </label>
-                                {{ form.tags }}
-                                <div class="form-text">{{ form.fields.tags.help_text }}</div>
+                                <input type="file" name="image" id="id_image"
+                                    class="form-control {% if form.image.errors %}is-invalid{% endif %}"
+                                    accept="image/*">
+                                {% if form.image.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.image.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Upload a featured image for your blog post</div>
                             </div>
                         </div>
 
-                        <!-- RIGHT SECTION -->
-                        <div class="col-md-4">
-                            <!-- Image Upload -->
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-image me-1"></i> {{ form.image.label }}
-                                </label>
-                                {{ form.image }}
-                                {% if form.image.errors %}
-                                <div class="invalid-feedback d-block">{{ form.image.errors.0 }}</div>
-                                {% endif %}
-                                <div class="mt-2">
-                                    {% if form.instance.image %}
-                                    <img id="imagePreview" src="{{ form.instance.image.url }}"
-                                        class="img-fluid img-thumbnail" alt="Current Image">
-                                    {% else %}
-                                    <img id="imagePreview" class="img-fluid img-thumbnail d-none" alt="Image Preview">
-                                    {% endif %}
+                        <div class="col-md-6 d-flex">
+                            <div class="w-100 p-3 border rounded">
+                                <!-- Video content here -->
+                                <label for="id_video" class="form-label">Video</label>
+                                {% if blog and blog.video %}
+                                <div class="mb-2">
+                                    <video src="{{ blog.video.url }}" controls class="preview-video w-100"></video>
                                 </div>
-                            </div>
-
-                            <!-- Video Upload -->
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-video me-1"></i> {{ form.video.label }}
-                                </label>
-                                {{ form.video }}
-                                {% if form.video.errors %}
-                                <div class="invalid-feedback d-block">{{ form.video.errors.0 }}</div>
+                                <p class="form-text">Current video: {{ blog.video.name }}</p>
                                 {% endif %}
-                                <div class="mt-2">
-                                    {% if form.instance.video %}
-                                    <video id="videoPreview" controls class="w-100" style="max-height: 300px;">
-                                        <source src="{{ form.instance.video.url }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    {% else %}
-                                    <video id="videoPreview" controls class="w-100 d-none"
-                                        style="max-height: 300px;"></video>
-                                    {% endif %}
+                                <input type="file" name="video" id="id_video"
+                                    class="form-control {% if form.video.errors %}is-invalid{% endif %}"
+                                    accept="video/*">
+                                {% if form.video.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.video.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Upload a video file (MP4, WebM, Ogg recommended)</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_quote" class="form-label">Quote</label>
+                                <textarea name="quote" id="id_quote"
+                                    class="form-control {% if form.quote.errors %}is-invalid{% endif %}"
+                                    rows="3">{{ form.quote.value|default:'' }}</textarea>
+                                {% if form.quote.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.quote.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Add a memorable quote or highlight from your blog post (optional)
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Submit Button -->
-                    <div class="d-flex mt-4">
-                        <button type="submit" class="btn btn-lg btn-primary px-4">
-                            <i class="fas fa-save me-2"></i> Save Blog
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_content" class="form-label">Content</label>
+                                <textarea name="content" id="id_content"
+                                    class="form-control summernote {% if form.content.errors %}is-invalid{% endif %}"
+                                    rows="10">{{ form.content.value|default:'' }}</textarea>
+                                {% if form.content.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.content.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_tags" class="form-label">Tags</label>
+                                <input type="text" name="tags" id="id_tags"
+                                    class="form-control {% if form.tags.errors %}is-invalid{% endif %}"
+                                    value="{{ form.tags.value|default:'' }}">
+                                {% if form.tags.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.tags.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Separate tags with commas (e.g., technology, news, tutorial)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Blog
                         </button>
                     </div>
                 </form>
@@ -125,49 +178,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- FontAwesome (if not already included) -->
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-<!-- JS Preview Script -->
-<script>
-    function handleFormSubmit() {
-        console.log("Form is submitting...");  // You should see this if not blocked
-        return true;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const imageInput = document.querySelector('input[name="image"]');
-        const videoInput = document.querySelector('input[name="video"]');
-
-        if (imageInput) {
-            imageInput.addEventListener("change", function () {
-                const preview = document.getElementById("imagePreview");
-                const file = this.files[0];
-                if (file && file.type.startsWith("image/")) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        preview.src = e.target.result;
-                        preview.classList.remove("d-none");
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        if (videoInput) {
-            videoInput.addEventListener("change", function () {
-                const preview = document.getElementById("videoPreview");
-                const file = this.files[0];
-                if (file && file.type.startsWith("video/")) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        preview.src = e.target.result;
-                        preview.classList.remove("d-none");
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-    });
-</script>
 {% endblock %}

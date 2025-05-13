@@ -7,12 +7,12 @@
                 <nav class="navbar navbar-expand-lg">
                     <a class="navbar-brand d-flex align-items-center" href="{% url 'landingpage' %}">
                         <img class="me-2" src="{% static 'images/logo.png' %}" alt="Logo"
-                            style="height: 70px; width: auto;">
+                             style="height: 70px; width: auto;">
                     </a>
 
                     <!-- Navbar Toggler -->
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTwo"
-                        aria-controls="navbarTwo" aria-expanded="false" aria-label="Toggle navigation">
+                            aria-controls="navbarTwo" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="toggler-icon"></span>
                         <span class="toggler-icon"></span>
                         <span class="toggler-icon"></span>
@@ -20,45 +20,48 @@
 
                     <!-- Collapsible Navigation Menu -->
                     <div class="collapse navbar-collapse sub-menu-bar" id="navbarTwo">
-                        <!-- User Profile Dropdown (ONLY VISIBLE WHEN COLLAPSED) -->
                         {% if User_Subscription.active %}
                         <ul class="navbar-nav m-auto">
                             {% if user.is_authenticated %}
-                            <li class="nav-item d-lg-none"><img src="{% static 'images/profile.png' %}" class="avatar img-fluid me-1" alt="user"
-                                    style="border-radius: 50px; height: 40px; width: 40px;" />
+                            <li class="nav-item d-lg-none">
+                                <img src="{% static 'images/profile.png' %}" class="avatar img-fluid me-1" alt="user"
+                                     style="border-radius: 50px; height: 40px; width: 40px;" />
                                 <span style="font-weight: bold;">Hi {{ user.first_name }}</span>
                             </li>
+                            {% if user.is_superuser %}
+                            <li class="nav-item d-lg-none">
+                                <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Panel</a>
+                            </li>
                             {% endif %}
-                            <li class="nav-item active"><a class="page-scroll" href="{% url 'landingpage' %}">Home</a>
-                            </li>
+                            {% endif %}
+                            <li class="nav-item active"><a class="page-scroll" href="{% url 'landingpage' %}">Home</a></li>
                             <li class="nav-item"><a class="page-scroll" href="{% url 'favourites' %}">Favorites</a></li>
-                                <li class="nav-item"><a class="page-scroll" href="{% url 'blog_listings' %}">All Blogs</a>
-                            </li>
-                            <li class="nav-item"><a class="page-scroll" href="{% url 'create_post' %}">Create Blogs</a>
-                            </li>
+                            <li class="nav-item"><a class="page-scroll" href="{% url 'blog_listings' %}">All Blogs</a></li>
+                            <li class="nav-item"><a class="page-scroll" href="{% url 'create_post' %}">Create Blogs</a></li>
                             <li class="nav-item"><a class="page-scroll" href="{% url 'faq' %}">FAQs</a></li>
                             {% if user.is_authenticated %}
-                            <li class="nav-item active  d-lg-none"><a class="page-scroll" href="{% url 'profile' %}">My profile</a>
-                            </li>
-                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'my_products' %}">My Listing</a>
-                            </li>
-                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                            </li>
+                            <li class="nav-item active d-lg-none"><a class="page-scroll" href="{% url 'profile' %}">My profile</a></li>
+                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'my_products' %}">My Listing</a></li>
+                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                             {% else %}
-                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'login' %}">Login</a>
-                            </li>
+                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
                             {% endif %}
                         </ul>
                         {% else %}
                         <ul class="navbar-nav m-auto">
                             {% if user.is_authenticated %}
-                            <li class="nav-item d-lg-none"><img src="{% static 'images/profile.png' %}" class="avatar img-fluid me-1" alt="user"
-                                    style="border-radius: 50px; height: 40px; width: 40px;" />
+                            <li class="nav-item d-lg-none">
+                                <img src="{% static 'images/profile.png' %}" class="avatar img-fluid me-1" alt="user"
+                                     style="border-radius: 50px; height: 40px; width: 40px;" />
                                 <span style="font-weight: bold;">Hi {{ user.first_name }}</span>
                             </li>
-                            {% endif %}
-                            <li class="nav-item"><a class="page-scroll" href="{% url 'landingpage' %}">Home</a>
+                            {% if user.is_superuser %}
+                            <li class="nav-item d-lg-none">
+                                <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Panel</a>
                             </li>
+                            {% endif %}
+                            {% endif %}
+                            <li class="nav-item"><a class="page-scroll" href="{% url 'landingpage' %}">Home</a></li>
                             {% if not User_Subscription.active %}
                             <li class="nav-item"><a class="page-scroll" href="#pricing">Pricing</a></li>
                             {% endif %}
@@ -66,12 +69,9 @@
                             <li class="nav-item"><a class="page-scroll" href="#about">About</a></li>
                             <li class="nav-item"><a class="page-scroll" href="{% url 'faq' %}">FAQs</a></li>
                             {% if user.is_authenticated %}
-                            
-                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                            </li>
+                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                             {% else %}
-                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'login' %}">Login</a>
-                            </li>
+                            <li class="nav-item d-lg-none"><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
                             {% endif %}
                         </ul>
                         {% endif %}
@@ -82,9 +82,9 @@
                         {% if user.is_authenticated %}
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
+                               data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="{% static 'images/profile.png' %}" class="avatar img-fluid me-1"
-                                    alt="user" style="border-radius: 50px; height: 40px; width: 40px;" />
+                                     alt="user" style="border-radius: 50px; height: 40px; width: 40px;" />
                                 <span>Hi {{ user.first_name }}</span>
                             </a>
                             <div class="dropdown-menu">
@@ -92,6 +92,9 @@
                                 {% if User_Subscription.active %}
                                 <a class="dropdown-item" href="{% url 'my_subscription' %}">My Subscriptiong</a>
                                 <a class="dropdown-item" href="{% url 'my_products' %}">My Listing</a>
+                                {% endif %}
+                                {% if user.is_superuser %}
+                                <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Panel</a>
                                 {% endif %}
                                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                             </div>
@@ -101,8 +104,6 @@
                         {% endif %}
                     </div>
                 </nav>
-
-
             </div>
         </div> <!-- row -->
     </div> <!-- container -->

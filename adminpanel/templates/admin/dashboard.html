@@ -211,8 +211,10 @@
         {% endif %}
 
         <!-- Users and Blog Posts -->
+        {% if all_user or SearchHistory %}
         <div class="row">
             <!-- Users Table -->
+            {% if all_user %}
             <div class="col-xl-8 mb-4">
                 <div class="card">
                     <div class="card-header">
@@ -283,6 +285,9 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+
+            {% if SearchHistory %}
 
             <!-- Search History -->
             <div class="col-xl-4 mb-4">
@@ -326,8 +331,12 @@
 
                 </div>
             </div>
+            {% endif %}
         </div>
+        {% endif %}
         <!-- Blog Posts and Comments -->
+        {% if recent_blogs %}
+
         <div class="row">
             <div class="col-12 d-flex">
                 <h4 class="mb-4">Recent Blog Posts</h4>
@@ -356,6 +365,7 @@
             </div>
             {% endfor %}
         </div>
+        {% endif %}
 
         <!-- Blog Comments -->
         <!-- <div class="row">
@@ -413,6 +423,7 @@
             </div>
         </div> -->
 
+        {% if pricings %}
         <!-- Pricing Plans (View-Only) -->
         <div class="row mt-4">
             <div class="col-12 d-flex">
@@ -443,9 +454,11 @@
             </div>
             {% endfor %}
         </div>
+        {% endif %}
 
 
         <!-- FAQ Section -->
+        {% if faqs %}
         <div class="row mt-4">
             <!-- FAQ Table -->
             <div class="col-12 mb-4">
@@ -479,6 +492,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
         <!-- Contact Us Section
         <div class="row mt-4">

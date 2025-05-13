@@ -3,11 +3,16 @@ from landingpage.models import *
 
 
 class CustomUserForm(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
+        required=False,
+        label='Password'
+    )
     class Meta:
         model = CustomUser
         fields = [
             'first_name', 'last_name', 'email', 'phone_number', 'gender',
-            'city', 'country', 'address', 'zip_code', 'country_code'
+            'city', 'country', 'address', 'zip_code', 'country_code',
         ]
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
@@ -21,7 +26,30 @@ class CustomUserForm(forms.ModelForm):
             'zip_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Zip Code'}),
             'country_code': forms.Select(attrs={'class': 'form-control'}),
         }
+    def __init__(self, *args, **kwargs):
+        # `editing` tells us if this is an edit operation
+        self.editing = kwargs.pop('editing', False)
+        super().__init__(*args, **kwargs)
 
+        if self.editing:
+            # If editing an existing user, hide the password field
+            self.fields['password'].widget = forms.HiddenInput()
+            self.fields['password'].required = False
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        password = self.cleaned_data.get("password")
+
+        # Only set password if provided and not editing
+        if password:
+            user.set_password(password)
+        elif not self.editing:
+            # Raise error if creating and no password provided
+            raise forms.ValidationError("Password is required.")
+
+        if commit:
+            user.save()
+        return user
 
 
 class BlogPostForm(forms.ModelForm):
@@ -99,29 +127,79 @@ class UserSubscriptionForm(forms.ModelForm):
             'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
-# class SliderForm(forms.ModelForm):
-#     class Meta:
-#         model = Slidder
-#         fields = ['title', 'subtitle', 'image', 'button_text', 
-#                   'button_url', 'order', 'is_active']
-#         widgets = {
-#             'title': forms.TextInput(attrs={'class': 'form-control'}),
-#             'subtitle': forms.TextInput(attrs={'class': 'form-control'}),
-#             'image': forms.FileInput(attrs={'class': 'form-control'}),
-#             'button_text': forms.TextInput(attrs={'class': 'form-control'}),
-#             'button_url': forms.URLInput(attrs={'class': 'form-control'}),
-#             'order': forms.NumberInput(attrs={'class': 'form-control'}),
-#             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-#         }
+class SliderForm(forms.ModelForm):
+    class Meta:
+        model = Slidder
+        fields = ['heading', 'image', 'text', 'order', 'is_active']
+        widgets = {
+            'heading': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'text': forms.TextInput(attrs={'class': 'form-control'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
 
-# class FAQForm(forms.ModelForm):
-#     class Meta:
-#         model = FAQ
-#         fields = ['question', 'answer', 'category', 'order', 'is_active']
-#         widgets = {
-#             'question': forms.TextInput(attrs={'class': 'form-control'}),
-#             'answer': forms.Textarea(attrs={'class': 'form-control summernote'}),
-#             'category': forms.Select(attrs={'class': 'form-select'}),
-#             'order': forms.NumberInput(attrs={'class': 'form-control'}),
-#             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-#         }
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Ensure order is set correctly if not explicitly set
+        if instance.order is None or instance.order <= 0:
+            max_order = Slidder.objects.aggregate(models.Max('order'))['order__max'] or 0
+            instance.order = max_order + 1  # Auto-increment order if it's not provided
+
+        if commit:
+            instance.save()
+
+            # Reorder all sliders after saving
+            Slidder.reorder_all()
+
+        return instance
+
+class FAQForm(forms.ModelForm):
+    class Meta:
+        model = FAQ
+        fields = ['question', 'answer', 'order', 'is_active']
+        widgets = {
+            'question': forms.TextInput(attrs={'class': 'form-control'}),
+            'answer': forms.Textarea(attrs={'class': 'form-control'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+class PricingForm(forms.ModelForm):
+    class Meta:
+        model = Pricing
+        fields = [
+            'price_heading',
+            'price',
+            'desc',
+            'duration_in_days',
+            'price_feature1',
+            'price_feature2',
+            'price_feature3',
+            'price_feature4',
+        ]
+        widgets = {
+            'price_heading': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Plan Name'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price'}),
+            'desc': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Description'}),
+            'duration_in_days': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Duration (in days)'}),
+            'price_feature1': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Feature 1'}),
+            'price_feature2': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Feature 2'}),
+            'price_feature3': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Feature 3'}),
+            'price_feature4': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Feature 4'}),
+        }
+
+class ContactusForm(forms.ModelForm):
+    class Meta:
+        model = Contactus
+        fields = '__all__'
+        widgets = {
+            'company_about': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'company_email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'facebook_url': forms.URLInput(attrs={'class': 'form-control'}),
+            'twitter_url': forms.URLInput(attrs={'class': 'form-control'}),
+            'linkedin_url': forms.URLInput(attrs={'class': 'form-control'}),
+            'instagram_url': forms.URLInput(attrs={'class': 'form-control'}),
+            'youtube_url': forms.URLInput(attrs={'class': 'form-control'}),
+        }

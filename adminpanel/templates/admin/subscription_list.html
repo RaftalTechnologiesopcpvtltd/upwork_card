@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="subscriptionTable" class="table table-striped align-middle my-2" style="width:100%">
+                    <table {% if plans %} id="subscriptionTable" {% endif %} class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
                                 <th>User</th>
@@ -81,7 +81,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center">No subscription plans found</td>
+                                <td colspan="12" class="text-center">No subscription plans found</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -101,10 +101,11 @@
                 responsive: true,
                 pageLength: 10,
                 lengthChange: true,
+                order: [], 
                 language: {
                     search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ users",
+                    lengthMenu: "Show _MENU_ Subscription",
+                    info: "Showing _START_ to _END_ of _TOTAL_ Subscription",
                     paginate: {
                         next: "Next",
                         previous: "Previous"

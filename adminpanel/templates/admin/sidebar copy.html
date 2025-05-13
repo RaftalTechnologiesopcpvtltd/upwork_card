@@ -14,18 +14,15 @@
     </div>
     <div class="sidebar-content">
         <ul class="nav flex-column">
-
             <li class="nav-item">
-                <a href="{% url 'admin_dashboard' %}" class="nav-link">
+                <a href="{% url 'admin_dashboard' %}" class="nav-link active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-
-            <!-- Users -->
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseUsers"
-                    href="{% url 'admin_users' %}">
+                <a href="{% url 'admin_users' %}" class="nav-link" data-bs-toggle="collapse" data-bs-target="#collapseUsers"
+                    aria-expanded="false">
                     <i class="fas fa-users"></i>
                     <span>Users</span>
                 </a>
@@ -36,11 +33,9 @@
                     </div>
                 </div>
             </li>
-
-            <!-- Subscriptions -->
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false"
-                    data-bs-target="#collapseSubscriptions" href="{% url 'admin_subscriptions' %}">
+                <a href="{% url 'admin_subscriptions' %}" class="nav-link" data-bs-toggle="collapse" data-bs-target="#collapseSubscriptions"
+                    aria-expanded="false">
                     <i class="fas fa-credit-card"></i>
                     <span>Subscriptions</span>
                 </a>
@@ -50,11 +45,9 @@
                     </div>
                 </div>
             </li>
-
-            <!-- Blogs -->
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseBlog"
-                    href="{% url 'admin_blogs' %}">
+                <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#collapseBlog"
+                    aria-expanded="false">
                     <i class="fas fa-blog"></i>
                     <span>Blog</span>
                 </a>
@@ -65,75 +58,51 @@
                     </div>
                 </div>
             </li>
-
-            <!-- Pricing -->
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapsePricing"
-                    href="{% url 'pricing' %}">
+                <a href="{% url 'pricing' %}" class="nav-link">
                     <i class="fas fa-tags"></i>
                     <span>Pricing</span>
                 </a>
-                <div class="collapse" id="collapsePricing">
-                    <div class="submenu">
-                        <a href="{% url 'pricing' %}" class="submenu-item">All Pricings</a>
-                        <a href="{% url 'admin_pricing_add' %}" class="submenu-item">Add Pricing</a>
-                    </div>
-                </div>
             </li>
-
-            <!-- FAQs -->
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseFaqs"
-                    href="{% url 'admin_faqs' %}">
+                <a href="{% url 'admin_faqs' %}" class="nav-link">
                     <i class="fas fa-question-circle"></i>
                     <span>FAQs</span>
                 </a>
-                <div class="collapse" id="collapseFaqs">
-                    <div class="submenu">
-                        <a href="{% url 'admin_faqs' %}" class="submenu-item">All FAQs</a>
-                        <a href="{% url 'admin_faq_add' %}" class="submenu-item">Add FAQ</a>
-                    </div>
-                </div>
             </li>
-
-            <!-- Contact -->
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseContact"
-                    href="{% url 'admin_contacts' %}">
+                <a href="{% url 'admin_contacts' %}" class="nav-link">
                     <i class="fas fa-envelope"></i>
-                    <span>Contact</span>
+                    <span>Contact Us</span>
                 </a>
-                <div class="collapse" id="collapseContact">
-                    <div class="submenu">
-                        <a href="{% url 'admin_contacts' %}" class="submenu-item">Messages</a>
-                        <a href="{% url 'contactus_list' %}" class="submenu-item">Contact Links</a>
-                    </div>
-                </div>
             </li>
-
-            <!-- Sliders -->
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseSlider"
-                    href="{% url 'admin_sliders' %}">
-                    <i class="fas fa-images"></i>
-                    <span>Sliders</span>
+                <a href="{% url 'contactus_list' %}" class="nav-link">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Contact Us Links</span>
                 </a>
-                <div class="collapse" id="collapseSlider">
-                    <div class="submenu">
-                        <a href="{% url 'admin_sliders' %}" class="submenu-item">All Sliders</a>
-                        <a href="{% url 'admin_slider_add' %}" class="submenu-item">Add Slider</a>
-                    </div>
-                </div>
             </li>
-
-            <!-- Search History -->
+            <li class="nav-item">
+                <a href="{% url 'admin_sliders' %}" class="nav-link">
+                    <i class="fas fa-images"></i>
+                    <span>Slider</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a href="{% url 'admin_search_history' %}" class="nav-link">
                     <i class="fas fa-history"></i>
                     <span>Search History</span>
                 </a>
             </li>
-
         </ul>
     </div>
+    <!-- <div class="sidebar-footer">
+        <div class="user-info">
+            <img src="https://via.placeholder.com/150" alt="User" class="user-avatar">
+            <div>
+                <span class="d-block fw-bold">John Doe</span>
+                <span class="d-block text-white-50 small">Administrator</span>
+            </div>
+        </div>
+    </div> -->
 </nav>

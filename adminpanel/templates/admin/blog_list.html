@@ -7,8 +7,8 @@
         <div class="d-flex align-items-center justify-content-between">
             <h1 class="page-title mb-4">Manage Blogs</h1>
             <span>
-                <a href="{% url 'create_post' %}" class="btn btn-outline-primary" target="_blank">
-                    Create
+                <a href="{% url 'admin_blog_add' %}" class="btn btn-outline-primary">
+                    Create Blogs
                 </a>
             </span>
         </div>
@@ -17,7 +17,8 @@
 
 
                 <div class="table-responsive">
-                    <table id="blogTable" class="table table-striped align-middle my-2" style="width:100%">
+                    <table {% if blogs %} id="blogTable" {% endif %} class="table table-striped align-middle my-2"
+                        style="width:100%">
                         <thead class="table-dark">
                             <tr>
                                 <th>Title</th>
@@ -54,7 +55,8 @@
                                 <td>
                                     {{ blog.comment_count }}
                                     {% if blog.comment_count > 0 %}
-                                    <a class="btn btn-sm btn-outline-info" href="{% url 'blog_comment_list' blog.id %}">see comments</a>
+                                    <a class="btn btn-sm btn-outline-info"
+                                        href="{% url 'blog_comment_list' blog.id %}">see comments</a>
                                     {% endif %}
                                 </td>
                                 <td>{{ blog.created_at|date:"M d, Y" }}</td>
@@ -64,7 +66,7 @@
                                             class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-edit"></i> <!-- Pencil/Edit Icon -->
                                         </a>
-                                        <a href="{% url 'blog_post' blog.id %}" target="_blank"
+                                        <a href="{% url 'admin_blog_view' blog.id %}"
                                             class="btn btn-sm btn-outline-info">
                                             <i class="fas fa-eye"></i> <!-- Eye/View Icon -->
                                         </a>
@@ -92,7 +94,7 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Cancel</button>
-                                                    <form action="#" method="post">
+                                                    <form action="{% url 'admin_blog_delete' blog.id %}" method="post">
                                                         {% csrf_token %}
                                                         <button type="submit" class="btn btn-danger">Delete</button>
                                                     </form>
@@ -104,61 +106,14 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center">No blogs found</td>
+                                <td colspan="8" class="text-center">No blogs found</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Pagination -->
-                {% if blogs.has_other_pages %}
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        {% if blogs.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link"
-                                href="?page={{ blogs.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
-                                aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        {% else %}
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        {% endif %}
 
-                        {% for i in blogs.paginator.page_range %}
-                        {% if blogs.number == i %}
-                        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
-                        {% else %}
-                        <li class="page-item"><a class="page-link"
-                                href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">{{
-                                i }}</a></li>
-                        {% endif %}
-                        {% endfor %}
-
-                        {% if blogs.has_next %}
-                        <li class="page-item">
-                            <a class="page-link"
-                                href="?page={{ blogs.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
-                                aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        {% else %}
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-                {% endif %}
             </div>
         </div>
     </div>
@@ -175,8 +130,8 @@
                 lengthChange: true,
                 language: {
                     search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ users",
+                    lengthMenu: "Show _MENU_ Blogs",
+                    info: "Showing _START_ to _END_ of _TOTAL_ Blogs",
                     paginate: {
                         next: "Next",
                         previous: "Previous"

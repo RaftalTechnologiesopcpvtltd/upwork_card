@@ -105,7 +105,7 @@
 
                 <!-- Contact Information -->
                 <div class="contact-info mt-3">
-                    <p class="mb-3">{{ Contact.about }}</p>
+                    <p class="mb-3">{{ Contact.company_about }}</p>
                     <!-- <p><i class="fas fa-phone-alt"></i> +1 234 567 8900</p> -->
                     <p><i class="fas fa-envelope"></i> <a style="color: white;" href="mailto:{{ contact.email }}">{{ Contact.company_email }}</a></p>
 
@@ -154,11 +154,11 @@
 
                 <!-- Social Media Links -->
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="{{ Contact.facebook_url }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="{{ Contact.twitter_url }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="{{ Contact.instagram_url }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="{{ Contact.linkedin_url }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="{{ Contact.youtube_url }}" target="_blank"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>
