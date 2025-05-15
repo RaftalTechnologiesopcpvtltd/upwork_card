@@ -41,6 +41,24 @@
                     </div>
 
                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_product_id" class="form-label">Product Id</label>
+                                <input type="text" name="product_id" id="id_product_id"
+                                    class="form-control {% if form.product_id.errors %}is-invalid{% endif %}"
+                                    value="{{ form.product_id.value|default:'' }}">
+                                {% if form.product_id.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.product_id.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="id_price" class="form-label">Price</label>
@@ -57,6 +75,24 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="id_price_id" class="form-label">Price Id</label>
+                                    <input type="text" name="price_id" id="id_price_id"
+                                        class="form-control {% if form.price_id.errors %}is-invalid{% endif %}"
+                                        value="{{ form.price_id.value|default:'' }}">
+                                    {% if form.price_id.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.price_id.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="id_duration_in_days" class="form-label">Duration (in days)</label>
@@ -70,6 +106,13 @@
                                     {% endfor %}
                                 </div>
                                 {% endif %}
+                                <div class="form-text">
+                                    Example values: <br>
+                                    <strong>1</strong> for a day<br>
+                                    <strong>7</strong> for a week<br>
+                                    <strong>30</strong> for a month<br>
+                                    <strong>365</strong> for a year
+                                </div>
                             </div>
                         </div>
                     </div>

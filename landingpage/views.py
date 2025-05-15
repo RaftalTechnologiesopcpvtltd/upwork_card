@@ -1,3 +1,4 @@
+from django.forms import model_to_dict
 from django.shortcuts import render, redirect, get_object_or_404 ,reverse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -33,49 +34,39 @@ import json
 import boto3
 from concurrent.futures import ThreadPoolExecutor
 from landingpage.dict_normalizers import normalize_data
+import logging
+from .forms import CustomAuthenticationForm  # Custom form with username & password fields
 
+logger = logging.getLogger(__name__)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def Landing_page(request):
-    faqs = FAQ.objects.all()
+    faqs = FAQ.objects.filter(is_active = True).order_by('order')[:3]
     slidders = Slidder.objects.filter(is_active=True).order_by('order')
-    Contact = Contactus.objects.order_by('-id').first()
-
-    Pricings = Pricing.objects.all()
-
-    User_Subscription = None
-    
-    
+    contact = Contactus.objects.order_by('-id').first()
+    pricings = Pricing.objects.filter(status=True).order_by('-id')
+    print(pricings)
+    user_subscription = None
 
     if request.user.is_authenticated:
-        try:
-            # Check if the user has an active subscription
-            subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
-            print(subscription)
-            if subscription:
-                if subscription.active:
-                    return redirect('dashboard_view')  # Redirect to dashboard if active subscription            
-        except UserSubscription.DoesNotExist:
-            context = {
-                "User_Subscription" : User_Subscription,
-                "slidders" : slidders,
-                "Contact" : Contact,
-                "Pricings" :Pricings
-            }
-            # If no subscription exists, show the landing page
-            return render(request, 'home.html',context)
-    
+        subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
+        print(subscription)
+        if subscription and subscription.active:
+            return redirect('dashboard_view')  # Redirect to dashboard if active subscription
+        else:
+            user_subscription = subscription  # Can pass inactive subscription to template
+
     context = {
-        "faqs" : faqs,
-        "User_Subscription" : User_Subscription,
-        "slidders" : slidders,
-        "Contact" : Contact,
-        "Pricings" :Pricings
+        "faqs": faqs,
+        "user_subscription": user_subscription,
+        "slidders": slidders,
+        "contact": contact,
+        "pricings": pricings
     }
 
-    return render(request, 'home.html',context)
+    return render(request, 'home.html', context)
 
 
 def contact_submit(request):
@@ -109,22 +100,13 @@ def contact_submit(request):
     return redirect('landingpage')
 
 
-logger = logging.getLogger(__name__)
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib import messages
-import logging
-from .forms import CustomAuthenticationForm  # Custom form with username & password fields
-
-logger = logging.getLogger(__name__)
 
 def login_view(request):
     if request.method == 'POST':
         form = CustomAuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            remember_me = request.POST.get('remember_me')
+            
 
             login(request, user)
 
@@ -132,11 +114,6 @@ def login_view(request):
             logger.info(f'User {user.username} logged in successfully.')
             session_key = request.session.session_key
             logger.debug(f'Session key: {session_key}')
-
-            # Session expiry
-            if remember_me:
-                request.session.set_expiry(1209600)  # 2 weeks
-            
 
             # Superuser redirect
             if user.is_superuser:
@@ -186,10 +163,7 @@ def subscribe_to_plan(request, plan_id):
     
     plan = get_object_or_404(Pricing, id=plan_id)
 
-    subscription_prod = {
-        'Monthly' : 'price_1QtpecKyDQNgXXcfn7iWYSRF',
-        'Annual' : 'price_1Qtpk3KyDQNgXXcfzS4EApeg',
-    }
+    
     try:
         recent_subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
     except UserSubscription.DoesNotExist:
@@ -197,9 +171,7 @@ def subscribe_to_plan(request, plan_id):
     if recent_subscription:
         print("recent : ",recent_subscription.plan)
     if request.method == 'POST':
-        price_id = request.POST.get('price_id')
-        print("Price id : ",price_id)
-        subscription_id = subscription_prod.get(price_id)
+        subscription_id = plan.price_id
         print(subscription_id)
         
         checkout_session = stripe.checkout.Session.create(
@@ -422,7 +394,7 @@ def run_functions(selected_functions, query, location, function_names=None):
 def search_history(request):
     Contact = Contactus.objects.order_by('-id').first()
 
-    search_history = SearchHistory.objects.all().order_by('-created')
+    search_history = SearchHistory.objects.filter(user=request.user).order_by('-created')
     try:
         subscription = UserSubscription.objects.filter(user=request.user).order_by('-id').first()
     except:
@@ -1516,15 +1488,47 @@ def my_subscription(request):
 
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()
+        # Fetch subscriptions and history
+        subscriptions = UserSubscription.objects.filter(user=request.user).exclude(subscription_id=subscription.subscription_id if subscription else None)
+        subscription_histories = SubscriptionHistory.objects.filter(user=request.user).exclude(subscription_id=subscription.subscription_id if subscription else None)
+
+        # Map subscription_id -> cancel_at from history
+        cancel_at_map = {
+            hist.subscription_id: hist.cancel_at
+            for hist in subscription_histories
+        }
+
+        # Print subscriptions as dictionaries with cancel_at
+        for sub in subscriptions:
+            # Dynamically add cancel_at
+            sub.cancel_at = cancel_at_map.get(sub.subscription_id, None)
+
+            # Convert to dict and include cancel_at
+            sub_dict = model_to_dict(sub)
+            sub_dict['cancel_at'] = sub.cancel_at
+            #     print("Active")        
+            # elif plan.is_finished:
+            #     print("Finished")
+            # elif plan.cancel_at:
+            #     print("Cancel: ",plan.cancel_at)
+            # else:
+            #     print("Inactive")
+
+            print("-----------------")
+        
+        plans = list(subscriptions)  # Already modified and cancel_at added above
+
+        # Optional: Sort manually by ID or any other field
+        plans.sort(key=lambda x: x.id, reverse=True)
     except Exception as e:
         print(f"Subscription check failed: {e}")
         subscription = None
+        subscriptions = None
 
     if not (subscription and subscription.active):
         return redirect("landingpage")
-    # stripe_subscription = stripe.Subscription.retrieve(subscription.subscription_id)
-    # print(stripe_subscription)
-    return render(request, 'my_subscription.html', {'User_Subscription': subscription,"Contact":Contact})
+    
+    return render(request, 'my_subscription.html', {'User_Subscription': subscription,'Subscription_History': subscriptions,"Contact":Contact})
 
 
 @csrf_exempt
@@ -1664,7 +1668,7 @@ def blog_post(request,post_id):
 
 
 def faq(request):
-    faqs = FAQ.objects.all()
+    faqs = FAQ.objects.filter(is_active = True).order_by('order')
     Contact = Contactus.objects.order_by('-id').first()
     try:
         subscription = UserSubscription.objects.filter(user=request.user, active=True).first()

@@ -26,15 +26,13 @@
             </div>
         </div> <!-- row -->
         <div class="row justify-content-center">
-            {% for price in Pricings %}
+            {% for price in pricings %}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card {% if 'Pro' in price.price_heading %} dark-card {% endif %} h-100 p-4">
                     <div class="card-body">
-                        <h2 {% if 'Pro' in price.price_heading %} style="color: #fafafa!important;" {% endif %}
-                            class="plan-type mb-2">{{ price.price_heading }}</h2>
+                        <h2 class="plan-type mb-2">{{ price.price_heading }}</h2>
                         <p class="plan-for mb-4">{{ price.desc }}</p>
-                        <h3 {% if 'Pro' in price.price_heading %} style="color: #fafafa!important;" {% endif %}
-                            class="price mb-4">$ {{ price.price }}</h3>
+                        <h3 class="price mb-4">$ {{ price.price }}</h3>
                         <ul class="feature-list mb-4">
                             <li>{{ price.price_feature1 }}</li>
                             <li>{{ price.price_feature2 }}</li>

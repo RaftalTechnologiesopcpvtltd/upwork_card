@@ -17,9 +17,10 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table {% if slider %} id="sliddersTable" {% endif %} class="table table-striped align-middle my-2" style="width:100%">
+                    <table {% if sliders %} id="sliddersTable" {% endif %} class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
+                                <th>Serial No.</th>
                                 <th>Image</th>
                                 <th>Heading</th>
                                 <th>Description</th>
@@ -31,6 +32,7 @@
                         <tbody>
                             {% for slider in sliders %}
                             <tr>
+                                <td>{{ forloop.counter }}</td>
                                 <td>
                                     <img src="{{ slider.image.url }}" alt="{{ slider.heading }}" class="img-thumbnail"
                                         style="max-width: 100px;">
@@ -88,7 +90,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center">No sliders found</td>
+                                <td colspan="7" class="text-center">No sliders found</td>
                             </tr>
                             {% endfor %}
                         </tbody>

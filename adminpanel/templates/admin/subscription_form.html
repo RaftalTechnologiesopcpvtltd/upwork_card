@@ -4,7 +4,18 @@
 <div id="content">
     {% include 'admin/header.html' %}
     <div class="main-content">
-        <h1 class="page-title mb-4">Manage Subscription</h1>
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">Edit Subscription</h1>
+            {% if subscription_history.cancel_at %}
+            <span class="badge bg-danger">Cancelled ({{ subscription_history.cancel_at|date:"M d, Y" }})</span>
+            {% elif plan.is_finished %}
+            <span class="badge bg-warning">Plan Finished</span>
+            {% elif plan.active %}
+            <span class="badge bg-success">Active</span>
+            {% else %}
+            <span class="badge bg-secondary">Inactive</span>
+            {% endif %}
+        </div>
         <div class="card">
             <div class="card-body">
                 <form method="post">
@@ -94,11 +105,14 @@
                         </button>
                     </div>
                 </form>
-                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelImmediateModal">Cancel
-                    Immediately</button>
-                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelEndModal">Cancel at
-                    End of Billing Period</button>
-
+                {% if not subscription_history.cancel_at and plan.active and not is_finished %}
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelImmediateModal">
+                    Cancel Immediately
+                </button>
+                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelEndModal">
+                    Cancel at End of Billing Period
+                </button>
+                {% endif %}
             </div>
         </div>
 

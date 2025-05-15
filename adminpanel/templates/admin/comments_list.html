@@ -21,6 +21,7 @@
                         class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
+                                <th>Serial No.</th>
                                 <th>Post</th>
                                 <th>Comment Body</th>
                                 <th>User</th>
@@ -31,6 +32,7 @@
                         <tbody>
                             {% for comment in comments %}
                             <tr>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ comment.post }}</td>
                                 <td>{{ comment.body }}</td>
                                 <td>{{ comment.user.first_name }} {{ comment.user.last_name }}</td>
@@ -49,7 +51,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center">No blogs found</td>
+                                <td colspan="7" class="text-center">No blogs found</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -69,6 +71,7 @@
                 responsive: true,
                 pageLength: 10,
                 lengthChange: true,
+                order: [], 
                 language: {
                     search: "Search:",
                     lengthMenu: "Show _MENU_ entries",

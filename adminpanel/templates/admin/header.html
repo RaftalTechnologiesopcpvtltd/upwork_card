@@ -9,10 +9,10 @@
         <button id="mobileToggle" class="sidebar-toggle d-md-none">
             <i class="fas fa-bars"></i>
         </button>
-        <div class="search-form">
+        <!-- <div class="search-form">
             <i class="fas fa-search"></i>
             <input type="text" class="form-control" placeholder="Search...">
-        </div>
+        </div> -->
     </div>
     <div class="header-right">
         <!-- <div class="header-action">
@@ -26,7 +26,7 @@
         <div class="dropdown">
             <div class="user-dropdown" data-bs-toggle="dropdown">
                 <img src="{% static 'images/user.jpg' %}" alt="User">
-                <span class="user-name">John Doe</span>
+                <span class="user-name">{{ request.user.first_name }} {{ request.user.last_name }}</span>
                 <i class="fas fa-chevron-down ms-2 small"></i>
             </div>
             <ul class="dropdown-menu dropdown-menu-end">

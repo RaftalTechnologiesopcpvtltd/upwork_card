@@ -404,6 +404,8 @@ class ContactMessage(models.Model):
 
 class Pricing(models.Model):
     price_heading = models.CharField(max_length=100)
+    product_id = models.CharField(blank=True, null=True, max_length=100,default = "")
+    price_id = models.CharField(blank=True, null=True, max_length=100,default = "")
     price =  models.DecimalField(max_digits=10, decimal_places=2)
     desc = models.TextField()
     duration_in_days = models.PositiveIntegerField(default=30)
@@ -411,6 +413,7 @@ class Pricing(models.Model):
     price_feature2 = models.CharField(max_length=100 ,default = "")
     price_feature3 = models.CharField(max_length=100 ,default = "")
     price_feature4 = models.CharField(max_length=100 ,default = "")
+    status = models.BooleanField(default=True)  # False = unread/unresolved, True = read/resolved
 
     def __str__(self):
         return self.price_heading

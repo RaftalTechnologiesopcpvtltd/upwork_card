@@ -11,7 +11,12 @@ from django.db import transaction
 import stripe
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
+from django.conf import settings
+import calendar
+from datetime import datetime
+from django.forms.models import model_to_dict
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -27,8 +32,8 @@ def dashboard(request):
         'subscriptions': UserSubscription.objects.filter(active = True).order_by('-start_date')[:3],
         'blog_count': BlogPost.objects.count(),
         'recent_blogs': BlogPost.objects.order_by('-created_at').annotate(comment_count=Count('comments'))[:3],
-        'pricings' : Pricing.objects.all(),
-        'faqs' : FAQ.objects.all(),
+        'pricings' : Pricing.objects.all().order_by('-id')[:3],
+        'faqs' : FAQ.objects.all().order_by('-id')[:11],
     }
     return render(request, 'admin/dashboard.html', context)
 
@@ -202,22 +207,45 @@ def blog_delete(request, blog_id):
     
     return redirect('admin_blogs')
 
+
+
 @user_passes_test(lambda u: u.is_superuser)
 def subscription_list(request):
     """Display a list of all subscription plans."""
-    subscription = UserSubscription.objects.all().order_by("-start_date")
-    subscription_history = SubscriptionHistory.objects.all().order_by("-start_date")
+    # Fetch subscriptions and history
+    subscriptions = UserSubscription.objects.all().order_by("-start_date")
+    subscription_histories = SubscriptionHistory.objects.all().order_by("-start_date")
 
-    for sub in subscription:
-        for hist in subscription_history:
-            if sub.subscription_id == hist.subscription_id:
-                sub.was_renewed = hist.was_renewed
-                sub.cancel_at = hist.cancel_at
+    # Map subscription_id -> cancel_at from history
+    cancel_at_map = {
+        hist.subscription_id: hist.cancel_at
+        for hist in subscription_histories
+    }
 
-    
+    # Print subscriptions as dictionaries with cancel_at
+    for sub in subscriptions:
+        # Dynamically add cancel_at
+        sub.cancel_at = cancel_at_map.get(sub.subscription_id, None)
+
+        # Convert to dict and include cancel_at
+        sub_dict = model_to_dict(sub)
+        sub_dict['cancel_at'] = sub.cancel_at
+        #     print("Active")        
+        # elif plan.is_finished:
+        #     print("Finished")
+        # elif plan.cancel_at:
+        #     print("Cancel: ",plan.cancel_at)
+        # else:
+        #     print("Inactive")
+
+        print("-----------------")
+    plans = list(subscriptions)  # Already modified and cancel_at added above
+
+    # Optional: Sort manually by ID or any other field
+    plans.sort(key=lambda x: x.id, reverse=True)
     context = {
         'active_page': 'subscriptions',
-        'plans': subscription.order_by("-id"),
+        'plans': plans,  # optional order
     }
     return render(request, 'admin/subscription_list.html', context)
 
@@ -255,6 +283,10 @@ def subscription_list(request):
 def subscription_edit(request, plan_id):
     """Edit an existing subscription plan."""
     plan = get_object_or_404(UserSubscription, id=plan_id)
+
+    subscription_history = get_object_or_404(SubscriptionHistory, subscription_id=plan.subscription_id)
+
+    print(subscription_history.cancel_at)
     
     if request.method == 'POST':
         form = UserSubscriptionForm(request.POST, instance=plan)
@@ -268,6 +300,7 @@ def subscription_edit(request, plan_id):
     context = {
         'active_page': 'subscriptions',
         'plan': plan,
+        'subscription_history':subscription_history,
         'form': form,
     }
     return render(request, 'admin/subscription_form.html', context)
@@ -305,29 +338,146 @@ def pricing_list(request):
         return JsonResponse({"error": str(e)}, status=400) 
     
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def pricing_add(request):
     if request.method == 'POST':
         form = PricingForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('pricing')  # Replace with your view name
+            pricing = form.save(commit=False)
+
+            current_year = datetime.now().month
+
+            # Leap year check
+            is_leap = calendar.isleap(current_year)
+
+            days = int(pricing.duration_in_days)
+            if days >= 345:
+                interval = "year"
+                pricing.duration_in_days = 366 if is_leap else 365
+            elif days >= 24:
+                interval = "month"
+                pricing.duration_in_days = 30
+            elif days >= 5:
+                interval = "week"
+                pricing.duration_in_days = 7
+            else:
+                interval = "day"
+                pricing.duration_in_days = 1
+            try:
+                # 1. Create Product on Stripe
+                product = stripe.Product.create(
+                    name=pricing.price_heading,
+                    description=pricing.desc,
+                )
+
+                # 2. Create Recurring Price (e.g., monthly)
+                price = stripe.Price.create(
+                    unit_amount=int(pricing.price * 100),  # dollars to cents
+                    currency='usd',
+                    recurring={"interval": interval},  # or "year"
+                    product=product.id
+                )
+
+                # 3. Save product_id and price_id
+                pricing.product_id = product.id
+                pricing.price_id = price.id
+                pricing.save()
+
+                messages.success(request, 'Pricing and Stripe data created successfully!')
+                return redirect('pricing')
+
+            except stripe.error.StripeError as e:
+                messages.error(request, f"Stripe Error: {e.user_message or str(e)}")
+
     else:
         form = PricingForm()
 
     return render(request, 'admin/pricing_form.html', {'form': form})
 
 
+# from django.contrib.auth.decorators import user_passes_test
+# from django.shortcuts import render, get_object_or_404, redirect
+# from django.contrib import messages
+# import stripe
+# from .models import Pricing
+# from .forms import PricingForm
+
+@user_passes_test(lambda u: u.is_superuser)
+def pricing_delete(request, pricing_id):
+    """Toggle the Boolean status of an existing pricing and update it on Stripe."""
+    pricing = get_object_or_404(Pricing, id=pricing_id)
+
+    # Toggle the Boolean status
+    pricing.status = not pricing.status
+
+    try:
+        stripe.Product.modify(
+            pricing.product_id,
+            active=pricing.status  # Likely a placeholder—adjust to a real field if needed
+        )
+        pricing.save()
+    except Exception as e:
+        messages.error(request, f"Failed to update product on Stripe: {e}")
+
+    return redirect('pricing')
+    
+
 @user_passes_test(lambda u: u.is_superuser)
 def pricing_edit(request, pricing_id):
-    """Edit an existing pricing."""
+    """Edit an existing pricing and update it on Stripe."""
     pricing = get_object_or_404(Pricing, id=pricing_id)
+    old_amount = pricing.price  # Store old price to check for change
+    old_name = pricing.price_heading
+    old_price_id = pricing.price_id
 
     if request.method == 'POST':
         form = PricingForm(request.POST, instance=pricing)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'pricing updated successfully!')
+            updated_pricing = form.save(commit=False)
+
+            print(updated_pricing)
+            print(updated_pricing.price_heading)
+            print(updated_pricing.price)
+
+            # 1. Update Stripe product name (if name is part of Pricing model)
+            if updated_pricing.price_heading != old_name:
+                try:
+                    stripe.Product.modify(
+                        pricing.product_id,
+                        name=updated_pricing.price_heading  # adjust if name field is different
+                    )
+                except Exception as e:
+                    messages.error(request, f"Failed to update product on Stripe: {e}")
+                    return redirect('pricing')
+
+            # 2. If price changed, create a new price on Stripe
+            if updated_pricing.price != old_amount:
+                try:
+                    new_price = stripe.Price.create(
+                        unit_amount=int(updated_pricing.price * 100),  # Convert dollars to cents
+                        currency='usd',
+                        product=pricing.product_id
+                    )
+
+                    stripe.Product.modify(
+                        pricing.product_id,
+                        default_price=new_price.id
+                    )
+
+                    # 4. Deactivate old price
+                    if old_price_id:
+                        stripe.Price.modify(
+                            old_price_id,
+                            active=False
+                        )
+                    updated_pricing.price_id = new_price.id
+                except Exception as e:
+                    messages.error(request, f"Failed to create new price on Stripe: {e}")
+                    return redirect('pricing')
+
+            updated_pricing.save()
+            messages.success(request, 'Pricing updated successfully!')
             return redirect('pricing')
     else:
         form = PricingForm(instance=pricing)
@@ -338,16 +488,24 @@ def pricing_edit(request, pricing_id):
         'form': form,
     }
     return render(request, 'admin/pricing_form.html', context)
-    
+
 @user_passes_test(lambda u: u.is_superuser)
-def pricing_delete(request, pricing_id):
-    """Delete a blog post."""
+def pricing_status(request, pricing_id):
+    """Toggle the Boolean status of an existing pricing and update it on Stripe."""
     pricing = get_object_or_404(Pricing, id=pricing_id)
-    
-    if request.method == 'POST':
-        pricing.delete()
-        messages.success(request, 'Pricing deleted successfully!')
-    
+
+    # Toggle the Boolean status
+    pricing.status = True
+
+    try:
+        stripe.Product.modify(
+            pricing.product_id,
+            active=pricing.status  # Likely a placeholder—adjust to a real field if needed
+        )
+        pricing.save()
+    except Exception as e:
+        messages.error(request, f"Failed to update product on Stripe: {e}")
+
     return redirect('pricing')
 
 @user_passes_test(lambda u: u.is_superuser)

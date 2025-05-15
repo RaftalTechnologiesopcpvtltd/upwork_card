@@ -12,6 +12,7 @@
                         class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
+                                <th>Serial No.</th>
                                 <th>Name</th>
                                 <th>User</th>
                                 <th>Email</th>
@@ -24,6 +25,7 @@
                         <tbody>
                             {% for contact in contacts %}
                             <tr class="{% if not contact.status %}table-warning{% endif %}">
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ contact.name }}</td>
                                 <td>{% if contact.user %}{{ contact.user }}{% else %}Guest{% endif %}</td>
                                 <td>{{ contact.email }}</td>
@@ -130,7 +132,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="7" class="text-center">No messages found</td>
+                                <td colspan="8" class="text-center">No messages found</td>
                             </tr>
                             {% endfor %}
                         </tbody>

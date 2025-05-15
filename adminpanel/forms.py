@@ -171,7 +171,9 @@ class PricingForm(forms.ModelForm):
         model = Pricing
         fields = [
             'price_heading',
+            'product_id',
             'price',
+            'price_id',
             'desc',
             'duration_in_days',
             'price_feature1',
@@ -181,7 +183,9 @@ class PricingForm(forms.ModelForm):
         ]
         widgets = {
             'price_heading': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Plan Name'}),
+            'product_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Product Id'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price'}),
+            'price_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Price Id'}),
             'desc': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Description'}),
             'duration_in_days': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Duration (in days)'}),
             'price_feature1': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Feature 1'}),

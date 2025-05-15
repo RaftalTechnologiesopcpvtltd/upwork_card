@@ -5,7 +5,7 @@
     {% include 'admin/header.html' %}
     <div class="main-content">
         <div class="d-flex align-items-center justify-content-between">
-            <h1 class="page-title mb-4">Manage pricings</h1>
+            <h1 class="page-title mb-4">Pricings</h1>
             <span>
                 <a href="{% url 'admin_pricing_add' %}" class="btn btn-outline-primary">
                     Create Pricing
@@ -21,10 +21,14 @@
                         style="width:100%">
                         <thead class="table-dark">
                             <tr>
+                                <th>Serial No.</th>
                                 <th>Price Heading</th>
+                                <th>Product Id</th>
                                 <th>Price</th>
+                                <th>Price Id</th>
                                 <th>Description</th>
                                 <th>Duration in Days</th>
+                                <th>Status</th>
                                 <th>Features</th>
                                 <th>Action</th>
                             </tr>
@@ -32,10 +36,21 @@
                         <tbody>
                             {% for pricing in pricings %}
                             <tr>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ pricing.price_heading }}</td>
+                                <td>{{ pricing.product_id }}</td>
                                 <td>{{ pricing.price }}</td>
+                                <td>{{ pricing.price_id }}</td>
                                 <td>{{ pricing.desc }}</td>
                                 <td>{{ pricing.duration_in_days }}</td>
+                                <td>
+                                    {% if pricing.status %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                    <a class="btn btn-sm btn-success mt-1" href="{% url 'admin_pricing_edit_status' pricing_id=pricing.id %}">Activate</a>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-info" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#features{{ pricing.id }}" aria-expanded="false"
@@ -44,17 +59,12 @@
                                     </button>
                                     <div class="collapse mt-2" id="features{{ pricing.id }}">
                                         <ul class="list-group list-group-flush">
-                                            {% if pricing.description %}<li class="list-group-item">{{
-                                                pricing.description }}
+                                            {% if pricing.description %}<li class="list-group-item">{{ pricing.description }}
                                             </li>{% endif %}
-                                            {% if pricing.price_feature1 %}<li class="list-group-item">{{
-                                                pricing.price_feature1 }}</li>{% endif %}
-                                            {% if pricing.price_feature2 %}<li class="list-group-item">{{
-                                                pricing.price_feature2 }}</li>{% endif %}
-                                            {% if pricing.price_feature3 %}<li class="list-group-item">{{
-                                                pricing.price_feature3 }}</li>{% endif %}
-                                            {% if pricing.price_feature4 %}<li class="list-group-item">{{
-                                                pricing.price_feature4 }}</li>{% endif %}
+                                            {% if pricing.price_feature1 %}<li class="list-group-item">{{ pricing.price_feature1 }}</li>{% endif %}
+                                            {% if pricing.price_feature2 %}<li class="list-group-item">{{ pricing.price_feature2 }}</li>{% endif %}
+                                            {% if pricing.price_feature3 %}<li class="list-group-item">{{ pricing.price_feature3 }}</li>{% endif %}
+                                            {% if pricing.price_feature4 %}<li class="list-group-item">{{ pricing.price_feature4 }}</li>{% endif %}
                                         </ul>
                                     </div>
                                 </td>
@@ -65,11 +75,13 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <!-- Trigger Button -->
+                                        {% if pricing.status %}
                                         <button type="button" class="btn btn-sm btn-outline-danger"
                                             data-bs-toggle="modal" data-bs-target="#deleteModal{{ pricing.id }}"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
+                                        {% endif %}
                                     </div>
                                     <!-- Delete Confirmation Modal -->
                                     <div class="modal fade" id="deleteModal{{ pricing.id }}" tabindex="-1"
@@ -84,8 +96,8 @@
                                                         aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Are you sure you want to delete <strong>{{ pricing.price_heading
-                                                        }}</strong>?
+                                                    You cannot delete <strong>{{ pricing.price_heading }}</strong>! <br>
+                                                    It simply <strong>De-Activate</strong>!
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form method="POST"
@@ -104,7 +116,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center">No Pricing found</td>
+                                <td colspan="7" class="text-center">No Pricing found</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -124,6 +136,7 @@
                 responsive: true,
                 pageLength: 10,
                 lengthChange: true,
+                order: [], 
                 language: {
                     search: "Search:",
                     lengthMenu: "Show _MENU_ entries",

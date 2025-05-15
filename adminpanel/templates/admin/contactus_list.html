@@ -19,6 +19,7 @@
                         class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
+                                <th>Serial No.</th>
                                 <th>Email</th>
                                 <th>About</th>
                                 <th>Facebook</th>
@@ -32,6 +33,7 @@
                         <tbody>
                             {% for contact in contactus_entries %}
                             <tr>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ contact.company_email }}</td>
                                 <td>{{ contact.company_about|truncatechars:40 }}</td>
                                 <td><a href="{{ contact.facebook_url }}" target="_blank">Facebook</a></td>
@@ -81,7 +83,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center">No contact information found.</td>
+                                <td colspan="9" class="text-center">No contact information found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>

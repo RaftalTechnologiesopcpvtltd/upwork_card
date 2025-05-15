@@ -5,7 +5,7 @@
     {% include 'admin/header.html' %}
     <div class="main-content">
         <div class="d-flex align-items-center justify-content-between">
-            <h1 class="page-title mb-4">Manage Blogs</h1>
+            <h1 class="page-title mb-4">Blogs</h1>
             <span>
                 <a href="{% url 'admin_blog_add' %}" class="btn btn-outline-primary">
                     Create Blogs
@@ -21,6 +21,9 @@
                         style="width:100%">
                         <thead class="table-dark">
                             <tr>
+                                <th>Serial No.</th>
+                                <th>Image</th>
+                                <th>Video</th>
                                 <th>Title</th>
                                 <th>Tags</th>
                                 <th>Author</th>
@@ -34,6 +37,16 @@
                         <tbody>
                             {% for blog in blogs %}
                             <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="img-thumbnail" style="max-width: 150px;"></td>
+                                
+                                <td>
+                                    <video class="img-thumbnail img-fluid" style="max-width: 150px; height: auto; object-fit: cover;" controls
+                                        preload="metadata">
+                                        <source src="{{ blog.video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </td>
                                 <td>{{ blog.title }}</td>
                                 <td>{% for tag in blog.tags.all %}
                                     {{ tag.name }}{% if not forloop.last %} |{% endif %}
@@ -106,7 +119,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center">No blogs found</td>
+                                <td colspan="9" class="text-center">No blogs found</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -128,6 +141,7 @@
                 responsive: true,
                 pageLength: 10,
                 lengthChange: true,
+                order: [], 
                 language: {
                     search: "Search:",
                     lengthMenu: "Show _MENU_ Blogs",

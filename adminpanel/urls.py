@@ -30,6 +30,7 @@ urlpatterns = [
     path('pricings/', views.pricing_list, name='pricing'),
     path('pricings/add/', views.pricing_add, name='admin_pricing_add'),
     path('pricings/edit/<int:pricing_id>/', views.pricing_edit, name='admin_pricing_edit'),
+    path('pricings/edit/status/<int:pricing_id>/', views.pricing_status, name='admin_pricing_edit_status'),
     path('pricings/delete/<int:pricing_id>/', views.pricing_delete, name='admin_pricing_delete'),
     
     # # Subscription Plans

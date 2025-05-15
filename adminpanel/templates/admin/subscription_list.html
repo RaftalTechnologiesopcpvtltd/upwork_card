@@ -4,13 +4,15 @@
 <div id="content">
     {% include 'admin/header.html' %}
     <div class="main-content">
-        <h1 class="page-title mb-4">Manage Subscription</h1>
+        <h1 class="page-title mb-4">Subscriptions</h1>
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table {% if plans %} id="subscriptionTable" {% endif %} class="table table-striped align-middle my-2" style="width:100%">
+                    <table {% if plans %} id="subscriptionTable" {% endif %}
+                        class="table table-striped align-middle my-2" style="width:100%">
                         <thead class="table-dark">
                             <tr>
+                                <th>Serial No.</th>
                                 <th>User</th>
                                 <th>Subscription Name</th>
                                 <th>Subscription Id</th>
@@ -28,6 +30,7 @@
                         <tbody>
                             {% for plan in plans %}
                             <tr>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ plan.user.first_name }} {{ plan.user.last_name }}</td>
                                 <td>{{ plan.plan.price_heading }}</td>
                                 <td>{{ plan.subscription_id }}</td>
@@ -51,16 +54,17 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {% if plan.active %}
-                                    <span class="badge bg-success">Active</span>
-                                    {% elif plan.cancel_at %}
-                                    <span class="badge bg-danger">Cancelled ({{ plan.cancel_at }})</span>
+                                    {% if plan.cancel_at %}
+                                    <span class="badge bg-danger">Cancelled ({{ plan.cancel_at|date:"M d, Y" }})</span>
                                     {% elif plan.is_finished %}
-                                    <span class="badge bg-success">Plan Finished</span>
+                                    <span class="badge bg-warning">Plan Finished</span>
+                                    {% elif plan.active %}
+                                    <span class="badge bg-success">Active</span>
                                     {% else %}
                                     <span class="badge bg-secondary">Inactive</span>
-                                    {% endif %}
+                                    {% endif %}                                
                                 </td>
+
                                 <td>{{ plan.payment_status }}</td>
                                 <td>{{ plan.start_date }}</td>
                                 <td>{{ plan.end_date }}</td>
@@ -73,15 +77,16 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="{% url 'admin_subscription_edit' plan_id=plan.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                        <a href="{% url 'admin_subscription_edit' plan_id=plan.id %}"
+                                            class="btn btn-sm btn-outline-primary" title="Edit">
                                             <i class="fas fa-edit"></i>
-                                        </a>                                        
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="12" class="text-center">No subscription plans found</td>
+                                <td colspan="13" class="text-center">No subscription plans found</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -101,7 +106,7 @@
                 responsive: true,
                 pageLength: 10,
                 lengthChange: true,
-                order: [], 
+                order: [],
                 language: {
                     search: "Search:",
                     lengthMenu: "Show _MENU_ Subscription",

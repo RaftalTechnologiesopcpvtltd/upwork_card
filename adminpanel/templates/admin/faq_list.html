@@ -19,6 +19,7 @@
                         style="width:100%">
                         <thead class="table-dark">
                             <tr>
+                                <th>Serial No.</th>
                                 <th>Question</th>
                                 <th>Answer</th>
                                 <th>Order</th>
@@ -30,6 +31,7 @@
                         <tbody>
                             {% for faq in faqs %}
                             <tr>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ faq.question }} ?</td>
                                 <td>{{ faq.answer }}</td>
                                 <td>{{ faq.order }}</td>
@@ -83,7 +85,7 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center">No FAQs found</td>
+                                <td colspan="7" class="text-center">No FAQs found</td>
                             </tr>
                             {% endfor %}
                         </tbody>
