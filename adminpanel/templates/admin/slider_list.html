@@ -1,0 +1,126 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">Sliders</h1>
+            <span>
+                <a href="{% url 'admin_slider_add' %}" class="btn btn-outline-primary">
+                    Add Slider
+                </a>
+            </span>
+        </div>
+        
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table {% if sliders %} id="sliddersTable" {% endif %} class="table table-striped align-middle my-2" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Serial No.</th>
+                                <th>Image</th>
+                                <th>Heading</th>
+                                <th>Description</th>
+                                <th>Order</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for slider in sliders %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    <img src="{{ slider.image.url }}" alt="{{ slider.heading }}" class="img-thumbnail"
+                                        style="max-width: 100px;">
+                                </td>
+                                <td>{{ slider.heading }}</td>
+                                <td>{{ slider.text }}</td>
+                                <td>{{ slider.order }}</td>
+                                <td>
+                                    {% if slider.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'admin_slider_edit' slider.id %}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i> <!-- Pencil icon -->
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ slider.id }}">
+                                            <i class="fas fa-trash-alt"></i> <!-- Trash icon -->
+                                        </button>
+                                    </div>
+
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteModal{{ slider.id }}" tabindex="-1"
+                                        aria-labelledby="deleteModalLabel{{ slider.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel{{ slider.id }}">Confirm
+                                                        Delete</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this slider?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <form action="{% url 'admin_slider_delete' slider.id %}"
+                                                        method="post">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No sliders found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#sliddersTable').DataTable(
+            {
+                responsive: true,
+                pageLength: 10,
+                lengthChange: true,
+                order: [],
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ Slider",
+                    info: "Showing _START_ to _END_ of _TOTAL_ Slider",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                }
+            });
+    });
+</script>
+{% endblock %}

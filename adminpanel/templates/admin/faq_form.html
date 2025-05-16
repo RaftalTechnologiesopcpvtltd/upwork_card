@@ -1,0 +1,103 @@
+{% extends 'admin/adminbase.html' %}
+
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        {% if faq %}
+        <h1 class="page-heading mb-4">Edit FAQ</h1>
+        {% else %}
+        <h1 class="page-heading mb-4">Create FAQ</h1>
+        {% endif %}
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_question" class="form-label">Question</label>
+                                <input type="text" name="question" id="id_question"
+                                    class="form-control {% if form.question.errors %}is-invalid{% endif %}"
+                                    value="{{ form.question.value|default:'' }}" required>
+                                {% if form.question.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.question.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_answer" class="form-label">Answer</label>
+                                <textarea name="answer" id="id_answer"
+                                    class="form-control summernote {% if form.answer.errors %}is-invalid{% endif %}"
+                                    rows="6">{{ form.answer.value|default:'' }}</textarea>
+                                {% if form.answer.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.answer.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_order" class="form-label">Display Order</label>
+                                <input type="number" name="order" id="id_order"
+                                    class="form-control {% if form.order.errors %}is-invalid{% endif %}"
+                                    value="{{ form.order.value|default:'0' }}">
+                                {% if form.order.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.order.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Lower numbers appear first</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check form-switch mt-4">
+                                    <input type="checkbox" name="is_active" id="id_is_active" class="form-check-input"
+                                        {% if form.is_active.value %}checked{% endif %}>
+                                    <label for="id_is_active" class="form-check-label">Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save FAQ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

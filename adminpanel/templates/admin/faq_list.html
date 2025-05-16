@@ -1,0 +1,121 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">FAQS</h1>
+            <span>
+                <a href="{% url 'admin_faq_add' %}" class="btn btn-outline-primary">
+                    Create FAQ
+                </a>
+            </span>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table {% if faqs %} id="faqsTable" {% endif %} class="table table-striped align-middle my-2"
+                        style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Serial No.</th>
+                                <th>Question</th>
+                                <th>Answer</th>
+                                <th>Order</th>
+                                <th>Status</th>
+                                <th>created_at</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for faq in faqs %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ faq.question }} ?</td>
+                                <td>{{ faq.answer }}</td>
+                                <td>{{ faq.order }}</td>
+                                <td>
+                                    {% if faq.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ faq.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'admin_faq_edit' faq.id %}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i> <!-- Pencil icon -->
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ faq.id }}">
+                                            <i class="fas fa-trash-alt"></i> <!-- Trash icon -->
+                                        </button>
+                                    </div>
+
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteModal{{ faq.id }}" tabindex="-1"
+                                        aria-labelledby="deleteModalLabel{{ faq.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel{{ faq.id }}">Confirm
+                                                        Delete</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this FAQ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <form action="{% url 'admin_faq_delete' faq.id %}" method="post">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No FAQs found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#faqsTable').DataTable(
+            {
+                responsive: true,
+                pageLength: 10,
+                lengthChange: true,
+                order: [],
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ FAQ",
+                    info: "Showing _START_ to _END_ of _TOTAL_ FAQ",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                }
+            });
+    });
+</script>
+{% endblock %}

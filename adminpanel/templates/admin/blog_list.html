@@ -1,0 +1,157 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">Blogs</h1>
+            <span>
+                <a href="{% url 'admin_blog_add' %}" class="btn btn-outline-primary">
+                    Create Blogs
+                </a>
+            </span>
+        </div>
+        <div class="card">
+            <div class="card-body">
+
+
+                <div class="table-responsive">
+                    <table {% if blogs %} id="blogTable" {% endif %} class="table table-striped align-middle my-2"
+                        style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Serial No.</th>
+                                <th>Image</th>
+                                <th>Video</th>
+                                <th>Title</th>
+                                <th>Tags</th>
+                                <th>Author</th>
+                                <th>Quote</th>
+                                <th>Content</th>
+                                <th>Comments</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for blog in blogs %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="img-thumbnail" style="max-width: 150px;"></td>
+                                
+                                <td>
+                                    <video class="img-thumbnail img-fluid" style="max-width: 150px; height: auto; object-fit: cover;" controls
+                                        preload="metadata">
+                                        <source src="{{ blog.video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </td>
+                                <td>{{ blog.title }}</td>
+                                <td>{% for tag in blog.tags.all %}
+                                    {{ tag.name }}{% if not forloop.last %} |{% endif %}
+                                    {% endfor %}</td>
+                                <td>{{ blog.author.first_name }} {{ blog.author.last_name }}</td>
+                                <td>{% if blog.quote|length > 50 %}
+                                    {{ blog.quote|slice:":50" }}...
+                                    {% else %}
+                                    {{ blog.quote }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if blog.content|length > 100 %}
+                                    {{ blog.content|slice:":100" }}...
+                                    {% else %}
+                                    {{ blog.content }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ blog.comment_count }}
+                                    {% if blog.comment_count > 0 %}
+                                    <a class="btn btn-sm btn-outline-info"
+                                        href="{% url 'blog_comment_list' blog.id %}">see comments</a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ blog.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'admin_blog_edit' blog_id=blog.id %}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i> <!-- Pencil/Edit Icon -->
+                                        </a>
+                                        <a href="{% url 'admin_blog_view' blog.id %}"
+                                            class="btn btn-sm btn-outline-info">
+                                            <i class="fas fa-eye"></i> <!-- Eye/View Icon -->
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ blog.id }}">
+                                            <i class="fas fa-trash-alt"></i> <!-- Trash/Delete Icon -->
+                                        </button>
+                                    </div>
+
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteModal{{ blog.id }}" tabindex="-1"
+                                        aria-labelledby="deleteModalLabel{{ blog.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel{{ blog.id }}">Confirm
+                                                        Delete</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete the blog "{{ blog.title }}"?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <form action="{% url 'admin_blog_delete' blog.id %}" method="post">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center">No blogs found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#blogTable').DataTable(
+            {
+                responsive: true,
+                pageLength: 10,
+                lengthChange: true,
+                order: [], 
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ Blogs",
+                    info: "Showing _START_ to _END_ of _TOTAL_ Blogs",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                }
+            });
+    });
+</script>
+{% endblock %}

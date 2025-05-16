@@ -1,0 +1,130 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <h1 class="page-heading mb-4">Update Contact Us Links</h1>
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="id_company_about" class="form-label">About Company</label>
+                        <textarea name="company_about" id="id_company_about"
+                                  class="form-control {% if form.company_about.errors %}is-invalid{% endif %}"
+                                  rows="4">{{ form.company_about.value|default:'' }}</textarea>
+                        {% if form.company_about.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.company_about.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_company_email" class="form-label">Company Email</label>
+                        <input type="email" name="company_email" id="id_company_email"
+                               class="form-control {% if form.company_email.errors %}is-invalid{% endif %}"
+                               value="{{ form.company_email.value|default:'' }}">
+                        {% if form.company_email.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.company_email.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_facebook_url" class="form-label">Facebook URL</label>
+                        <input type="url" name="facebook_url" id="id_facebook_url"
+                               class="form-control {% if form.facebook_url.errors %}is-invalid{% endif %}"
+                               value="{{ form.facebook_url.value|default:'' }}">
+                        {% if form.facebook_url.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.facebook_url.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_twitter_url" class="form-label">Twitter URL</label>
+                        <input type="url" name="twitter_url" id="id_twitter_url"
+                               class="form-control {% if form.twitter_url.errors %}is-invalid{% endif %}"
+                               value="{{ form.twitter_url.value|default:'' }}">
+                        {% if form.twitter_url.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.twitter_url.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_linkedin_url" class="form-label">LinkedIn URL</label>
+                        <input type="url" name="linkedin_url" id="id_linkedin_url"
+                               class="form-control {% if form.linkedin_url.errors %}is-invalid{% endif %}"
+                               value="{{ form.linkedin_url.value|default:'' }}">
+                        {% if form.linkedin_url.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.linkedin_url.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_instagram_url" class="form-label">Instagram URL</label>
+                        <input type="url" name="instagram_url" id="id_instagram_url"
+                               class="form-control {% if form.instagram_url.errors %}is-invalid{% endif %}"
+                               value="{{ form.instagram_url.value|default:'' }}">
+                        {% if form.instagram_url.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.instagram_url.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_youtube_url" class="form-label">YouTube URL</label>
+                        <input type="url" name="youtube_url" id="id_youtube_url"
+                               class="form-control {% if form.youtube_url.errors %}is-invalid{% endif %}"
+                               value="{{ form.youtube_url.value|default:'' }}">
+                        {% if form.youtube_url.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.youtube_url.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Changes
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

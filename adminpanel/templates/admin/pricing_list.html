@@ -1,0 +1,152 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">Pricings</h1>
+            <span>
+                <a href="{% url 'admin_pricing_add' %}" class="btn btn-outline-primary">
+                    Create Pricing
+                </a>
+            </span>
+        </div>
+        <div class="card">
+            <div class="card-body">
+
+
+                <div class="table-responsive">
+                    <table {% if pricing %} id="pricingTable" {% endif %} class="table table-striped align-middle my-2"
+                        style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Serial No.</th>
+                                <th>Price Heading</th>
+                                <th>Product Id</th>
+                                <th>Price</th>
+                                <th>Price Id</th>
+                                <th>Description</th>
+                                <th>Duration in Days</th>
+                                <th>Status</th>
+                                <th>Features</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pricing in pricings %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ pricing.price_heading }}</td>
+                                <td>{{ pricing.product_id }}</td>
+                                <td>{{ pricing.price }}</td>
+                                <td>{{ pricing.price_id }}</td>
+                                <td>{{ pricing.desc }}</td>
+                                <td>{{ pricing.duration_in_days }}</td>
+                                <td>
+                                    {% if pricing.status %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                    <a class="btn btn-sm btn-success mt-1" href="{% url 'admin_pricing_edit_status' pricing_id=pricing.id %}">Activate</a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#features{{ pricing.id }}" aria-expanded="false"
+                                        aria-controls="features{{ pricing.id }}">
+                                        <i class="fas fa-eye me-1"></i> View Features
+                                    </button>
+                                    <div class="collapse mt-2" id="features{{ pricing.id }}">
+                                        <ul class="list-group list-group-flush">
+                                            {% if pricing.description %}<li class="list-group-item">{{ pricing.description }}
+                                            </li>{% endif %}
+                                            {% if pricing.price_feature1 %}<li class="list-group-item">{{ pricing.price_feature1 }}</li>{% endif %}
+                                            {% if pricing.price_feature2 %}<li class="list-group-item">{{ pricing.price_feature2 }}</li>{% endif %}
+                                            {% if pricing.price_feature3 %}<li class="list-group-item">{{ pricing.price_feature3 }}</li>{% endif %}
+                                            {% if pricing.price_feature4 %}<li class="list-group-item">{{ pricing.price_feature4 }}</li>{% endif %}
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url 'admin_pricing_edit' pricing_id=pricing.id %}"
+                                            class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <!-- Trigger Button -->
+                                        {% if pricing.status %}
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ pricing.id }}"
+                                            title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                    <!-- Delete Confirmation Modal -->
+                                    <div class="modal fade" id="deleteModal{{ pricing.id }}" tabindex="-1"
+                                        aria-labelledby="deleteModalLabel{{ pricing.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel{{ pricing.id }}">
+                                                        Confirm Deletion
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    You cannot delete <strong>{{ pricing.price_heading }}</strong>! <br>
+                                                    It simply <strong>De-Activate</strong>!
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST"
+                                                        action="{% url 'admin_pricing_delete' pricing_id=pricing.id %}">
+                                                        {% csrf_token %}
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-danger">Yes,
+                                                            Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No Pricing found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#pricingTable').DataTable(
+            {
+                responsive: true,
+                pageLength: 10,
+                lengthChange: true,
+                order: [], 
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ pricings",
+                    paginate: {
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                }
+            });
+    });
+</script>
+{% endblock %}

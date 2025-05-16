@@ -45,6 +45,7 @@ admin.site.register(Slidder)
 admin.site.register(Contactus)
 admin.site.register(Pricing)
 admin.site.register(UserSubscription)
+admin.site.register(SubscriptionHistory)
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'approved', 'created_at')
@@ -87,3 +88,16 @@ class FavouritesAdmin(admin.ModelAdmin):
     list_display = ('user', 'created_at')
 
 admin.site.register(Favourites, FavouritesAdmin)
+
+@admin.register(SearchHistory)
+class SearchHistoryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'search_query', 'location', 'created')
+    search_fields = ('user__username', 'search_query', 'location')
+    list_filter = ('created', 'location')
+    ordering = ('-created',)
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'created_at')
+    search_fields = ('name', 'email', 'subject')
+    list_filter = ('created_at',)

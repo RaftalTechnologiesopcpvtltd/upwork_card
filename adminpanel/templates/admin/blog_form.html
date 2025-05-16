@@ -1,0 +1,182 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block extra_css %}
+<style>
+    .preview-image {
+        max-height: 200px;
+        object-fit: contain;
+    }
+
+    .preview-video {
+        max-height: 200px;
+        max-width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        {% if blog %}
+        <h1 class="page-title mb-4">Edit Blog</h1>
+        {% else %}
+        <h1 class="page-title mb-4">Create Blog</h1>
+        {% endif %}
+       
+
+        <div class="card">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_title" class="form-label">Title</label>
+                                <input type="text" name="title" id="id_title"
+                                    class="form-control {% if form.title.errors %}is-invalid{% endif %}"
+                                    value="{{ form.title.value|default:'' }}" required>
+                                {% if form.title.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 d-flex align-items-stretch">
+                        <div class="col-md-6 d-flex">
+                            <div class="w-100 p-3 border rounded">
+                                <!-- Featured Image content here -->
+                                <label for="id_image" class="form-label">Featured Image</label>
+                                {% if blog and blog.image %}
+                                <div class="mb-2">
+                                    <img src="{{ blog.image.url }}" alt="Featured Image"
+                                        class="img-fluid img-thumbnail preview-image">
+                                </div>
+                                {% endif %}
+                                <input type="file" name="image" id="id_image"
+                                    class="form-control {% if form.image.errors %}is-invalid{% endif %}"
+                                    accept="image/*">
+                                {% if form.image.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.image.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Upload a featured image for your blog post</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 d-flex">
+                            <div class="w-100 p-3 border rounded">
+                                <!-- Video content here -->
+                                <label for="id_video" class="form-label">Video</label>
+                                {% if blog and blog.video %}
+                                <div class="mb-2">
+                                    <video src="{{ blog.video.url }}" controls class="preview-video w-100"></video>
+                                </div>
+                                <p class="form-text">Current video: {{ blog.video.name }}</p>
+                                {% endif %}
+                                <input type="file" name="video" id="id_video"
+                                    class="form-control {% if form.video.errors %}is-invalid{% endif %}"
+                                    accept="video/*">
+                                {% if form.video.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.video.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Upload a video file (MP4, WebM, Ogg recommended)</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_quote" class="form-label">Quote</label>
+                                <textarea name="quote" id="id_quote"
+                                    class="form-control {% if form.quote.errors %}is-invalid{% endif %}"
+                                    rows="3">{{ form.quote.value|default:'' }}</textarea>
+                                {% if form.quote.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.quote.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Add a memorable quote or highlight from your blog post (optional)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_content" class="form-label">Content</label>
+                                <textarea name="content" id="id_content"
+                                    class="form-control summernote {% if form.content.errors %}is-invalid{% endif %}"
+                                    rows="10">{{ form.content.value|default:'' }}</textarea>
+                                {% if form.content.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.content.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_tags" class="form-label">Tags</label>
+                                <input type="text" name="tags" id="id_tags"
+                                    class="form-control {% if form.tags.errors %}is-invalid{% endif %}"
+                                    value="{{ form.tags.value|default:'' }}">
+                                {% if form.tags.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.tags.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">Separate tags with commas (e.g., technology, news, tutorial)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Blog
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

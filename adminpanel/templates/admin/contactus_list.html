@@ -1,0 +1,118 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        <div class="d-flex align-items-center justify-content-between">
+            <h1 class="page-title mb-4">Contact Information</h1>
+            <span>
+                <a href="{% url 'contactus_add' %}" class="btn btn-outline-primary">
+                    Create Contact
+                </a>
+            </span>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table {% if contactus_entries %} id="contactusTable" {% endif %}
+                        class="table table-striped align-middle my-2" style="width:100%">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Serial No.</th>
+                                <th>Email</th>
+                                <th>About</th>
+                                <th>Facebook</th>
+                                <th>Instagram</th>
+                                <th>Twitter</th>
+                                <th>Linkedin</th>
+                                <th>Youtube</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contact in contactus_entries %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ contact.company_email }}</td>
+                                <td>{{ contact.company_about|truncatechars:40 }}</td>
+                                <td><a href="{{ contact.facebook_url }}" target="_blank">Facebook</a></td>
+                                <td><a href="{{ contact.instagram_url }}" target="_blank">Instagram</a></td>
+                                <td><a href="{{ contact.twitter_url }}" target="_blank">Twitter</a></td>
+                                <td><a href="{{ contact.linkedin_url }}" target="_blank">Linkedin</a></td>
+                                <td><a href="{{ contact.youtube_url }}" target="_blank">Youtube</a></td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'contactus_update' contact.id %}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ contact.id }}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteModal{{ contact.id }}" tabindex="-1"
+                                        aria-labelledby="deleteModalLabel{{ contact.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel{{ contact.id }}">
+                                                        Confirm Delete</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete this contact?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <form action="{% url 'contactus_delete' contact.id %}"
+                                                        method="post">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center">No contact information found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        $('#contactusTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthChange: true,
+            order: [],
+            language: {
+                search: "Search:",
+                lengthMenu: "Show _MENU_ records",
+                info: "Showing _START_ to _END_ of _TOTAL_ records",
+                paginate: {
+                    next: "Next",
+                    previous: "Previous"
+                },
+            }
+        });
+    });
+</script>
+{% endblock %}

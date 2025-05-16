@@ -1,0 +1,139 @@
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <i class="fas fa-bolt logo-icon"></i>
+            <span class="logo-text">BUYREDGE - ADMIN</span>
+        </div>
+        <button class="sidebar-toggle d-md-none text-white" id="closeSidebar">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="sidebar-content">
+        <ul class="nav flex-column">
+
+            <li class="nav-item">
+                <a href="{% url 'admin_dashboard' %}" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Users -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseUsers"
+                    href="{% url 'admin_users' %}">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+                <div class="collapse" id="collapseUsers">
+                    <div class="submenu">
+                        <a href="{% url 'admin_users' %}" class="submenu-item">All Users</a>
+                        <a href="{% url 'admin_user_add' %}" class="submenu-item">Add User</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Subscriptions -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false"
+                    data-bs-target="#collapseSubscriptions" href="{% url 'admin_subscriptions' %}">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Subscriptions</span>
+                </a>
+                <div class="collapse" id="collapseSubscriptions">
+                    <div class="submenu">
+                        <a href="{% url 'admin_subscriptions' %}" class="submenu-item">All Subscriptions</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Blogs -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseBlog"
+                    href="{% url 'admin_blogs' %}">
+                    <i class="fas fa-blog"></i>
+                    <span>Blog</span>
+                </a>
+                <div class="collapse" id="collapseBlog">
+                    <div class="submenu">
+                        <a href="{% url 'admin_blogs' %}" class="submenu-item">All Posts</a>
+                        <a href="{% url 'admin_blog_add' %}" class="submenu-item">Add Post</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Pricing -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapsePricing"
+                    href="{% url 'pricing' %}">
+                    <i class="fas fa-tags"></i>
+                    <span>Pricing</span>
+                </a>
+                <div class="collapse" id="collapsePricing">
+                    <div class="submenu">
+                        <a href="{% url 'pricing' %}" class="submenu-item">All Pricings</a>
+                        <a href="{% url 'admin_pricing_add' %}" class="submenu-item">Add Pricing</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- FAQs -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseFaqs"
+                    href="{% url 'admin_faqs' %}">
+                    <i class="fas fa-question-circle"></i>
+                    <span>FAQs</span>
+                </a>
+                <div class="collapse" id="collapseFaqs">
+                    <div class="submenu">
+                        <a href="{% url 'admin_faqs' %}" class="submenu-item">All FAQs</a>
+                        <a href="{% url 'admin_faq_add' %}" class="submenu-item">Add FAQ</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Contact -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseContact"
+                    href="{% url 'admin_contacts' %}">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+                <div class="collapse" id="collapseContact">
+                    <div class="submenu">
+                        <a href="{% url 'admin_contacts' %}" class="submenu-item">Messages</a>
+                        <a href="{% url 'contactus_list' %}" class="submenu-item">Contact Links</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Sliders -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseSlider"
+                    href="{% url 'admin_sliders' %}">
+                    <i class="fas fa-images"></i>
+                    <span>Sliders</span>
+                </a>
+                <div class="collapse" id="collapseSlider">
+                    <div class="submenu">
+                        <a href="{% url 'admin_sliders' %}" class="submenu-item">All Sliders</a>
+                        <a href="{% url 'admin_slider_add' %}" class="submenu-item">Add Slider</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Search History -->
+            <li class="nav-item">
+                <a href="{% url 'admin_search_history' %}" class="nav-link">
+                    <i class="fas fa-history"></i>
+                    <span>Search History</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</nav>

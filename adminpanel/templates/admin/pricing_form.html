@@ -1,0 +1,216 @@
+{% extends 'admin/adminbase.html' %}
+
+{% block content %}
+<div id="content">
+    {% include 'admin/header.html' %}
+    <div class="main-content">
+        {% if pricing %}
+        <h1 class="page-heading mb-4">Manage Pricing: {{ pricing.price_heading }}</h1>
+        {% else %}
+        <h1 class="page-heading mb-4">Create Pricing Plan</h1>
+        {% endif %}
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_price_heading" class="form-label">Price Heading</label>
+                                <input type="text" name="price_heading" id="id_price_heading"
+                                    class="form-control {% if form.price_heading.errors %}is-invalid{% endif %}"
+                                    value="{{ form.price_heading.value|default:'' }}" required>
+                                {% if form.price_heading.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.price_heading.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_product_id" class="form-label">Product Id</label>
+                                <input type="text" name="product_id" id="id_product_id"
+                                    class="form-control {% if form.product_id.errors %}is-invalid{% endif %}"
+                                    value="{{ form.product_id.value|default:'' }}">
+                                {% if form.product_id.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.product_id.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_price" class="form-label">Price</label>
+                                <input type="number" name="price" id="id_price"
+                                    class="form-control {% if form.price.errors %}is-invalid{% endif %}"
+                                    value="{{ form.price.value|default:'' }}" step="0.01" required>
+                                {% if form.price.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.price.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="id_price_id" class="form-label">Price Id</label>
+                                    <input type="text" name="price_id" id="id_price_id"
+                                        class="form-control {% if form.price_id.errors %}is-invalid{% endif %}"
+                                        value="{{ form.price_id.value|default:'' }}">
+                                    {% if form.price_id.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.price_id.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_duration_in_days" class="form-label">Duration (in days)</label>
+                                <input type="number" name="duration_in_days" id="id_duration_in_days"
+                                    class="form-control {% if form.duration_in_days.errors %}is-invalid{% endif %}"
+                                    value="{{ form.duration_in_days.value|default:'' }}">
+                                {% if form.duration_in_days.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.duration_in_days.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    Example values: <br>
+                                    <strong>1</strong> for a day<br>
+                                    <strong>7</strong> for a week<br>
+                                    <strong>30</strong> for a month<br>
+                                    <strong>365</strong> for a year
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="id_desc" class="form-label">Description</label>
+                                <textarea name="desc" id="id_desc"
+                                    class="form-control {% if form.desc.errors %}is-invalid{% endif %}"
+                                    rows="6">{{ form.desc.value|default:'' }}</textarea>
+                                {% if form.desc.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.desc.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_price_feature1" class="form-label">Feature 1</label>
+                                <input type="text" name="price_feature1" id="id_price_feature1"
+                                    class="form-control {% if form.price_feature1.errors %}is-invalid{% endif %}"
+                                    value="{{ form.price_feature1.value|default:'' }}">
+                                {% if form.price_feature1.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.price_feature1.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_price_feature2" class="form-label">Feature 2</label>
+                                <input type="text" name="price_feature2" id="id_price_feature2"
+                                    class="form-control {% if form.price_feature2.errors %}is-invalid{% endif %}"
+                                    value="{{ form.price_feature2.value|default:'' }}">
+                                {% if form.price_feature2.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.price_feature2.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_price_feature3" class="form-label">Feature 3</label>
+                                <input type="text" name="price_feature3" id="id_price_feature3"
+                                    class="form-control {% if form.price_feature3.errors %}is-invalid{% endif %}"
+                                    value="{{ form.price_feature3.value|default:'' }}">
+                                {% if form.price_feature3.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.price_feature3.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_price_feature4" class="form-label">Feature 4</label>
+                                <input type="text" name="price_feature4" id="id_price_feature4"
+                                    class="form-control {% if form.price_feature4.errors %}is-invalid{% endif %}"
+                                    value="{{ form.price_feature4.value|default:'' }}">
+                                {% if form.price_feature4.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.price_feature4.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Pricing Plan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -88,6 +88,20 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_title
+    
+class SearchHistory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='search_histories')
+    search_query = models.CharField(max_length=255)
+    marketplaces = models.TextField(
+    blank=True,
+    default='',
+    help_text="Comma-separated list of marketplaces searched"
+)
+    location = models.CharField(max_length=255)
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.user.username} searched '{self.search_query}' on {self.created.strftime('%Y-%m-%d %H:%M:%S')}"
 
 class Favourites(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -355,15 +369,43 @@ class CustomUser(AbstractUser):
 class Slidder(models.Model):
     image = models.ImageField(upload_to='slidder/')
     heading = models.CharField(max_length=100)
-    text=models.TextField()
-    
-    def __str__(self):
-        return self.heading
-    
+    text = models.TextField()
+    is_active = models.BooleanField(default=True)  # Slider is active by default
+    order = models.IntegerField(default=0)         # Default order is 0
 
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Only set order when creating
+            max_order = Slidder.objects.aggregate(models.Max('order'))['order__max'] or 0
+            self.order = max_order + 1
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def reorder_all():
+        sliders = Slidder.objects.order_by('order')
+        for index, s in enumerate(sliders, start=1):
+            s.order = index
+            s.save()
+
+
+    def __str__(self):
+        return f"{self.heading} at {self.order} position"
+    
+class ContactMessage(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    status = models.BooleanField(default=False)  # False = unread/unresolved, True = read/resolved
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
 
 class Pricing(models.Model):
     price_heading = models.CharField(max_length=100)
+    product_id = models.CharField(blank=True, null=True, max_length=100,default = "")
+    price_id = models.CharField(blank=True, null=True, max_length=100,default = "")
     price =  models.DecimalField(max_digits=10, decimal_places=2)
     desc = models.TextField()
     duration_in_days = models.PositiveIntegerField(default=30)
@@ -371,16 +413,20 @@ class Pricing(models.Model):
     price_feature2 = models.CharField(max_length=100 ,default = "")
     price_feature3 = models.CharField(max_length=100 ,default = "")
     price_feature4 = models.CharField(max_length=100 ,default = "")
+    status = models.BooleanField(default=True)  # False = unread/unresolved, True = read/resolved
 
     def __str__(self):
         return self.price_heading
 
 
 class Contactus(models.Model):
-    about = models.TextField()
-    company_address = models.TextField()
-    company_phone = models.CharField(max_length=20)
-    company_email = models.EmailField()
+    company_about = models.TextField(null=True,blank=True)
+    company_email = models.EmailField(null=True,blank=True)
+    facebook_url = models.URLField(blank=True, null=True, default="")
+    twitter_url = models.URLField(blank=True, null=True, default="")
+    linkedin_url = models.URLField(blank=True, null=True, default="")
+    instagram_url = models.URLField(blank=True, null=True, default="")
+    youtube_url = models.URLField(blank=True, null=True, default="")
 
     def __str__(self):
         return self.company_email
@@ -397,6 +443,7 @@ class UserSubscription(models.Model):
     interval = models.CharField(max_length=50, default="month")
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    is_finished = models.BooleanField(default=False)
 
     @property
     def is_active(self):
@@ -427,11 +474,28 @@ class UserSubscription(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.user.username} - (Active: {self.active})"
+        return f"{self.user.first_name} - (Active: {self.active})"
     
 
 
+class SubscriptionHistory(models.Model):
+   
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    plan = models.ForeignKey(Pricing, on_delete=models.CASCADE)
+    subscription_id = models.CharField(max_length=100, null=True, blank=True)
+    customer_id = models.CharField(max_length=100, null=True, blank=True)
+    session_id = models.CharField(max_length=100, null=True, blank=True)
+    cancel_at = models.DateTimeField(null=True, blank=True)
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    was_renewed = models.BooleanField(default=False)
 
+    def __str__(self):
+        if self.start_date and self.end_date:
+            return f"{self.user.first_name} - {self.plan} from {self.start_date.date()} to {self.end_date.date()}"
+        else:
+            return f"{self.user.first_name} - {self.plan}"
+    
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
@@ -461,7 +525,12 @@ class Comment(models.Model):
 class FAQ(models.Model):
     question = models.CharField(max_length=255)
     answer = models.TextField()
+    order = models.PositiveIntegerField(default=1)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order']  # ensures ordered retrieval
 
     def __str__(self):
         return self.question
