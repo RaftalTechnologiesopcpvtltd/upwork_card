@@ -430,11 +430,31 @@ def pricing_edit(request, pricing_id):
     old_amount = pricing.price  # Store old price to check for change
     old_name = pricing.price_heading
     old_price_id = pricing.price_id
+    interval = pricing.duration_in_days
+    current_year = datetime.now().month
+
+    
 
     if request.method == 'POST':
         form = PricingForm(request.POST, instance=pricing)
         if form.is_valid():
             updated_pricing = form.save(commit=False)
+            # Leap year check
+            is_leap = calendar.isleap(current_year)
+
+            days = int(pricing.duration_in_days)
+            if days >= 345:
+                interval = "year"
+                updated_pricing.duration_in_days = 366 if is_leap else 365
+            elif days >= 24:
+                interval = "month"
+                updated_pricing.duration_in_days = 30
+            elif days >= 5:
+                interval = "week"
+                updated_pricing.duration_in_days = 7
+            else:
+                interval = "day"
+                updated_pricing.duration_in_days = 1
 
             print(updated_pricing)
             print(updated_pricing.price_heading)
@@ -454,9 +474,11 @@ def pricing_edit(request, pricing_id):
             # 2. If price changed, create a new price on Stripe
             if updated_pricing.price != old_amount:
                 try:
+                    
                     new_price = stripe.Price.create(
                         unit_amount=int(updated_pricing.price * 100),  # Convert dollars to cents
                         currency='usd',
+                        recurring={"interval": interval},  # or "year"
                         product=pricing.product_id
                     )
 

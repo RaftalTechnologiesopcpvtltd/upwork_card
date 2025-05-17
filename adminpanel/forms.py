@@ -1,8 +1,12 @@
 from django import forms
 from landingpage.models import *
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 class CustomUserForm(forms.ModelForm):
+    username = forms.CharField(required=False)  # Explicitly add the username field
+
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
         required=False,
@@ -12,7 +16,7 @@ class CustomUserForm(forms.ModelForm):
         model = CustomUser
         fields = [
             'first_name', 'last_name', 'email', 'phone_number', 'gender',
-            'city', 'country', 'address', 'zip_code', 'country_code',
+            'city', 'country', 'address', 'zip_code', 'country_code','username'
         ]
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
@@ -36,21 +40,34 @@ class CustomUserForm(forms.ModelForm):
             self.fields['password'].widget = forms.HiddenInput()
             self.fields['password'].required = False
 
+    def clean_username(self):
+        # Use email as username fallback
+        return self.cleaned_data.get('username') or self.cleaned_data.get('email')
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+
+        if password:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                raise forms.ValidationError(e.messages)
+        elif not self.editing:
+            raise forms.ValidationError("Password is required.")
+
+        return password
+
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.username = self.cleaned_data['email']  # or username fallback logic
         password = self.cleaned_data.get("password")
 
-        # Only set password if provided and not editing
         if password:
             user.set_password(password)
-        elif not self.editing:
-            # Raise error if creating and no password provided
-            raise forms.ValidationError("Password is required.")
 
         if commit:
             user.save()
         return user
-
 
 class BlogPostForm(forms.ModelForm):
     class Meta:
